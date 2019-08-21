@@ -5,7 +5,7 @@ class Discover extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        color: Colors.yellow,
+        // color: Colors.yellow,
         child: Text('Discover'),
       ),
     );

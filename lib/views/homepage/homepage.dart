@@ -4,6 +4,11 @@ import 'package:flutter_wechat/views/contacts/contacts.dart';
 import 'package:flutter_wechat/views/discover/discover.dart';
 import 'package:flutter_wechat/views/profile/profile.dart';
 
+class _TabBarItem {
+  String title, image, selectedImage;
+  _TabBarItem(this.title, this.image, this.selectedImage);
+}
+
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
 
@@ -24,26 +29,30 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   static List tabData = [
-    {'text': '业界动态', 'icon': Icon(Icons.language)},
-    {'text': 'WIDGET', 'icon': Icon(Icons.extension)},
-    {'text': '组件收藏', 'icon': Icon(Icons.favorite)},
-    {'text': '关于手册', 'icon': Icon(Icons.import_contacts)}
+    _TabBarItem('微信', 'assets/images/tabbar_mainframe_25x23.png', 'assets/images/tabbar_mainframeHL_25x23.png'),
+    _TabBarItem('通讯录', 'assets/images/tabbar_contacts_27x23.png', 'assets/images/tabbar_contactsHL_27x23.png'),
+    _TabBarItem('发现', 'assets/images/tabbar_discover_23x23.png', 'assets/images/tabbar_discoverHL_23x23.png'),
+    _TabBarItem('我', 'assets/images/tabbar_me_23x23.png', 'assets/images/tabbar_meHL_23x23.png')
   ];
 
-  String appBarTitle = tabData[0]['text'];
+  String appBarTitle = "微信";
+  // tabData[0].title;
   List<Widget> list = List();
   int _currentIndex = 0;
-
   List<BottomNavigationBarItem> myTabs = [];
 
   @override
   void initState() {
     super.initState();
     for (int i = 0; i < tabData.length; i++) {
+      final item = tabData[i];
       myTabs.add(BottomNavigationBarItem(
-        icon: tabData[i]['icon'],
+        icon: Image.asset(item.image, width: 25.0, height: 23.0,),
+        activeIcon: Image.asset(item.selectedImage, width: 25.0, height: 23.0,),
         title: Text(
-          tabData[i]['text'],
+          item.title,
+          // Fixed Bug: 这个只需要设置字体大小即可，颜色不要设置
+          style: TextStyle(fontSize: 10.0),
         ),
       ));
     }
@@ -63,7 +72,7 @@ class _HomePageState extends State<HomePage> {
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
       _currentIndex = index;
-      appBarTitle = tabData[index]['text'];
+      appBarTitle = tabData[index].title;
     });
   }
 
@@ -91,8 +100,8 @@ class _HomePageState extends State<HomePage> {
         //shifting :按钮点击移动效果
         //fixed：固定
         type: BottomNavigationBarType.fixed,
-
-        fixedColor: Color(0xFFC91B3A),
+        selectedItemColor: Color(0xFF57be6a),
+        unselectedItemColor: Color(0xFF191919),
       ),
     );
   }
