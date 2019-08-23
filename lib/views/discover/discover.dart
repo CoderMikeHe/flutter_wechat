@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_wechat/model/common/common_item.dart';
 
 class Discover0 extends StatefulWidget {
   Discover0({Key key}) : super(key: key);
@@ -90,12 +91,22 @@ class _KeyOoState extends State<KeyOo> {
   final slivers = <Widget>[];
   @override
   void initState() {
+    // final item = CommonItem();
+    final item0 = CommonItem.help(x: 10, y: 10);
+    final item1 = CommonItemArrow();
+    // print('object ${item.x} ${item.y}');
+    print('object0 ${item0.x} ${item0.y}');
+    print('object1 ${item1.x} ${item1.y}');
+
+ 
+
+
     super.initState();
     final a = new SliverFixedExtentList(
           itemExtent: 50.0,
           delegate:
               new SliverChildBuilderDelegate((BuildContext context, int index) {
-            print('list item $index');
+            // print('list item $index');
             //创建列表项
             return new Container(
               alignment: Alignment.center,
@@ -112,7 +123,7 @@ class _KeyOoState extends State<KeyOo> {
           itemExtent: 50.0,
           delegate:
               new SliverChildBuilderDelegate((BuildContext context, int index) {
-            print('red item $index');
+            // print('red item $index');
             //创建列表项
             return new Container(
               alignment: Alignment.center,
@@ -123,7 +134,7 @@ class _KeyOoState extends State<KeyOo> {
                   ),
         );
         setState(() {
-          slivers.add(b);
+          // slivers.add(b);
         });
     });
   }
@@ -180,7 +191,7 @@ class adc extends StatelessWidget {
           itemExtent: 50.0,
           delegate:
               new SliverChildBuilderDelegate((BuildContext context, int index) {
-            print('list item $index');
+            // print('list item $index');
             //创建列表项
             return new Container(
               alignment: Alignment.center,
@@ -194,106 +205,3 @@ class adc extends StatelessWidget {
     );
   }
 }
-
-/**
- * return new ListView(
-        children: <Widget>[
-          new Container(
-            padding:const EdgeInsets.only(top: 20.0),
-            child: new Container(
-              height: 50.0,
-              child: new ListTile(
-                leading: new Icon(Icons.camera),
-                title: new Text("朋友圈",style: TextStyle(backgroundColor: Colors.red),),
-              ),
-              color: Colors.white,
-            ),
-            color: Colors.grey[200],
-          ),
-          new Container(
-            padding:const EdgeInsets.only(top: 20.0),
-            child: new Container(
-              height: 50.0,
-              child: new ListTile(
-                leading: new Icon(Icons.crop_free),
-                title: new Text("扫一扫"),
-              ),
-              color: Colors.white,
-            ),
-            color: Colors.grey[200],
-          ),
-          new Container(
-            padding:const EdgeInsets.only(top: 20.0),
-            child: new Container(
-              height: 50.0,
-              child: new ListTile(
-                leading: new Icon(Icons.star),
-                title: new Text("看一看"),
-              ),
-              color: Colors.white,
-            ),
-            color: Colors.grey[200],
-          ),
-          new Container(
-            child: new ListTile(
-              leading: new Icon(Icons.search),
-              title: new Text("搜一搜"),
-            ),
-            color: Colors.white,
-            height: 50.0,
-          ),
-          new Container(
-            padding:const EdgeInsets.only(top: 20.0),
-            child: new Container(
-              child: new ListTile(
-                leading: new Icon(Icons.people),
-                title: new Text("附近的人"),
-              ),
-              color: Colors.white,
-              height: 50.0,
-            ),
-            color: Colors.grey[200],
-          ),
-          new Container(
-            child: new ListTile(
-              leading: new Icon(Icons.hourglass_empty),
-              title: new Text("漂流瓶"),
-            ),
-            color: Colors.white,
-            height: 50.0,
-          ),
-          new Container(
-            padding:const EdgeInsets.only(top: 20.0),
-            child: new Container(
-              child: new ListTile(
-                leading: new Icon(Icons.shopping_cart),
-                title: new Text("购物"),
-              ),
-              color: Colors.white,
-              height: 50.0,
-            ),
-            color: Colors.grey[200],
-          ),
-          new Container(
-            child: new ListTile(
-              leading: new Icon(Icons.games),
-              title: new Text("游戏"),
-            ),
-            color: Colors.white,
-            height: 50.0,
-          ),
-          new Container(
-            padding:const EdgeInsets.only(top: 20.0),
-            child: new Container(
-              child: new ListTile(
-                leading: new Icon(Icons.apps),
-                title: new Text("小程序"),
-              ),
-              color: Colors.white,
-              height: 50.0,
-            ),
-            color: Colors.grey[200],
-          ),
-        ],
-    ); 
- * */
