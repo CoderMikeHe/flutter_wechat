@@ -97,10 +97,11 @@ class _HomePageState extends State<HomePage> {
         currentIndex: _currentIndex,
         //修改 页面
         onTap: _itemTapped,
-        //shifting :按钮点击移动效果
         //fixed：固定
         type: BottomNavigationBarType.fixed,
+        // item选中颜色
         selectedItemColor: Color(0xFF57be6a),
+        // item非选中
         unselectedItemColor: Color(0xFF191919),
       ),
     );
