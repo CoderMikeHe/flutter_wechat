@@ -22,10 +22,11 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         // primarySwatch: Colors.blue,
         primaryColor: Color(0xFFEDEDED),
-
+        // Fixed Bug: 系统提供的 minWidth 88.0 太宽了
+        // https://www.jianshu.com/p/52b873d891f0
+        buttonTheme: ButtonThemeData(minWidth: 44.0),
       ),
       home: HomePage(title: 'Flutter WeChat'),
     );
   }
 }
-

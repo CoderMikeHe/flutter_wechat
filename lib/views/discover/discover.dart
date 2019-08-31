@@ -30,11 +30,10 @@ class _DiscoverState extends State<Discover> {
   _configData() {
     // group0
     // 朋友圈
-    var commonItem = CommonItem(
+    final moments = CommonItem(
       title: '朋友圈',
-      icon: Constant.ASSETS_IMG + "ff_IconShowAlbum_25x25.png",
+      icon: Constant.assetsImages + "ff_IconShowAlbum_25x25.png",
     );
-    final moments = commonItem;
     final group0 = CommonGroup(
       items: [moments],
     );
@@ -42,10 +41,10 @@ class _DiscoverState extends State<Discover> {
     // group1
     // 扫一扫
     final qrCode = CommonItem(
-        title: "扫一扫", icon: Constant.ASSETS_IMG + "ff_IconQRCode_25x25.png");
+        title: "扫一扫", icon: Constant.assetsImages + "ff_IconQRCode_25x25.png");
     // 摇一摇
     final shake = CommonItem(
-        title: "摇一摇", icon: Constant.ASSETS_IMG + "ff_IconShake_25x25.png");
+        title: "摇一摇", icon: Constant.assetsImages + "ff_IconShake_25x25.png");
     final group1 = CommonGroup(
       items: [qrCode, shake],
     );
@@ -53,10 +52,10 @@ class _DiscoverState extends State<Discover> {
     // group2
     // 看一看
     final look = CommonItem(
-        title: "看一看", icon: Constant.ASSETS_IMG + "ff_IconBrowse1_25x25.png");
+        title: "看一看", icon: Constant.assetsImages + "ff_IconBrowse1_25x25.png");
     // 搜一搜
     final search = CommonItem(
-        title: "搜一搜", icon: Constant.ASSETS_IMG + "ff_IconSearch1_25x25.png");
+        title: "搜一搜", icon: Constant.assetsImages + "ff_IconSearch1_25x25.png");
     final group2 = CommonGroup(
       items: [look, search],
     );
@@ -65,10 +64,10 @@ class _DiscoverState extends State<Discover> {
     // 附近的人
     final locationService = CommonItem(
         title: "附近的人",
-        icon: Constant.ASSETS_IMG + "ff_IconLocationService_25x25.png");
+        icon: Constant.assetsImages + "ff_IconLocationService_25x25.png");
     // 漂流瓶
     final bottle = CommonItem(
-        title: "漂流瓶", icon: Constant.ASSETS_IMG + "ff_IconBottle_25x25.png");
+        title: "漂流瓶", icon: Constant.assetsImages + "ff_IconBottle_25x25.png");
     final group3 = CommonGroup(
       items: [locationService, bottle],
     );
@@ -77,10 +76,10 @@ class _DiscoverState extends State<Discover> {
     // 购物
     final shopping = CommonItem(
         title: "购物",
-        icon: Constant.ASSETS_IMG + "CreditCard_ShoppingBag_25x25.png");
+        icon: Constant.assetsImages + "CreditCard_ShoppingBag_25x25.png");
     // 游戏
     final game = CommonItem(
-        title: "游戏", icon: Constant.ASSETS_IMG + "MoreGame_25x25.png");
+        title: "游戏", icon: Constant.assetsImages + "MoreGame_25x25.png");
     final group4 = CommonGroup(
       items: [shopping, game],
     );
@@ -88,7 +87,7 @@ class _DiscoverState extends State<Discover> {
     // group5
     // 小程序
     final moreApps = CommonItem(
-        title: "小程序", icon: Constant.ASSETS_IMG + "MoreWeApp_25x25.png");
+        title: "小程序", icon: Constant.assetsImages + "MoreWeApp_25x25.png");
     final group5 = CommonGroup(
       items: [moreApps],
     );
@@ -99,13 +98,15 @@ class _DiscoverState extends State<Discover> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: dataSource.length,
-      itemBuilder: (BuildContext context, int index) {
-        return CommonGroupWidget(
-          group: dataSource[index],
-        );
-      },
+    return Container(
+      child: ListView.builder(
+        itemCount: dataSource.length,
+        itemBuilder: (BuildContext context, int index) {
+          return CommonGroupWidget(
+            group: dataSource[index],
+          );
+        },
+      ),
     );
   }
 }

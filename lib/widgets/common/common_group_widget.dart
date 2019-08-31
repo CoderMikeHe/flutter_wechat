@@ -4,6 +4,8 @@ import 'package:flutter_wechat/utils/util.dart';
 
 import 'package:flutter_wechat/model/common/common_group.dart';
 import 'package:flutter_wechat/model/common/common_item.dart';
+import 'package:flutter_wechat/model/common/common_header.dart';
+import 'package:flutter_wechat/model/common/common_footer.dart';
 
 import 'package:flutter_wechat/widgets/common/common_header_widget.dart';
 import 'package:flutter_wechat/widgets/common/common_item_widget.dart';
@@ -18,10 +20,10 @@ class CommonGroupWidget extends StatefulWidget {
 }
 
 class _CommonGroupWidgetState extends State<CommonGroupWidget> {
-  // 生成身体元素
+  // 生成身体小部件
   Widget _itemBuilder(List items) {
     // 装饰容器
-    var boxDecoration = BoxDecoration(
+    final boxDecoration = BoxDecoration(
       color: Colors.white,
       border: Border(
         top: BorderSide(color: Color(0xFFD8D8D8), width: 0.5),
@@ -60,21 +62,40 @@ class _CommonGroupWidgetState extends State<CommonGroupWidget> {
     );
   }
 
+  // 生成头部小部件
+  Widget _headerBuilder(CommonHeader header) {
+    return null == header
+        ? SizedBox(
+            width: double.maxFinite,
+            height: widget.group.headerHeight,
+          )
+        : CommonHeaderWidget(
+            header: header,
+          );
+  }
+
+  // 生成尾部小部件
+  Widget _footerBuilder(CommonFooter footer) {
+    return null == footer
+        ? SizedBox(
+            width: double.maxFinite,
+            height: widget.group.footerHeight,
+          )
+        : CommonFooterWidget(
+            footer: footer,
+          );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
-      // 组头
-
-      // 身体
-      // 组尾
       children: <Widget>[
-        SizedBox(
-          height: 0.0,
-        ),
+        // 组头
+        _headerBuilder(widget.group.header),
+        // 身体
         _itemBuilder(widget.group.items),
-        SizedBox(
-          height: 8.0,
-        ),
+        // 组尾
+        _footerBuilder(widget.group.footer),
       ],
     );
   }
