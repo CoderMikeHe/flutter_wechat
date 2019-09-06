@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart' as prefix0;
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:flutter_wechat/utils/util.dart';
 import 'package:flutter_wechat/constant/constant.dart';
@@ -55,12 +55,14 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
       child = _buildTextItem(item);
     } else if (item is CommonSecurityPhoneItem) {
       child = _buildSecurityPhonetem(item);
+    } else if (item is CommonImageItem) {
+      child = _buildImageItem(item);
     } else if (item is CommonItem) {
       child = _buildItem(item);
     }
 
     return Container(
-      padding: EdgeInsets.all(Constant.pEdgeInset),
+      padding: item.padding,
       child: child,
     );
   }
@@ -405,6 +407,52 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
         titleWidget,
         iconWidget,
       ],
+    );
+  }
+
+  /// 返回 图片 item
+  Widget _buildImageItem(CommonImageItem item) {
+    Widget titleWidget = Expanded(
+      child: Padding(
+        padding: EdgeInsets.only(right: Constant.pEdgeInset),
+        child: Text(
+          item.title,
+          style: TextStyle(fontSize: 17.0),
+        ),
+      ),
+    );
+
+    Widget arrowWidget = Image.asset(
+      'assets/images/tableview_arrow_8x13.png',
+      width: 8.0,
+      height: 13.0,
+    );
+
+    // 图片
+    bool offstageIcon = Util.isEmptyString(item.imageUrl);
+    Widget iconWidget = Offstage(
+      offstage: offstageIcon,
+      child: Padding(
+        padding: EdgeInsets.only(right: 10.0),
+        // Fixed Bug: 这里icon 没值就别去渲染了,直接为null,否则报错
+        child: offstageIcon
+            ? null
+            : item.isNetwork
+                ? CachedNetworkImage(
+                    imageUrl: item.imageUrl,
+                    width: item.width,
+                    height: item.height,
+                  )
+                : Image.asset(
+                    item.imageUrl,
+                    width: item.width,
+                    height: item.height,
+                  ),
+      ),
+    );
+
+    return Row(
+      children: [titleWidget, iconWidget, arrowWidget],
     );
   }
 }

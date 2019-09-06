@@ -29,10 +29,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   static List tabData = [
-    _TabBarItem('微信', 'assets/images/tabbar_mainframe_25x23.png', 'assets/images/tabbar_mainframeHL_25x23.png'),
-    _TabBarItem('通讯录', 'assets/images/tabbar_contacts_27x23.png', 'assets/images/tabbar_contactsHL_27x23.png'),
-    _TabBarItem('发现', 'assets/images/tabbar_discover_23x23.png', 'assets/images/tabbar_discoverHL_23x23.png'),
-    _TabBarItem('我', 'assets/images/tabbar_me_23x23.png', 'assets/images/tabbar_meHL_23x23.png')
+    _TabBarItem('微信', 'assets/images/tabbar_mainframe_25x23.png',
+        'assets/images/tabbar_mainframeHL_25x23.png'),
+    _TabBarItem('通讯录', 'assets/images/tabbar_contacts_27x23.png',
+        'assets/images/tabbar_contactsHL_27x23.png'),
+    _TabBarItem('发现', 'assets/images/tabbar_discover_23x23.png',
+        'assets/images/tabbar_discoverHL_23x23.png'),
+    _TabBarItem('我', 'assets/images/tabbar_me_23x23.png',
+        'assets/images/tabbar_meHL_23x23.png')
   ];
 
   String appBarTitle = "微信";
@@ -47,8 +51,16 @@ class _HomePageState extends State<HomePage> {
     for (int i = 0; i < tabData.length; i++) {
       final item = tabData[i];
       myTabs.add(BottomNavigationBarItem(
-        icon: Image.asset(item.image, width: 25.0, height: 23.0,),
-        activeIcon: Image.asset(item.selectedImage, width: 25.0, height: 23.0,),
+        icon: Image.asset(
+          item.image,
+          width: 25.0,
+          height: 23.0,
+        ),
+        activeIcon: Image.asset(
+          item.selectedImage,
+          width: 25.0,
+          height: 23.0,
+        ),
         title: Text(
           item.title,
           // Fixed Bug: 这个只需要设置字体大小即可，颜色不要设置
@@ -76,6 +88,11 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  //  AppBar(
+  //       // Here we take the value from the HomePage object that was created by
+  //       // the App.build method, and use it to set our appbar title.
+  //       title: Text(appBarTitle),
+  //     )
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -85,11 +102,7 @@ class _HomePageState extends State<HomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the HomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(appBarTitle),
-      ),
+      appBar: null,
       body: list[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: myTabs,

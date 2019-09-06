@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:flutter_wechat/constant/constant.dart';
+
 typedef CommonGestureTapCallback = void Function(CommonItem item);
 
 // 最常用的
 class CommonItem {
   /// 构造函数
-  CommonItem(
-      {this.icon,
-      this.title = "",
-      this.subtitle = "",
-      this.tapHighlight = true,
-      this.onTap});
+  CommonItem({
+    this.icon,
+    this.title = "",
+    this.subtitle = "",
+    this.tapHighlight = true,
+    this.padding = const EdgeInsets.all(Constant.pEdgeInset),
+    this.onTap,
+  });
 
   /// icon
   final String icon;
@@ -24,6 +28,9 @@ class CommonItem {
 
   /// 点击高亮 default is true
   final bool tapHighlight;
+
+  /// item 内容边距 default is
+  final EdgeInsetsGeometry padding;
 
   /// 点击方法
   final CommonGestureTapCallback onTap;
@@ -91,4 +98,32 @@ class CommonRadioItem extends CommonItem {
 
   /// 是否选中 默认是不选中中
   bool value;
+}
+
+/// 图片 item (网络 or 本地)
+class CommonImageItem extends CommonItem {
+  /// 构造函数
+  CommonImageItem({
+    String title,
+    @required this.imageUrl,
+    this.width,
+    this.height,
+    this.isNetwork = false,
+    EdgeInsetsGeometry padding,
+  }) : super(
+          title: title,
+          padding: padding ?? EdgeInsets.all(Constant.pEdgeInset),
+        );
+
+  /// 图片宽
+  final double width;
+
+  /// 图片高
+  final double height;
+
+  /// 图片地址
+  final String imageUrl;
+
+  /// 是否为为网络图片 default is false
+  final bool isNetwork;
 }

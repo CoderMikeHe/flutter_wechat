@@ -133,7 +133,7 @@ class _PrivatesPageState extends State<PrivatesPage> {
     final checkScope = CommonItem(
       title: "允许朋友查看朋友圈的范围",
       subtitle: '',
-      onTap: (CommonItem item) async {
+      onTap: (item) async {
         final String result = await Navigator.of(context).push(
           new MaterialPageRoute(
             builder: (_) {

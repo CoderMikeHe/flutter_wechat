@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_wechat/constant/constant.dart';
+
 import 'package:flutter_wechat/model/common/common_item.dart';
 import 'package:flutter_wechat/model/common/common_group.dart';
-
 import 'package:flutter_wechat/widgets/common/common_group_widget.dart';
 
 import 'package:flutter_wechat/views/profile/setting/setting_page.dart';
+import 'package:flutter_wechat/views/profile/user_info/user_info_page.dart';
+
+import 'package:flutter_wechat/views/profile/widgets/profile_header.dart';
 
 class Profile extends StatefulWidget {
   Profile({Key key}) : super(key: key);
@@ -35,6 +38,7 @@ class _ProfileState extends State<Profile> {
     );
     final group0 = CommonGroup(
       items: [pay],
+      headerHeight: 8.0,
     );
 
     // group1
@@ -60,15 +64,16 @@ class _ProfileState extends State<Profile> {
     // group2
     // 设置
     final setting = CommonItem(
-        title: "设置",
-        icon: Constant.assetsImages + "MoreSetting_25x25.png",
-        onTap: (_) {
-          Navigator.of(context).push(new MaterialPageRoute(
-            builder: (_) {
-              return SettingPage();
-            },
-          ));
-        });
+      title: "设置",
+      icon: Constant.assetsImages + "MoreSetting_25x25.png",
+      onTap: (_) {
+        Navigator.of(context).push(new MaterialPageRoute(
+          builder: (_) {
+            return SettingPage();
+          },
+        ));
+      },
+    );
     final group2 = CommonGroup(
       items: [setting],
     );
@@ -86,15 +91,30 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: CustomScrollView(
-        slivers: <Widget>[
-          // 头部
-          // 列表
-          SliverList(
-            delegate: SliverChildBuilderDelegate(_buildListItem,
-                childCount: dataSource.length),
-          ),
-        ],
+      child: Scaffold(
+        body: CustomScrollView(
+          slivers: <Widget>[
+            // 头部
+            ProfileHeader(
+              onTapTitle: () {
+                print('点击昵称');
+              },
+              onTapContent: () {
+                print('除了点击名称');
+                Navigator.of(context).push(new MaterialPageRoute(
+                  builder: (_) {
+                    return UserInfoPage();
+                  },
+                ));
+              },
+            ),
+            // 列表
+            SliverList(
+              delegate: SliverChildBuilderDelegate(_buildListItem,
+                  childCount: dataSource.length),
+            ),
+          ],
+        ),
       ),
     );
   }

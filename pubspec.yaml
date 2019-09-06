@@ -24,7 +24,9 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   # 本地偏好设置
-  shared_preferences: "^0.5.3+4"
+  shared_preferences: ^0.5.3+4
+  # 图片缓存 
+  cached_network_image: ^1.1.1
 
 
 dev_dependencies:

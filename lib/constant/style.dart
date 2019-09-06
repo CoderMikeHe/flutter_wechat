@@ -13,7 +13,7 @@ class Style {
 
   // ---- 文字相关
   /// 主要 文字颜色
-  static const Color pTextColor = Color.fromRGBO(0, 0, 0, 1);
+  static const Color pTextColor = Color.fromRGBO(0, 0, 0, 0.9);
 
   /// 次要 文字颜色
   static const Color sTextColor = Color.fromRGBO(0, 0, 0, 0.5);

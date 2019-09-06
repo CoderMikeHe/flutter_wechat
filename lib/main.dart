@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_wechat/views/homepage/homepage.dart';
+import 'package:flutter_wechat/views/login/login_page.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  final login = false;
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,7 @@ class MyApp extends StatelessWidget {
         // https://www.jianshu.com/p/52b873d891f0
         buttonTheme: ButtonThemeData(minWidth: 44.0),
       ),
-      home: HomePage(title: 'Flutter WeChat'),
+      home: login ? LoginPage() : HomePage(title: 'Flutter WeChat'),
     );
   }
 }
