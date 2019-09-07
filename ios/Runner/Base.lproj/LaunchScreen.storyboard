@@ -21,15 +21,26 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UAl-p8-SdI">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="300"/>
+                                <color key="backgroundColor" red="0.0" green="0.0039215686274509803" blue="0.0078431372549019607" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="300" id="rPC-rA-3cv"/>
+                                </constraints>
+                            </view>
                             <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" image="LaunchImage" translatesAutoresizingMaskIntoConstraints="NO" id="YRO-k0-Ey4">
-                                <rect key="frame" x="-49" y="0.0" width="512" height="736"/>
+                                <rect key="frame" x="-49" y="26.666666666666686" width="512" height="682.66666666666652"/>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.0078431372549019607" green="0.043137254901960784" blue="0.0039215686274509803" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="YRO-k0-Ey4" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="KUN-Jc-VpF"/>
-                            <constraint firstAttribute="bottom" secondItem="YRO-k0-Ey4" secondAttribute="bottom" id="hzP-qa-ZaE"/>
-                            <constraint firstItem="YRO-k0-Ey4" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="mQx-mV-gUc"/>
+                            <constraint firstItem="UAl-p8-SdI" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="IGO-2C-ga9"/>
+                            <constraint firstItem="YRO-k0-Ey4" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="MIl-6M-S7e"/>
+                            <constraint firstItem="YRO-k0-Ey4" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="OFJ-hQ-3qo"/>
+                            <constraint firstAttribute="trailing" secondItem="UAl-p8-SdI" secondAttribute="trailing" id="cqq-jZ-f3B"/>
+                            <constraint firstItem="UAl-p8-SdI" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="dby-YZ-FB5"/>
+                            <constraint firstItem="UAl-p8-SdI" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="w9Z-Qi-2Qd"/>
                         </constraints>
                     </view>
                 </viewController>
