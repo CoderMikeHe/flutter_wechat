@@ -32,7 +32,7 @@
                                 <rect key="frame" x="-49" y="26.666666666666686" width="512" height="682.66666666666652"/>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" red="0.0078431372549019607" green="0.043137254901960784" blue="0.0039215686274509803" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" red="0.0078431372549019607" green="0.043137254901960784" blue="0.086274509803921567" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="UAl-p8-SdI" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="IGO-2C-ga9"/>

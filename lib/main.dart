@@ -6,7 +6,7 @@ import 'package:flutter_wechat/views/login/login_page.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  final login = false;
+  final login = true;
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {

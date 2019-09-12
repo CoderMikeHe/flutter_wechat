@@ -41,7 +41,6 @@ class _CommonGroupWidgetState extends State<CommonGroupWidget> {
       Widget child = CommonItemWidget(
         item: item,
       );
-
       // 添加一条分割线
       if (i != 0 && count > 1) {
         children.add(Divider(

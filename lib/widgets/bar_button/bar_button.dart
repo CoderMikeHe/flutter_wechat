@@ -84,6 +84,8 @@ class _BarButtonState extends State<BarButton> {
         ),
         child: Text(
           widget.text,
+          textAlign: TextAlign.center,
+          textScaleFactor: 1.0,
           style: TextStyle(
             fontSize: 16.0,
             color: widget.enabled

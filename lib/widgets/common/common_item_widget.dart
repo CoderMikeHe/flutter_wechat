@@ -282,7 +282,7 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
       child: Container(
         alignment: Alignment.centerLeft,
         padding: EdgeInsets.only(right: 16.0),
-        // Fixed Bug: 这里icon 没值就别去渲染了,直接为null,否则报错
+        // Fixed Bug: 这里icon 没值就别去渲染��,直接为null,否则报错
         child: Image.asset(
           'assets/images/WeChat_Lab_Logo_small_15x17.png',
           width: 15.0,
@@ -391,7 +391,7 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
     Widget iconWidget = Offstage(
       offstage: offstageIcon,
       child: Padding(
-        padding: EdgeInsets.only(right: 16.0),
+        padding: EdgeInsets.only(right: 0.0),
         child: offstageIcon
             ? null
             : Image.asset(

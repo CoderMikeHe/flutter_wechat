@@ -12,18 +12,18 @@ import 'package:flutter_wechat/widgets/common/common_group_widget.dart';
 import 'package:flutter_wechat/widgets/bar_button/bar_button.dart';
 
 /// 允许朋友查看朋友圈的范围
-class SettingGenderPage extends StatefulWidget {
-  SettingGenderPage({Key key, @required this.value}) : super(key: key);
+class LanguagePickerPage extends StatefulWidget {
+  LanguagePickerPage({Key key, @required this.value}) : super(key: key);
 
   /// value
   final String value;
 
-  _SettingGenderPageState createState() => _SettingGenderPageState();
+  _LanguagePickerPageState createState() => _LanguagePickerPageState();
 }
 
-class _SettingGenderPageState extends State<SettingGenderPage> {
+class _LanguagePickerPageState extends State<LanguagePickerPage> {
   /// 数据源
-  List<CommonGroup> dataSource = [];
+  List dataSource = [];
 
   /// 选中的Item
   CommonRadioItem _selectedItem;
@@ -35,34 +35,62 @@ class _SettingGenderPageState extends State<SettingGenderPage> {
     _configData();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    print('language picker over');
+  }
+
   /// 配置数据
-  void _configData() {
-    // group0
-    // 男
-    final male = CommonRadioItem(
-      title: '男',
-      onTap: _itemOnTap,
-      value: '男' == widget.value,
-    );
-    // 女
-    final female = CommonRadioItem(
-      title: '女',
-      onTap: _itemOnTap,
-      value: '女' == widget.value,
-    );
+  void _configData() async {
+    /// https://www.zybang.com/question/8b478510701184609e88eec8d869f87e.html 国家语言列表 拿走不谢
+    final titles = [
+      "简体中文",
+      "繁體中文（台灣）",
+      "繁體中文（香港）",
+      "English",
+      "Bahasa Indonesia",
+      "Bahasa Melayu",
+      "español",
+      // Fixed Bug：这里如果显示了 韩语，会导致导航栏 文字显示异常，
+      // "한국어",
+      "Italiano",
+      "日本語",
+      "Polski",
+      "Português",
+      "Русский",
+      "ภาษาไทย",
+      "Tiếng Việt",
+      "العربية",
+      "हिन्दी",
+      "עברית",
+      "Türkçe",
+      "Deutsch",
+      "Français"
+    ];
 
     // 赋值给 _selectedItem
-    _selectedItem = male.value ? male : female;
-
+    final List<CommonItem> items = [];
+    final length = titles.length;
+    for (var i = 0; i < length; i++) {
+      final t = titles[i];
+      CommonRadioItem item = CommonRadioItem(
+        title: t,
+        onTap: _itemOnTap,
+        value: widget.value == t,
+      );
+      if (item.title == widget.value) {
+        _selectedItem = item;
+      }
+      items.add(item);
+    }
     final group0 = CommonGroup(
-      items: [
-        male,
-        female,
-      ],
+      items: items,
     );
-
     // 添加数据源
-    dataSource = [group0];
+    setState(() {
+      dataSource = [group0];
+    });
   }
 
   /// itemOnTap
@@ -86,15 +114,13 @@ class _SettingGenderPageState extends State<SettingGenderPage> {
 
   // 构建 child 的小部件
   Widget _buildChildWidget(BuildContext context) {
-    return Container(
-      child: ListView.builder(
-        itemCount: dataSource.length,
-        itemBuilder: (BuildContext context, int index) {
-          return CommonGroupWidget(
-            group: dataSource[index],
-          );
-        },
-      ),
+    return ListView.builder(
+      itemCount: dataSource.length,
+      itemBuilder: (BuildContext context, int index) {
+        return CommonGroupWidget(
+          group: dataSource[index],
+        );
+      },
     );
   }
 
@@ -102,7 +128,11 @@ class _SettingGenderPageState extends State<SettingGenderPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('设置性别'),
+        title: Text(
+          '设置性别',
+          textAlign: TextAlign.center,
+          textScaleFactor: 1.0,
+        ),
         // leading : 最大宽度为56.0
         leading: Container(
             padding: EdgeInsets.only(left: 16.0),
@@ -117,7 +147,7 @@ class _SettingGenderPageState extends State<SettingGenderPage> {
             )),
         actions: <Widget>[
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            padding: EdgeInsets.only(right: 16.0),
             alignment: Alignment.centerRight,
             child: BarButton(
               '完成',
