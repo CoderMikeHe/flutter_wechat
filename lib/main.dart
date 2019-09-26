@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:flutter_wechat/views/homepage/homepage.dart';
 import 'package:flutter_wechat/views/login/login_page.dart';
@@ -27,8 +28,61 @@ class MyApp extends StatelessWidget {
         // Fixed Bug: 系统提供的 minWidth 88.0 太宽了
         // https://www.jianshu.com/p/52b873d891f0
         buttonTheme: ButtonThemeData(minWidth: 44.0),
+        //
+        appBarTheme: AppBarTheme(elevation: 1),
       ),
-      home: login ? LoginPage() : HomePage(title: 'Flutter WeChat'),
+      home: login ? _HomePage0() : HomePage(title: 'Flutter WeChat'),
+    );
+  }
+}
+
+class _HomePage0 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: CupertinoButton(
+        child: Text("show dialog"),
+        onPressed: () {
+          _showDialog(context);
+        },
+      ),
+    );
+  }
+
+  void _showDialog(BuildContext context) {
+    showDialog(
+      // barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          // backgroundColor: Colors.yellow,
+          title: new Text('你确定要这样做吗?'),
+          content: new Text('你确定要这样做吗?'),
+          actions: <Widget>[
+            CupertinoDialogAction(
+              child: new Text('取消'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                print('取消');
+              },
+            ),
+            CupertinoDialogAction(
+              child: new Text('取消'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                print('取消');
+              },
+            ),
+            CupertinoDialogAction(
+              child: new Text('取消'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                print('取消');
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

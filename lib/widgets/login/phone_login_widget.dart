@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_wechat/constant/constant.dart';
 import 'package:flutter_wechat/constant/style.dart';
 
+import 'package:flutter_wechat/utils/util.dart';
+
 import 'package:flutter_wechat/widgets/transition/slide_transition_x.dart';
 
 import 'package:flutter_wechat/widgets/login/login_title_widget.dart';
@@ -10,54 +12,61 @@ import 'package:flutter_wechat/widgets/text_field/mh_text_field.dart';
 
 import 'package:flutter_wechat/views/login/phone_login/phone_login_page.dart';
 
-class OtherLoginWidget extends StatefulWidget {
-  OtherLoginWidget({Key key}) : super(key: key);
+class PhoneLoginWidget extends StatefulWidget {
+  PhoneLoginWidget({Key key, this.phone, this.zoneCode}) : super(key: key);
 
-  _OtherLoginWidgetState createState() => _OtherLoginWidgetState();
+  /// 电话号码
+  final String phone;
+
+  /// 地区code
+  final String zoneCode;
+
+  _PhoneLoginWidgetState createState() => _PhoneLoginWidgetState();
 }
 
-class _OtherLoginWidgetState extends State<OtherLoginWidget> {
+class _PhoneLoginWidgetState extends State<PhoneLoginWidget> {
+  // 电话格式化
+  String get _phoneFormat {
+    return "+" +
+        (widget.zoneCode ?? '') +
+        " " +
+        (Util.formatMobile344(widget.phone));
+  }
+
+  // 登录按钮是否无效
+  bool get _loginBtnDisabled {
+    return _showPasswordWay
+        ? _passwordController.text.isEmpty
+        : _captchaController.text.isEmpty;
+  }
+
   // 切换登陆方式
   bool _showPasswordWay = true;
 
   // 切换名称
-  String get _changeLoginName => _showPasswordWay ? "用微信号/QQ号/邮箱登录" : "用手机号登录";
+  String get _changeLoginName => _showPasswordWay ? "用短信验证码登录" : "用密码登录";
 
   // loginBtnTitle
-  String get _loginBtnTitle => _showPasswordWay ? "下一步" : "登录";
-
-  // 登录按钮是否无效
-  bool get _loginBtnDisabled {
-    print('xxx  ${_phoneController.text}');
-    return _showPasswordWay
-        ? _phoneController.text.isEmpty
-        : _accountController.text.isEmpty || _passwordController.text.isEmpty;
-  }
+  String get _loginBtnTitle => "登录";
 
   // 屏幕宽
   double _screenWidth = 0;
-
-  /// 按钮
-
-  /// zone控制输入
-  final TextEditingController _zoneController = TextEditingController(text: '');
-
-  /// phone控制输入
-  final TextEditingController _phoneController =
-      TextEditingController(text: '');
-
-  /// account控制输入
-  final TextEditingController _accountController =
-      TextEditingController(text: '');
+  // 验证码名称
+  String captchaTitle = "获取验证码";
+  // 验证码是否不可点击
+  bool captchaBtnDisabled = false;
 
   /// password控制输入
   final TextEditingController _passwordController =
       TextEditingController(text: '');
 
+  /// 验证码控制输入
+  final TextEditingController _captchaController =
+      TextEditingController(text: '');
+
   @override
   void initState() {
     super.initState();
-    _zoneController.text = '86';
   }
 
   @override
@@ -68,25 +77,8 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
 
   /// -------------------- 事件 --------------------
   void _login() {
-    if (_loginBtnDisabled) {
-      return;
-    }
     if (_showPasswordWay) {
-      // 跳转到手机登陆
-      Navigator.of(context).push(
-        new MaterialPageRoute(
-          builder: (_) {
-            print('xxxxoooo ${_phoneController.text}');
-            return PhoneLoginPage(
-              phone: _phoneController.text,
-              zoneCode: _zoneController.text,
-            );
-          },
-        ),
-      );
-    } else {
-      // 登陆
-    }
+    } else {}
   }
 
   /// -------------------- UI --------------------
@@ -108,7 +100,16 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
 
   /// 构建标题+输入小部件
   Widget _buildTitleInputWidget() {
-    // 动画组件
+    return Container(
+      width: double.maxFinite,
+      color: Colors.white,
+      child: _buildPhoneLoginWidget(),
+    );
+  }
+
+  /// 构建手机号登录的Widgets
+  Widget _buildPhoneLoginWidget() {
+    // 动画组件 子部件 必须加key
     var animatedSwitcher = AnimatedSwitcher(
       duration: const Duration(milliseconds: 250),
       switchInCurve: Curves.easeInOut,
@@ -120,28 +121,19 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
           direction: AxisDirection.left, //右入左出
         );
       },
-      child:
-          _showPasswordWay ? _buildPhoneLoginWidget() : _buildQQLoginWidget(),
+      child: _showPasswordWay
+          ? _buildPasswordLoginWidget()
+          : _buildCaptchaLoginWidget(),
     );
 
     return Container(
-      width: double.maxFinite,
-      color: Colors.white,
-      child: animatedSwitcher,
-    );
-  }
-
-  /// 构建手机号登录的Widgets
-  Widget _buildPhoneLoginWidget() {
-    return Container(
-      key: ValueKey('phone'),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           LoginTitleWidget(title: '手机号登录'),
-          _buildSelectZoneWidget(),
+          _buildPhoneWidget(),
           _buildDivider(),
-          _buildZoneAndPhoneInputWidget(),
+          animatedSwitcher,
           _buildDivider(),
         ],
       ),
@@ -149,98 +141,29 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
     );
   }
 
-  /// 构建选择地区的Widget
-  Widget _buildSelectZoneWidget() {
+  /// 构建选择手机号的Widget
+  Widget _buildPhoneWidget() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-      child: InkWell(
-        onTap: () {},
-        child: Row(
-          children: <Widget>[
-            SizedBox(
-              width: 105.0,
-              child: Text(
-                '国家/地区',
-                style: TextStyle(
-                  color: Style.pTextColor,
-                  fontSize: 17.0,
-                ),
-              ),
-            ),
-            Expanded(
-              child: Text(
-                '中国大陆',
-                style: TextStyle(
-                  color: Style.pTextColor,
-                  fontSize: 17.0,
-                ),
-              ),
-            ),
-            Image.asset(
-              Constant.assetsImages + 'tableview_arrow_8x13.png',
-              width: 8.0,
-              height: 13.0,
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// 构建地区部和手机 输入小部件
-  Widget _buildZoneAndPhoneInputWidget() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Container(
-            width: 80.0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Expanded(
-                  child: MHTextField(
-                    controller: _zoneController,
-                    prefixMode: MHTextFieldWidgetMode.always,
-                    clearButtonMode: MHTextFieldWidgetMode.never,
-                    maxLength: 4,
-                    prefix: Text(
-                      '+',
-                      style: TextStyle(
-                        color: Style.pTextColor,
-                        fontSize: 17.0,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            width: 10.0,
-            padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-            decoration: BoxDecoration(
-              border: Border(
-                left: BorderSide(width: .5, color: Style.pDividerColor),
+          SizedBox(
+            width: 105.0,
+            child: Text(
+              '手机号',
+              style: TextStyle(
+                color: Style.pTextColor,
+                fontSize: 17.0,
               ),
-            ),
-            child: SizedBox(
-              height: 24.0,
-              width: 10.0,
             ),
           ),
           Expanded(
-            child: MHTextField(
-              controller: _phoneController,
-              hintText: '请填写手机号码',
-              onChanged: (value) {
-                // _phoneController.text = value;
-                setState(() {});
-              },
+            child: Text(
+              _phoneFormat,
+              style: TextStyle(
+                color: Style.pTextColor,
+                fontSize: 17.0,
+              ),
             ),
           ),
         ],
@@ -248,31 +171,10 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
     );
   }
 
-  /// 构建微信号/QQ号/邮箱登录的Widgets
-  Widget _buildQQLoginWidget() {
+  /// 构建密码登陆小部件
+  Widget _buildPasswordLoginWidget() {
     return Container(
-      key: ValueKey('account'),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          LoginTitleWidget(title: '微信号/QQ号/邮箱登录'),
-          _buildAccountOrPasswordWidget(_accountController, '账号', '微信号/QQ号/邮箱'),
-          _buildDivider(),
-          _buildAccountOrPasswordWidget(_passwordController, '密码', '请填写密码'),
-          _buildDivider(),
-        ],
-      ),
-      width: double.maxFinite,
-    );
-  }
-
-  /// 构建账号/密码小部件
-  Widget _buildAccountOrPasswordWidget(
-    TextEditingController controller,
-    String title,
-    String placeholder,
-  ) {
-    return Container(
+      key: ValueKey('password'),
       padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -281,7 +183,7 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
           SizedBox(
             width: 105.0,
             child: Text(
-              title,
+              '密码',
               style: TextStyle(
                 color: Style.pTextColor,
                 fontSize: 17.0,
@@ -290,11 +192,65 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
           ),
           Expanded(
             child: MHTextField(
-              controller: controller,
-              hintText: placeholder,
+              controller: _passwordController,
+              hintText: '请填写密码',
+              obscureText: true,
+              maxLength: 16,
               onChanged: (value) {
                 setState(() {});
               },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 构建验证码登陆小部件
+  Widget _buildCaptchaLoginWidget() {
+    return Container(
+      key: ValueKey('captcha'),
+      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          SizedBox(
+            width: 105.0,
+            child: Text(
+              '验证码',
+              style: TextStyle(
+                color: Style.pTextColor,
+                fontSize: 17.0,
+              ),
+            ),
+          ),
+          Expanded(
+            child: MHTextField(
+              controller: _captchaController,
+              hintText: '请输入验证码',
+              clearButtonMode: MHTextFieldWidgetMode.never,
+              maxLength: 6,
+              onChanged: (value) {
+                setState(() {});
+              },
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(3.0)),
+              border: Border.all(color: Color(0xFF353535)),
+            ),
+            child: InkWell(
+              onTap: () {},
+              child: Text(
+                '获取验证码',
+                style: TextStyle(
+                  color: Style.pTextColor,
+                  fontSize: 13.0,
+                ),
+              ),
             ),
           ),
         ],

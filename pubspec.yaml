@@ -27,6 +27,8 @@ dependencies:
   shared_preferences: ^0.5.3+4
   # 图片缓存 
   cached_network_image: ^1.1.1
+  # Flutter 常用工具库
+  flustars: ^0.2.6+1
 
 
 dev_dependencies:

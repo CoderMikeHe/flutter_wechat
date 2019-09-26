@@ -1,6 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_wechat/constant/constant.dart';
+
+import 'package:flutter_wechat/widgets/action_sheet/action_sheet.dart';
 
 import 'package:flutter_wechat/widgets/login/other_login_widget.dart';
 
@@ -17,12 +20,24 @@ class _OtherLoginPageState extends State<OtherLoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Container(
         child: _buildChidWidgets(),
       ),
     );
   }
 
+  /// -------------------- 事件 --------------------
+  /// 底部条 item 事件
+  void _bottomItemAction(int idx) {
+    // idx 0: 找回密码 1: 更多选项
+    if (idx == 0) {
+    } else {
+      _showActionSheet(context);
+    }
+  }
+
+  /// -------------------- UI --------------------
   // 构建整体部件
   Widget _buildChidWidgets() {
     // 头部
@@ -40,10 +55,9 @@ class _OtherLoginPageState extends State<OtherLoginPage> {
   /// 构建头部小部件
   Widget _buildHeaderWidget() {
     return Container(
-      color: Colors.red,
       padding: EdgeInsets.fromLTRB(16.0, 0, 16.0, 12.0),
       alignment: Alignment.bottomLeft,
-      height: 64.0,
+      height: kToolbarHeight + MediaQuery.of(context).padding.top,
       width: double.maxFinite,
       child: InkWell(
         child: Image.asset(
@@ -96,7 +110,9 @@ class _OtherLoginPageState extends State<OtherLoginPage> {
                 fontSize: 15.0,
               ),
             ),
-            onTap: () {},
+            onTap: () {
+              _bottomItemAction(0);
+            },
             splashColor: Colors.transparent,
             highlightColor: Colors.transparent,
           ),
@@ -119,11 +135,40 @@ class _OtherLoginPageState extends State<OtherLoginPage> {
                 fontSize: 15.0,
               ),
             ),
-            onTap: () {},
+            onTap: () {
+              _bottomItemAction(1);
+            },
             highlightColor: Colors.transparent,
             splashColor: Colors.transparent,
           ),
         ],
+      ),
+    );
+  }
+
+  /// 构建actionsheet
+  void _showActionSheet(BuildContext context) {
+    ActionSheet.show(
+      context,
+      actions: <Widget>[
+        ActionSheetAction(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('紧急冻结'),
+        ),
+        ActionSheetAction(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('前往微信安全中心'),
+        ),
+      ],
+      cancelButton: ActionSheetAction(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        child: Text('取消'),
       ),
     );
   }
