@@ -73,13 +73,6 @@ class _HomePage0 extends StatelessWidget {
                 print('取消');
               },
             ),
-            CupertinoDialogAction(
-              child: new Text('取消'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                print('取消');
-              },
-            ),
           ],
         );
       },
