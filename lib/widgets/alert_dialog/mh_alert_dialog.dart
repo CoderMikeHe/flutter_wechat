@@ -14,27 +14,32 @@ import 'package:flutter/material.dart';
 
 // TODO(abarth): These constants probably belong somewhere more general.
 
-/// 自定义AlertDialog
+/// 自定义类似微信AlertDialog （PS: https://weui.io/#dialog ）
 /// 源码参照 CupertinoAlertDialog
 /// 修改的
+/// CupertinoAlertDialog => MHAlertDialog
+/// CupertinoDialogAction => MHDialogAction
+/// 去掉 CupertinoPopupSurface 类
+/// CoderMikeHe Modify:
 
 const TextStyle _kCupertinoDialogTitleStyle = TextStyle(
   fontFamily: '.SF UI Display',
   inherit: false,
-  fontSize: 18.0,
-  fontWeight: FontWeight.w600,
+  fontSize: 17.0,
+  fontWeight: FontWeight.w700,
   color: CupertinoColors.black,
   letterSpacing: 0.48,
+  height: 1.4,
   textBaseline: TextBaseline.alphabetic,
 );
 
 const TextStyle _kCupertinoDialogContentStyle = TextStyle(
   fontFamily: '.SF UI Text',
   inherit: false,
-  fontSize: 13.4,
-  fontWeight: FontWeight.w400,
-  color: CupertinoColors.black,
-  height: 1.036,
+  fontSize: 17.0,
+  fontWeight: FontWeight.w500,
+  color: Color.fromRGBO(0, 0, 0, 0.5),
+  height: 1.4,
   letterSpacing: -0.25,
   textBaseline: TextBaseline.alphabetic,
 );
@@ -42,17 +47,19 @@ const TextStyle _kCupertinoDialogContentStyle = TextStyle(
 const TextStyle _kCupertinoDialogActionStyle = TextStyle(
   fontFamily: '.SF UI Text',
   inherit: false,
-  fontSize: 16.8,
-  fontWeight: FontWeight.w400,
-  color: CupertinoColors.activeBlue,
+  fontSize: 17.0,
+  fontWeight: FontWeight.w600,
+  color: Color.fromRGBO(0, 0, 0, 0.9),
   textBaseline: TextBaseline.alphabetic,
 );
 
 // iOS dialogs have a normal display width and another display width that is
 // used when the device is in accessibility mode. Each of these widths are
 // listed below.
-const double _kCupertinoDialogWidth = 270.0;
-const double _kAccessibilityCupertinoDialogWidth = 310.0;
+// CoderMikeHe Modify: 270.0 => 280.0
+const double _kCupertinoDialogWidth = 280.0;
+// CoderMikeHe Modify: 310.0 => 320.0
+const double _kAccessibilityCupertinoDialogWidth = 320.0;
 
 // _kCupertinoDialogBlurOverlayDecoration is applied to the blurred backdrop to
 // lighten the blurred image. Brightening is done to counteract the dark modal
@@ -65,15 +72,19 @@ const BoxDecoration _kCupertinoDialogBlurOverlayDecoration = BoxDecoration(
 );
 
 const double _kBlurAmount = 20.0;
-const double _kEdgePadding = 20.0;
-const double _kMinButtonHeight = 45.0;
+//
+const double _kEdgePadding = 24.0;
+const double _kMaxEdgePadding = 32.0;
+const double _kMinEdgePadding = 16.0;
+
+const double _kMinButtonHeight = 56.0;
 const double _kMinButtonFontSize = 10.0;
 const double _kDialogCornerRadius = 12.0;
 const double _kDividerThickness = 1.0;
 
 // Translucent white that is painted on top of the blurred backdrop as the
 // dialog's background color.
-const Color _kDialogColor = Color(0xC0FFFFFF);
+const Color _kDialogColor = Color(0xFFFFFFFF);
 
 // Translucent white that is painted on top of the blurred backdrop as the
 // background color of a pressed button.
@@ -101,8 +112,18 @@ const double _kMaxRegularTextScaleFactor = 1.4;
 // Accessibility mode on iOS is determined by the text scale factor that the
 // user has selected.
 bool _isInAccessibilityMode(BuildContext context) {
-  final MediaQueryData data = MediaQuery.of(context, nullOk: true);
-  return data != null && data.textScaleFactor > _kMaxRegularTextScaleFactor;
+  // CoderMikeHe Modify: 根据屏幕宽度 来设置alert width
+  // final MediaQueryData data = MediaQuery.of(context, nullOk: true);
+  // return data != null && data.textScaleFactor > _kMaxRegularTextScaleFactor;
+
+  final Orientation orientation = MediaQuery.of(context).orientation;
+  double w;
+  if (orientation == Orientation.portrait) {
+    w = MediaQuery.of(context).size.width;
+  } else {
+    w = MediaQuery.of(context).size.height;
+  }
+  return w > 320.0;
 }
 
 /// An iOS-style alert dialog.
@@ -118,7 +139,7 @@ bool _isInAccessibilityMode(BuildContext context) {
 /// are part of the title or content.
 ///
 /// To display action buttons that look like standard iOS dialog buttons,
-/// provide [CupertinoDialogAction]s for the [actions] given to this dialog.
+/// provide [MHDialogAction]s for the [actions] given to this dialog.
 ///
 /// Typically passed as the child widget to [showDialog], which displays the
 /// dialog.
@@ -127,14 +148,44 @@ bool _isInAccessibilityMode(BuildContext context) {
 ///
 ///  * [CupertinoPopupSurface], which is a generic iOS-style popup surface that
 ///    holds arbitrary content to create custom popups.
-///  * [CupertinoDialogAction], which is an iOS-style dialog button.
+///  * [MHDialogAction], which is an iOS-style dialog button.
 ///  * [AlertDialog], a Material Design alert dialog.
 ///  * <https://developer.apple.com/ios/human-interface-guidelines/views/alerts/>
-class CupertinoAlertDialog extends StatelessWidget {
+class MHAlertDialog extends StatelessWidget {
+  // 显示ActionSheet
+  static alert(BuildContext context,
+      {Key key,
+      Widget title,
+      Widget content,
+      List<Widget> actions,
+      ScrollController scrollController,
+      ScrollController actionScrollController,
+      barrierDismissible: false}) {
+    showDialog(
+      context: context,
+      barrierDismissible: barrierDismissible,
+      builder: (context) {
+        return MHAlertDialog(
+          key: key,
+          title: title,
+          content: content,
+          actions: actions,
+          scrollController: scrollController,
+          actionScrollController: actionScrollController,
+        );
+      },
+    );
+  }
+
+  // 隐藏ActionSheet
+  static hide(BuildContext context) {
+    Navigator.of(context).pop();
+  }
+
   /// Creates an iOS-style alert dialog.
   ///
   /// The [actions] must not be null.
-  const CupertinoAlertDialog({
+  const MHAlertDialog({
     Key key,
     this.title,
     this.content,
@@ -159,7 +210,7 @@ class CupertinoAlertDialog extends StatelessWidget {
   /// The (optional) set of actions that are displayed at the bottom of the
   /// dialog.
   ///
-  /// Typically this is a list of [CupertinoDialogAction] widgets.
+  /// Typically this is a list of [MHDialogAction] widgets.
   final List<Widget> actions;
 
   /// A scroll controller that can be used to control the scrolling of the
@@ -265,94 +316,18 @@ class CupertinoAlertDialog extends StatelessWidget {
 ///
 /// This dialog widget does not have any opinion about the contents of the
 /// dialog. Rather than using this widget directly, consider using
-/// [CupertinoAlertDialog], which implement a specific kind of dialog.
+/// [MHAlertDialog], which implement a specific kind of dialog.
 ///
 /// Push with `Navigator.of(..., rootNavigator: true)` when using with
 /// [CupertinoTabScaffold] to ensure that the dialog appears above the tabs.
 ///
 /// See also:
 ///
-///  * [CupertinoAlertDialog], which is a dialog with title, contents, and
+///  * [MHAlertDialog], which is a dialog with title, contents, and
 ///    actions.
 ///  * <https://developer.apple.com/ios/human-interface-guidelines/views/alerts/>
-@Deprecated(
-    'Use CupertinoAlertDialog for alert dialogs. Use CupertinoPopupSurface for custom popups.')
-class CupertinoDialog extends StatelessWidget {
-  /// Creates an iOS-style dialog.
-  const CupertinoDialog({
-    Key key,
-    this.child,
-  }) : super(key: key);
-
-  /// The widget below this widget in the tree.
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: SizedBox(
-        width: _kCupertinoDialogWidth,
-        child: CupertinoPopupSurface(
-          child: child,
-        ),
-      ),
-    );
-  }
-}
-
 /// Rounded rectangle surface that looks like an iOS popup surface, e.g., alert dialog
 /// and action sheet.
-///
-/// A [CupertinoPopupSurface] can be configured to paint or not paint a white
-/// color on top of its blurred area. Typical usage should paint white on top
-/// of the blur. However, the white paint can be disabled for the purpose of
-/// rendering divider gaps for a more complicated layout, e.g., [CupertinoAlertDialog].
-/// Additionally, the white paint can be disabled to render a blurred rounded
-/// rectangle without any color (similar to iOS's volume control popup).
-///
-/// See also:
-///
-///  * [CupertinoAlertDialog], which is a dialog with a title, content, and
-///    actions.
-///  * <https://developer.apple.com/ios/human-interface-guidelines/views/alerts/>
-class CupertinoPopupSurface extends StatelessWidget {
-  /// Creates an iOS-style rounded rectangle popup surface.
-  const CupertinoPopupSurface({
-    Key key,
-    this.isSurfacePainted = true,
-    this.child,
-  }) : super(key: key);
-
-  /// Whether or not to paint a translucent white on top of this surface's
-  /// blurred background. [isSurfacePainted] should be true for a typical popup
-  /// that contains content without any dividers. A popup that requires dividers
-  /// should set [isSurfacePainted] to false and then paint its own surface area.
-  ///
-  /// Some popups, like iOS's volume control popup, choose to render a blurred
-  /// area without any white paint covering it. To achieve this effect,
-  /// [isSurfacePainted] should be set to false.
-  final bool isSurfacePainted;
-
-  /// The widget below this widget in the tree.
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(_kDialogCornerRadius),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: _kBlurAmount, sigmaY: _kBlurAmount),
-        child: Container(
-          decoration: _kCupertinoDialogBlurOverlayDecoration,
-          child: Container(
-            color: isSurfacePainted ? _kDialogColor : null,
-            child: child,
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 // iOS style layout policy widget for sizing an alert dialog's content section and
 // action button section.
@@ -827,7 +802,7 @@ enum _AlertDialogSections {
   actionsSection,
 }
 
-// The "content section" of a CupertinoAlertDialog.
+// The "content section" of a MHAlertDialog.
 //
 // If title is missing, then only content is added.  If content is
 // missing, then only title is added. If both are missing, then it returns
@@ -868,8 +843,8 @@ class _CupertinoAlertContentSection extends StatelessWidget {
         padding: EdgeInsets.only(
           left: _kEdgePadding,
           right: _kEdgePadding,
-          bottom: content == null ? _kEdgePadding : 1.0,
-          top: _kEdgePadding * textScaleFactor,
+          bottom: content == null ? _kMaxEdgePadding : 16.0,
+          top: _kMaxEdgePadding,
         ),
         child: DefaultTextStyle(
           style: _kCupertinoDialogTitleStyle,
@@ -885,8 +860,8 @@ class _CupertinoAlertContentSection extends StatelessWidget {
           padding: EdgeInsets.only(
             left: _kEdgePadding,
             right: _kEdgePadding,
-            bottom: _kEdgePadding * textScaleFactor,
-            top: title == null ? _kEdgePadding : 1.0,
+            bottom: _kMaxEdgePadding,
+            top: title == null ? _kMaxEdgePadding : 1.0,
           ),
           child: DefaultTextStyle(
             style: _kCupertinoDialogContentStyle,
@@ -917,7 +892,7 @@ class _CupertinoAlertContentSection extends StatelessWidget {
   }
 }
 
-// The "actions section" of a [CupertinoAlertDialog].
+// The "actions section" of a [MHAlertDialog].
 //
 // See [_RenderCupertinoDialogActions] for details about action button sizing
 // and layout.
@@ -1054,15 +1029,15 @@ class _ActionButtonParentData extends MultiChildLayoutParentData {
   bool isPressed;
 }
 
-/// A button typically used in a [CupertinoAlertDialog].
+/// A button typically used in a [MHAlertDialog].
 ///
 /// See also:
 ///
-///  * [CupertinoAlertDialog], a dialog that informs the user about situations
+///  * [MHAlertDialog], a dialog that informs the user about situations
 ///    that require acknowledgement.
-class CupertinoDialogAction extends StatelessWidget {
+class MHDialogAction extends StatelessWidget {
   /// Creates an action for an iOS-style dialog.
-  const CupertinoDialogAction({
+  const MHDialogAction({
     this.onPressed,
     this.isDefaultAction = false,
     this.isDestructiveAction = false,
@@ -1083,7 +1058,7 @@ class CupertinoDialogAction extends StatelessWidget {
   /// Default buttons have bold text. Similar to
   /// [UIAlertController.preferredAction](https://developer.apple.com/documentation/uikit/uialertcontroller/1620102-preferredaction),
   /// but more than one action can have this attribute set to true in the same
-  /// [CupertinoAlertDialog].
+  /// [MHAlertDialog].
   ///
   /// This parameters defaults to false and cannot be null.
   final bool isDefaultAction;
@@ -1189,7 +1164,7 @@ class CupertinoDialogAction extends StatelessWidget {
     }
 
     if (isDestructiveAction) {
-      style = style.copyWith(color: CupertinoColors.destructiveRed);
+      style = style.copyWith(color: Color(0xFF576B95));
     }
 
     if (!enabled) {

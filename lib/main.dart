@@ -4,6 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_wechat/views/homepage/homepage.dart';
 import 'package:flutter_wechat/views/login/login_page.dart';
 
+import 'package:flutter_wechat/widgets/alert_dialog/mh_alert_dialog.dart';
+import 'package:flutter_wechat/widgets/loading_dialog/LoadingDialog.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -31,7 +34,7 @@ class MyApp extends StatelessWidget {
         //
         appBarTheme: AppBarTheme(elevation: 1),
       ),
-      home: login ? _HomePage0() : HomePage(title: 'Flutter WeChat'),
+      home: login ? LoginPage() : HomePage(title: 'Flutter WeChat'),
     );
   }
 }
@@ -43,7 +46,13 @@ class _HomePage0 extends StatelessWidget {
       body: CupertinoButton(
         child: Text("show dialog"),
         onPressed: () {
-          _showDialog(context);
+          // _showDialog(context);
+          final loading = LoadingDialog(buildContext: context);
+          loading.show();
+          // 延时1s执行返回
+          Future.delayed(Duration(seconds: 5), () {
+            loading.hide();
+          });
         },
       ),
     );
@@ -51,23 +60,23 @@ class _HomePage0 extends StatelessWidget {
 
   void _showDialog(BuildContext context) {
     showDialog(
-      // barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
-        return CupertinoAlertDialog(
+        return MHAlertDialog(
           // backgroundColor: Colors.yellow,
-          title: new Text('你确定要这样做吗?'),
-          content: new Text('你确定要这样做吗?'),
+          title: new Text('弹窗标题'),
+          content: new Text('弹窗内容，告知当前状态、信息和解决方法，描述文字尽量控制在三行内'),
           actions: <Widget>[
-            CupertinoDialogAction(
+            MHDialogAction(
               child: new Text('取消'),
               onPressed: () {
                 Navigator.of(context).pop();
                 print('取消');
               },
             ),
-            CupertinoDialogAction(
-              child: new Text('取消'),
+            MHDialogAction(
+              child: new Text('主操作'),
+              isDestructiveAction: true,
               onPressed: () {
                 Navigator.of(context).pop();
                 print('取消');

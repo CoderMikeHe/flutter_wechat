@@ -28,10 +28,12 @@ class MHTextField extends StatefulWidget {
     this.obscureText = false,
     this.maxLength,
     this.hintText,
+    TextInputType keyboardType,
   })  : assert(obscureText != null),
         assert(maxLength == null ||
             maxLength == TextField.noMaxLength ||
             maxLength > 0),
+        keyboardType = keyboardType ?? TextInputType.text,
         assert(prefixMode != null),
         assert(suffixMode != null),
         assert(clearButtonMode != null),
@@ -87,6 +89,9 @@ class MHTextField extends StatefulWidget {
 
   /// hintText
   final String hintText;
+
+  /// {@macro flutter.widgets.editableText.keyboardType}
+  final TextInputType keyboardType;
 
   /// 构建
   _MHTextFieldState createState() => _MHTextFieldState();
@@ -177,6 +182,7 @@ class _MHTextFieldState extends State<MHTextField> {
         ),
         // Fixed Bug：如果限制4个字符，会导致底部出现 0/4 这个鬼东西，影响布局
         // maxLength: 4,
+        keyboardType: widget.keyboardType,
         inputFormatters: formatters,
         cursorColor: Style.pTintColor,
         obscureText: widget.obscureText,

@@ -1,14 +1,19 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+
+import 'package:flustars/flustars.dart';
 
 import 'package:flutter_wechat/constant/constant.dart';
 import 'package:flutter_wechat/constant/style.dart';
-
 import 'package:flutter_wechat/utils/util.dart';
 
 import 'package:flutter_wechat/widgets/transition/slide_transition_x.dart';
 
 import 'package:flutter_wechat/widgets/login/login_title_widget.dart';
 import 'package:flutter_wechat/widgets/text_field/mh_text_field.dart';
+import 'package:flutter_wechat/widgets/alert_dialog/mh_alert_dialog.dart';
+import 'package:flutter_wechat/widgets/loading_dialog/LoadingDialog.dart';
 
 import 'package:flutter_wechat/views/login/phone_login/phone_login_page.dart';
 
@@ -49,12 +54,17 @@ class _PhoneLoginWidgetState extends State<PhoneLoginWidget> {
   // loginBtnTitle
   String get _loginBtnTitle => "登录";
 
-  // 屏幕宽
-  double _screenWidth = 0;
-  // 验证码名称
-  String captchaTitle = "获取验证码";
-  // 验证码是否不可点击
-  bool captchaBtnDisabled = false;
+  /// 验证码名称
+  String _captchaTitle = "获取验证码";
+
+  /// 验证码是否不可点击
+  bool _captchaBtnDisabled = false;
+
+  /// 定时器
+  Timer _timer;
+
+  /// _timerMaxCount 定时器最大时间, default is 60
+  int _timerMaxCount = 60;
 
   /// password控制输入
   final TextEditingController _passwordController =
@@ -67,18 +77,170 @@ class _PhoneLoginWidgetState extends State<PhoneLoginWidget> {
   @override
   void initState() {
     super.initState();
+
+    print('🔥上交友');
+    print(RegexUtil.isZh('abc'));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    // 关闭定时器
+    _cancelTimer();
   }
 
   @override
   Widget build(BuildContext context) {
-    _screenWidth = MediaQuery.of(context).size.width;
     return _buildChidWidgets();
   }
 
   /// -------------------- 事件 --------------------
+  /// 登陆事件
   void _login() {
+    // 按钮不可点击，则过滤
+    if (_loginBtnDisabled) return;
+
     if (_showPasswordWay) {
-    } else {}
+      // 密码登陆 验证账号+密码
+      // 1、验证phone 是不是正确 2、密码8-16位且不含中文
+      if (!RegexUtil.isMobileExact(widget.phone) ||
+          _passwordController.text.length < 8 ||
+          _passwordController.text.length > 16 ||
+          RegexUtil.isZh(_passwordController.text)) {
+        MHAlertDialog.alert(
+          context,
+          title: Text('账号或密码错误，请重新填写'),
+          actions: <Widget>[
+            MHDialogAction(
+              child: Text('确定'),
+              isDestructiveAction: true,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+        return;
+      }
+    } else {
+      // 1、验证phone 是不是正确 2、验证码登录 纯6位数字
+      if (!RegexUtil.isMobileExact(widget.phone) ||
+          _captchaController.text.length != 6 ||
+          !Util.pureDigitCharacters(_captchaController.text)) {
+        MHAlertDialog.alert(
+          context,
+          title: Text('验证码超时，请重新获取验证码'),
+          actions: <Widget>[
+            MHDialogAction(
+              child: Text('确定'),
+              isDestructiveAction: true,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+        return;
+      }
+    }
+
+    /// 配置数据
+    ///
+  }
+
+  /// 获取验证码事件
+  void _captchaAction() {
+    // 不可点击，则负略点击事件
+    if (_captchaBtnDisabled) return;
+
+    // 1、判断电话号码是否正确
+    if (!RegexUtil.isMobileExact(widget.phone)) {
+      MHAlertDialog.alert(
+        context,
+        title: Text('手机号码错误'),
+        content: Text('你输入的是一个无效的手机号码'),
+        actions: <Widget>[
+          MHDialogAction(
+            child: Text('确定'),
+            isDestructiveAction: true,
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+      return;
+    }
+
+    // 2、弹出有提示
+    final content = "我们将发送验证码短信到这个号码：" + _phoneFormat;
+    MHAlertDialog.alert(
+      context,
+      title: Text('确认手机号码'),
+      content: Text(content),
+      actions: <Widget>[
+        MHDialogAction(
+          child: Text('取消'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        MHDialogAction(
+          child: Text('确定'),
+          isDestructiveAction: true,
+          onPressed: () {
+            Navigator.of(context).pop();
+            // 获取验证码
+            _fetchCaptcha();
+          },
+        ),
+      ],
+    );
+  }
+
+  /// 获取验证码
+  void _fetchCaptcha() {
+    setState(() {
+      // 获取验证码
+      _captchaBtnDisabled = true;
+      _captchaTitle = "发送中...";
+    });
+
+    // 延时1s执行返回
+    Future.delayed(Duration(seconds: 1), () {
+      setState(() {
+        _timerMaxCount = 60;
+        _captchaTitle = "60s后重新发送";
+      });
+
+      // 开启一个定时器
+      //设置 1 秒回调一次
+      const period = const Duration(seconds: 1);
+      _timer = Timer.periodic(period, _timerValueChanged);
+    });
+  }
+
+  /// 定时器事件
+  _timerValueChanged(Timer timer) {
+    setState(() {
+      _timerMaxCount--;
+      if (_timerMaxCount == 0) {
+        // 关掉定时器
+        _cancelTimer();
+        _captchaBtnDisabled = false;
+        _captchaTitle = "获取验证码";
+        return;
+      }
+      _captchaTitle = "$_timerMaxCount后重新发送";
+    });
+  }
+
+  /// 取消定时器
+  void _cancelTimer() {
+    if (_timer != null) {
+      _timer.cancel();
+      _timer = null;
+    }
   }
 
   /// -------------------- UI --------------------
@@ -228,6 +390,7 @@ class _PhoneLoginWidgetState extends State<PhoneLoginWidget> {
           Expanded(
             child: MHTextField(
               controller: _captchaController,
+              keyboardType: TextInputType.number,
               hintText: '请输入验证码',
               clearButtonMode: MHTextFieldWidgetMode.never,
               maxLength: 6,
@@ -240,14 +403,19 @@ class _PhoneLoginWidgetState extends State<PhoneLoginWidget> {
             padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(3.0)),
-              border: Border.all(color: Color(0xFF353535)),
+              border: Border.all(
+                  color: _captchaBtnDisabled
+                      ? Color(0xFF999999)
+                      : Color(0xFF353535)),
             ),
             child: InkWell(
-              onTap: () {},
+              onTap: _captchaAction,
               child: Text(
-                '获取验证码',
+                _captchaTitle,
                 style: TextStyle(
-                  color: Style.pTextColor,
+                  color: _captchaBtnDisabled
+                      ? Color(0xFF999999)
+                      : Style.pTextColor,
                   fontSize: 13.0,
                 ),
               ),

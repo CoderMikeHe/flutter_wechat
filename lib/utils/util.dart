@@ -29,4 +29,16 @@ class Util {
     }
     return mobile;
   }
+
+  /// 纯数字 ^[0-9]*$
+  static bool pureDigitCharacters(str) {
+    final String regex = "^[0-9]*\$";
+    return matches(regex, str);
+  }
+
+  /// 匹配
+  static bool matches(String regex, String input) {
+    if (input == null || input.isEmpty) return false;
+    return new RegExp(regex).hasMatch(input);
+  }
 }
