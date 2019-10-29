@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_wechat/routers/fluro_navigator.dart';
+import 'package:flutter_wechat/views/profile/profile_rourer.dart';
+
 import 'package:flutter_wechat/constant/constant.dart';
 
 import 'package:flutter_wechat/model/common/common_item.dart';
 import 'package:flutter_wechat/model/common/common_group.dart';
 import 'package:flutter_wechat/widgets/common/common_group_widget.dart';
 
-import 'package:flutter_wechat/views/profile/setting/setting_page.dart';
 import 'package:flutter_wechat/views/profile/user_info/user_info_page.dart';
 
 import 'package:flutter_wechat/views/profile/widgets/profile_header.dart';
 
-class Profile extends StatefulWidget {
-  Profile({Key key}) : super(key: key);
+class ProfilePage extends StatefulWidget {
+  ProfilePage({Key key}) : super(key: key);
 
-  _ProfileState createState() => _ProfileState();
+  _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfileState extends State<Profile> {
+class _ProfilePageState extends State<ProfilePage> {
   /// 数据源
   List<CommonGroup> dataSource = [];
 
@@ -67,11 +69,7 @@ class _ProfileState extends State<Profile> {
       title: "设置",
       icon: Constant.assetsImages + "MoreSetting_25x25.png",
       onTap: (_) {
-        Navigator.of(context).push(new MaterialPageRoute(
-          builder: (_) {
-            return SettingPage();
-          },
-        ));
+        NavigatorUtils.push(context, ProfileRouter.settingPage);
       },
     );
     final group2 = CommonGroup(

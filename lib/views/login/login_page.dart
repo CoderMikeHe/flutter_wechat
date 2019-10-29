@@ -1,7 +1,11 @@
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_wechat/constant/constant.dart';
 import 'package:flutter_wechat/constant/style.dart';
+
+import 'package:flutter_wechat/routers/fluro_navigator.dart';
+import 'login_router.dart';
 
 import 'package:flutter_wechat/views/login/language_picker/language_picker_page.dart';
 import 'package:flutter_wechat/views/login/current_login/current_login_page.dart';
@@ -24,13 +28,8 @@ class _LoginPageState extends State<LoginPage> {
 
   // 跳转登陆
   _login() {
-    Navigator.of(context).push(
-      new MaterialPageRoute(
-        builder: (_) {
-          return OtherLoginPage();
-        },
-      ),
-    );
+    NavigatorUtils.push(context, LoginRouter.otherLoginPage,
+        transition: TransitionType.inFromBottom);
   }
 
   // 跳转注册

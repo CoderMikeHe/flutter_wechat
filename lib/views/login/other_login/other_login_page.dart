@@ -65,8 +65,8 @@ class _OtherLoginPageState extends State<OtherLoginPage> {
               (_closeBtnHighlight
                   ? 'wsactionsheet_close_normal_16x16.png'
                   : 'wsactionsheet_close_press_16x16.png'),
-          width: 20.0,
-          height: 20.0,
+          width: 18.0,
+          height: 18.0,
         ),
         onHighlightChanged: (highlight) {
           print(highlight);

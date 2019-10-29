@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_wechat/views/mainframe/mainframe.dart';
 import 'package:flutter_wechat/views/contacts/contacts.dart';
 import 'package:flutter_wechat/views/discover/discover.dart';
-import 'package:flutter_wechat/views/profile/profile.dart';
+import 'package:flutter_wechat/views/profile/profile_page.dart';
 
 class _TabBarItem {
   String title, image, selectedImage;
@@ -68,7 +68,11 @@ class _HomePageState extends State<HomePage> {
         ),
       ));
     }
-    list..add(MainFrame())..add(Contacts())..add(Discover())..add(Profile());
+    list
+      ..add(MainFrame())
+      ..add(Contacts())
+      ..add(Discover())
+      ..add(ProfilePage());
   }
 
   @override

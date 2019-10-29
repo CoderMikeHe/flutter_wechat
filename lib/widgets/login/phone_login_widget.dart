@@ -1,7 +1,9 @@
 import 'dart:async';
-
+import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/material.dart';
 
+import 'package:fluro/fluro.dart';
 import 'package:flustars/flustars.dart';
 
 import 'package:flutter_wechat/constant/constant.dart';
@@ -10,12 +12,16 @@ import 'package:flutter_wechat/utils/util.dart';
 
 import 'package:flutter_wechat/widgets/transition/slide_transition_x.dart';
 
+import 'package:flutter_wechat/routers/fluro_navigator.dart';
+import 'package:flutter_wechat/routers/routers.dart';
+
 import 'package:flutter_wechat/widgets/login/login_title_widget.dart';
 import 'package:flutter_wechat/widgets/text_field/mh_text_field.dart';
 import 'package:flutter_wechat/widgets/alert_dialog/mh_alert_dialog.dart';
-import 'package:flutter_wechat/widgets/loading_dialog/LoadingDialog.dart';
+import 'package:flutter_wechat/widgets/loading_dialog/loading_dialog.dart';
 
-import 'package:flutter_wechat/views/login/phone_login/phone_login_page.dart';
+import 'package:flutter_wechat/model/user/user.dart';
+import 'package:flutter_wechat/utils/service/account_service.dart';
 
 class PhoneLoginWidget extends StatefulWidget {
   PhoneLoginWidget({Key key, this.phone, this.zoneCode}) : super(key: key);
@@ -77,9 +83,6 @@ class _PhoneLoginWidgetState extends State<PhoneLoginWidget> {
   @override
   void initState() {
     super.initState();
-
-    print('🔥上交友');
-    print(RegexUtil.isZh('abc'));
   }
 
   @override
@@ -145,7 +148,32 @@ class _PhoneLoginWidgetState extends State<PhoneLoginWidget> {
     }
 
     /// 配置数据
-    ///
+    final loading = LoadingDialog(buildContext: context);
+
+    /// show loading
+    loading.show();
+    // 延时1s执行返回,模拟网络加载
+    Future.delayed(Duration(seconds: 1), () async {
+      // hide loading
+      loading.hide();
+      // 获取用户信息
+      final jsonStr =
+          await rootBundle.loadString(Constant.mockData + 'user.json');
+      var userJson = json.decode(jsonStr);
+      final User user = User.fromJson(userJson);
+      // 配置用户信息
+      user.qq = "491273090";
+      user.email = "491273090" + "@qq.com"; // PS：机智，拼接成QQ邮箱
+      user.phone = widget.phone; // PS：瞎写的
+      user.channel = "Mobile Phone";
+
+      // 用户登陆
+      AccountService.sharedInstance.loginUser(user, rawLogin: user.phone);
+
+      // 登陆主界面 清掉堆栈
+      NavigatorUtils.push(context, Routers.homePage,
+          clearStack: true, transition: TransitionType.fadeIn);
+    });
   }
 
   /// 获取验证码事件
@@ -260,7 +288,7 @@ class _PhoneLoginWidgetState extends State<PhoneLoginWidget> {
     );
   }
 
-  /// 构建标题+输入小部件
+  /// 构建标题+输��小部件
   Widget _buildTitleInputWidget() {
     return Container(
       width: double.maxFinite,
@@ -271,13 +299,13 @@ class _PhoneLoginWidgetState extends State<PhoneLoginWidget> {
 
   /// 构建手机号登录的Widgets
   Widget _buildPhoneLoginWidget() {
-    // 动画组件 子部件 必须加key
+    // 动画组件 ��部件 必须加key
     var animatedSwitcher = AnimatedSwitcher(
       duration: const Duration(milliseconds: 250),
       switchInCurve: Curves.easeInOut,
       switchOutCurve: Curves.easeInOut,
       transitionBuilder: (Widget child, Animation<double> animation) {
-        //执行缩放动画
+        //执行缩放动���
         return SlideTransitionX(
           child: child, position: animation,
           direction: AxisDirection.left, //右入左出

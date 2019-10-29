@@ -44,7 +44,8 @@ class CommonPluginItem extends CommonItem {
 
 class CommonCenterItem extends CommonItem {
   /// 构造函数
-  CommonCenterItem({String title}) : super(title: title);
+  CommonCenterItem({String title, CommonGestureTapCallback onTap})
+      : super(title: title, onTap: onTap);
 }
 
 /// 没有箭头的item

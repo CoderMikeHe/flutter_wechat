@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
 
 class CacheKey {
+  /// 应用缓存的版本，主要用来判断新特性
+  static const String appVersionKey = "app_version_key";
+
+  /// 登陆账号
+  static const String rawLoginKey = "raw_login_key";
+
+  /// 微信登陆账号信息
+  static const String wechatUserDataKey = "wechat_user_data_key";
+
   /// ---- 通用
   /// 听筒模式
-  static const String receiverModeKey = "receiver_mode__key";
+  static const String receiverModeKey = "receiver_mode_key";
 
   // 设置静态属性 本项目规定：大写的属性认为是静态属性且只读
   /// ---- 应用

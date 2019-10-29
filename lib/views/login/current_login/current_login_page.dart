@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 
+import 'package:fluro/fluro.dart';
+
 import 'package:flutter_wechat/constant/constant.dart';
+
+import 'package:flutter_wechat/routers/fluro_navigator.dart';
+import 'package:flutter_wechat/views/login/login_router.dart';
+import 'package:flutter_wechat/routers/routers.dart';
 
 import 'package:flutter_wechat/widgets/login/current_login_widget.dart';
 
-import 'package:flutter/src/material/constants.dart' show kToolbarHeight;
+import 'package:flutter_wechat/widgets/action_sheet/action_sheet.dart';
 
 class CurrentLoginPage extends StatefulWidget {
   CurrentLoginPage({Key key}) : super(key: key);
@@ -145,11 +151,50 @@ class _CurrentLoginPageState extends State<CurrentLoginPage> {
                 fontSize: 15.0,
               ),
             ),
-            onTap: () {},
+            onTap: () {
+              _showActionSheet(context);
+            },
             highlightColor: Colors.transparent,
             splashColor: Colors.transparent,
           ),
         ],
+      ),
+    );
+  }
+
+  /// 构建actionsheet
+  void _showActionSheet(BuildContext context) {
+    ActionSheet.show(
+      context,
+      actions: <Widget>[
+        ActionSheetAction(
+          onPressed: () {
+            Navigator.of(context).pop();
+            NavigatorUtils.push(context, LoginRouter.otherLoginPage,
+                transition: TransitionType.inFromBottom);
+          },
+          child: Text('登陆其他账号'),
+        ),
+        ActionSheetAction(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('前往微信安全中心'),
+        ),
+        ActionSheetAction(
+          onPressed: () {
+            Navigator.of(context).pop();
+            NavigatorUtils.push(context, LoginRouter.registerPage,
+                transition: TransitionType.inFromBottom);
+          },
+          child: Text('注册'),
+        ),
+      ],
+      cancelButton: ActionSheetAction(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        child: Text('取消'),
       ),
     );
   }

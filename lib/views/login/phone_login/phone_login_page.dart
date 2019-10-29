@@ -4,7 +4,6 @@ import 'package:flutter_wechat/constant/constant.dart';
 
 import 'package:flutter_wechat/widgets/login/phone_login_widget.dart';
 
-import 'package:flutter_wechat/views/login/current_login/current_login_page.dart';
 import 'package:flutter_wechat/widgets/action_sheet/action_sheet.dart';
 
 class PhoneLoginPage extends StatefulWidget {

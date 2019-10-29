@@ -1,14 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'dart:async';
+import 'dart:convert';
+import 'package:fluro/fluro.dart';
+import 'package:flustars/flustars.dart';
 
 import 'package:flutter_wechat/constant/constant.dart';
 import 'package:flutter_wechat/constant/style.dart';
+import 'package:flutter_wechat/utils/util.dart';
 
 import 'package:flutter_wechat/widgets/transition/slide_transition_x.dart';
 
+import 'package:flutter_wechat/routers/fluro_navigator.dart';
+import 'package:flutter_wechat/views/login/login_router.dart';
+import 'package:flutter_wechat/routers/routers.dart';
+
 import 'package:flutter_wechat/widgets/login/login_title_widget.dart';
 import 'package:flutter_wechat/widgets/text_field/mh_text_field.dart';
+import 'package:flutter_wechat/widgets/alert_dialog/mh_alert_dialog.dart';
+import 'package:flutter_wechat/widgets/loading_dialog/loading_dialog.dart';
 
-import 'package:flutter_wechat/views/login/phone_login/phone_login_page.dart';
+import 'package:flutter_wechat/model/user/user.dart';
+import 'package:flutter_wechat/utils/service/account_service.dart';
 
 class OtherLoginWidget extends StatefulWidget {
   OtherLoginWidget({Key key}) : super(key: key);
@@ -73,19 +86,59 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
     }
     if (_showPasswordWay) {
       // 跳转到手机登陆
-      Navigator.of(context).push(
-        new MaterialPageRoute(
-          builder: (_) {
-            print('xxxxoooo ${_phoneController.text}');
-            return PhoneLoginPage(
-              phone: _phoneController.text,
-              zoneCode: _zoneController.text,
-            );
-          },
-        ),
-      );
+      NavigatorUtils.push(context,
+          '${LoginRouter.phoneLoginPage}?phone=${_phoneController.text}&zone_code=${_zoneController.text}');
     } else {
       // 登陆
+      // 对账号做验证
+      // 1、正确的QQ号 2、密码8-16位且不含中文
+      if (!Util.validQQ(_accountController.text) ||
+          _passwordController.text.length < 8 ||
+          _passwordController.text.length > 16 ||
+          RegexUtil.isZh(_passwordController.text)) {
+        MHAlertDialog.alert(
+          context,
+          title: Text('账号或密码错误，请重新填写'),
+          actions: <Widget>[
+            MHDialogAction(
+              child: Text('确定'),
+              isDestructiveAction: true,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+        return;
+      }
+
+      /// 配置数据
+      final loading = LoadingDialog(buildContext: context);
+
+      /// show loading
+      loading.show();
+      // 延时1s执行返回,模拟网络加载
+      Future.delayed(Duration(seconds: 1), () async {
+        // hide loading
+        loading.hide();
+        // 获取用户信息
+        final jsonStr =
+            await rootBundle.loadString(Constant.mockData + 'user.json');
+        var userJson = json.decode(jsonStr);
+        final User user = User.fromJson(userJson);
+        // 配置用户信息
+        user.qq = _accountController.text;
+        user.email = _accountController.text + "@qq.com"; // PS：机智，拼接成QQ邮箱
+        user.phone = '13874385438'; // PS：瞎写的
+        user.channel = "QQ";
+
+        // 用户登陆
+        AccountService.sharedInstance.loginUser(user, rawLogin: user.qq);
+
+        // 登陆主界面 清掉堆栈
+        NavigatorUtils.push(context, Routers.homePage,
+            clearStack: true, transition: TransitionType.fadeIn);
+      });
     }
   }
 
@@ -258,7 +311,8 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
           LoginTitleWidget(title: '微信号/QQ号/邮箱登录'),
           _buildAccountOrPasswordWidget(_accountController, '账号', '微信号/QQ号/邮箱'),
           _buildDivider(),
-          _buildAccountOrPasswordWidget(_passwordController, '密码', '请填写密码'),
+          _buildAccountOrPasswordWidget(_passwordController, '密码', '请填写密码',
+              obscure: true),
           _buildDivider(),
         ],
       ),
@@ -268,10 +322,8 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
 
   /// 构建账号/密码小部件
   Widget _buildAccountOrPasswordWidget(
-    TextEditingController controller,
-    String title,
-    String placeholder,
-  ) {
+      TextEditingController controller, String title, String placeholder,
+      {bool obscure = false}) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
       child: Row(
@@ -292,6 +344,7 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
             child: MHTextField(
               controller: controller,
               hintText: placeholder,
+              obscureText: obscure,
               onChanged: (value) {
                 setState(() {});
               },

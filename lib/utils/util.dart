@@ -31,9 +31,27 @@ class Util {
   }
 
   /// 纯数字 ^[0-9]*$
-  static bool pureDigitCharacters(str) {
+  static bool pureDigitCharacters(String input) {
     final String regex = "^[0-9]*\$";
-    return matches(regex, str);
+    return matches(regex, input);
+  }
+
+  // 🔥是否为正确的QQ号码、微信号、QQ邮箱
+  // - [微信号正则校验，qq正则，邮箱正则,英文名正则](https://blog.csdn.net/qq_29091239/article/details/80075981)
+  // - [微信号正则校验](https://blog.csdn.net/unknowna/article/details/50524529)
+  static bool validQQ(String input) {
+    final String regex = '^[1-9][0-9]{4,9}\$';
+    return matches(regex, input);
+  }
+
+  static bool validWeChatId(String input) {
+    final String regex = '^[a-zA-Z]{1}[-_a-zA-Z0-9]{5,19}\$';
+    return matches(regex, input);
+  }
+
+  static bool validQQMail(String input) {
+    final String regex = '^[1-9][0-9]{4,9}@qq\.com\$';
+    return matches(regex, input);
   }
 
   /// 匹配
