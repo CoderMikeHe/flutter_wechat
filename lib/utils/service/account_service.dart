@@ -3,6 +3,7 @@ import 'package:flutter_wechat/constant/cache_key.dart';
 import 'package:flutter_wechat/model/user/user.dart';
 export 'package:flutter_wechat/model/user/user.dart';
 
+/// 处理账号登陆相关的问题
 class AccountService {
   // 如果一个函数的构造方法并不总是返回一个新的对象的时候，可以使用factory，
   // 比如从缓存中获取一个实例并返回或者返回一个子类型的实例

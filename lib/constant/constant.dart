@@ -10,6 +10,12 @@ class Constant {
   /// 新特性模块相关的资源
   static const String assetsImagesNewFeature = 'assets/images/new_feature/';
 
+  /// 联系人模块相关的资源
+  static const String assetsImagesContacts = 'assets/images/contacts/';
+
+  /// 联系人模块相关的资源
+  static const String assetsImagesSearch = 'assets/images/search/';
+
   /// 本地mock数据json
   static const String mockData = 'mock/';
 

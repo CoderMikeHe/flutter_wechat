@@ -1,4 +1,6 @@
-class User {
+import 'package:azlistview/azlistview.dart';
+
+class User extends ISuspensionBean {
   String screenName;
   String idstr;
   String profileImageUrl;
@@ -13,23 +15,37 @@ class User {
   String phone;
   String channel;
   String zoneCode;
+  List phones;
+  List pictures;
+  String remarks;
 
-  User({
-    this.screenName,
-    this.idstr,
-    this.profileImageUrl,
-    this.avatarLarge,
-    this.coverImageUrl,
-    this.coverImage,
-    this.wechatId,
-    this.featureSign,
-    this.gender,
-    this.qq,
-    this.email,
-    this.phone,
-    this.channel,
-    this.zoneCode,
-  });
+  /// 用于通讯录排序
+  String tagIndex;
+  String screenNamePinyin;
+  @override
+  String getSuspensionTag() => tagIndex;
+
+  /// 构造函数
+  User(
+      {this.screenName,
+      this.idstr,
+      this.profileImageUrl,
+      this.avatarLarge,
+      this.coverImageUrl,
+      this.coverImage,
+      this.wechatId,
+      this.featureSign,
+      this.gender,
+      this.qq,
+      this.email,
+      this.phone,
+      this.channel,
+      this.zoneCode,
+      this.phones,
+      this.pictures,
+      this.remarks,
+      this.screenNamePinyin,
+      this.tagIndex});
 
   User.fromJson(Map<String, dynamic> json) {
     screenName = json['screen_name'];
@@ -46,6 +62,11 @@ class User {
     phone = json['phone'];
     channel = json['channel'];
     zoneCode = json['zoneCode'];
+    phones = json['phones'];
+    pictures = json['pictures'];
+    remarks = json['remarks'];
+    screenNamePinyin = json['screenNamePinyin'];
+    tagIndex = json['tagIndex'];
   }
 
   Map<String, dynamic> toJson() {
@@ -64,6 +85,11 @@ class User {
     data['phone'] = this.phone;
     data['channel'] = this.channel;
     data['zoneCode'] = this.zoneCode;
+    data['phones'] = this.phones;
+    data['pictures'] = this.pictures;
+    data['remarks'] = this.remarks;
+    data['screenNamePinyin'] = this.screenNamePinyin;
+    data['tagIndex'] = this.tagIndex;
     return data;
   }
 }

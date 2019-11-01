@@ -41,6 +41,10 @@ dependencies:
   package_info: ^0.4.0+10
   # WebView插件 https://github.com/flutter/plugins/tree/master/packages/webview_flutter
   webview_flutter: 0.3.15+1
+  # Flutter 城市列表，联系人列表，索引&悬停 https://github.com/flutterchina/azlistview
+  azlistview: ^0.1.2
+  # Dart 汉字转拼音 https://github.com/flutterchina/lpinyin
+  lpinyin: ^1.0.7
 
 dev_dependencies:
   flutter_test:
@@ -63,6 +67,8 @@ flutter:
    - assets/images/
    - assets/images/login/
    - assets/images/new_feature/
+   - assets/images/contacts/
+   - assets/images/search/
    - mock/
 
   # An image asset can refer to one or more resolution-specific "variants", see

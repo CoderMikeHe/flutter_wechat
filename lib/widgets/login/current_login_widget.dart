@@ -256,7 +256,7 @@ class _CurrentLoginWidgetState extends State<CurrentLoginWidget> {
     );
   }
 
-  /// 获取验���码
+  /// 获取验正码
   void _fetchCaptcha() {
     setState(() {
       // 获取验证��

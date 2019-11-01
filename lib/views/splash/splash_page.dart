@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 
 import 'package:flustars/flustars.dart';
@@ -18,6 +16,7 @@ import 'package:flutter_wechat/constant/cache_key.dart';
 import 'package:flutter_wechat/constant/constant.dart';
 
 import 'package:flutter_wechat/utils/service/account_service.dart';
+import 'package:flutter_wechat/utils/service/contacts_service.dart';
 
 /// 闪屏跳转模式
 enum MHSplashSkipMode {
@@ -47,6 +46,9 @@ class _SplashPageState extends State<SplashPage> {
       // widget渲染完成。
       // App启动时读取Sp数据，需要异步等待Sp初始化完成。必须保证它 优先初始化。
       await SpUtil.getInstance();
+
+      // 获取一下通讯录数据，理论上是在跳转到主页时去请求
+      ContactsService.sharedInstance;
 
       /// 获取App信息
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
