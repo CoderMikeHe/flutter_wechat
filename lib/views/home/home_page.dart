@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import 'package:flutter_wechat/constant/constant.dart';
+
 import 'package:flutter_wechat/views/mainframe/mainframe.dart';
-import 'package:flutter_wechat/views/contacts/contacts.dart';
+import 'package:flutter_wechat/views/contacts/contacts_page.dart';
 import 'package:flutter_wechat/views/discover/discover.dart';
 import 'package:flutter_wechat/views/profile/profile_page.dart';
 
@@ -29,6 +33,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   static List tabData = [
+    // 7.0.0-
+    // _TabBarItem('微信', 'assets/images/tabbar_mainframe_25x23.png',
+    //     'assets/images/tabbar_mainframeHL_25x23.png'),
+    // _TabBarItem('通讯录', 'assets/images/tabbar_contacts_27x23.png',
+    //     'assets/images/tabbar_contactsHL_27x23.png'),
+    // _TabBarItem('发现', 'assets/images/tabbar_discover_23x23.png',
+    //     'assets/images/tabbar_discoverHL_23x23.png'),
+    // _TabBarItem('我', 'assets/images/tabbar_me_23x23.png',
+    //     'assets/images/tabbar_meHL_23x23.png'),
+    // 7.0.0+
     _TabBarItem('微信', 'assets/images/tabbar_mainframe_25x23.png',
         'assets/images/tabbar_mainframeHL_25x23.png'),
     _TabBarItem('通讯录', 'assets/images/tabbar_contacts_27x23.png',
@@ -36,7 +50,7 @@ class _HomePageState extends State<HomePage> {
     _TabBarItem('发现', 'assets/images/tabbar_discover_23x23.png',
         'assets/images/tabbar_discoverHL_23x23.png'),
     _TabBarItem('我', 'assets/images/tabbar_me_23x23.png',
-        'assets/images/tabbar_meHL_23x23.png')
+        'assets/images/tabbar_meHL_23x23.png'),
   ];
 
   String appBarTitle = "微信";
@@ -51,10 +65,14 @@ class _HomePageState extends State<HomePage> {
     for (int i = 0; i < tabData.length; i++) {
       final item = tabData[i];
       myTabs.add(BottomNavigationBarItem(
-        icon: Image.asset(
-          item.image,
-          width: 25.0,
-          height: 23.0,
+        // icon: Image.asset(
+        //   item.image,
+        //   width: 25.0,
+        //   height: 23.0,
+        // ),
+        icon: new SvgPicture.asset(
+          Constant.assetsImagesContacts + 'icons_outlined_add-friends.svg',
+          color: Color(0xFF333333),
         ),
         activeIcon: Image.asset(
           item.selectedImage,
@@ -70,7 +88,7 @@ class _HomePageState extends State<HomePage> {
     }
     list
       ..add(MainFrame())
-      ..add(Contacts())
+      ..add(ContactsPage())
       ..add(Discover())
       ..add(ProfilePage());
   }

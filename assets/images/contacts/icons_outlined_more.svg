@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>icons_outlined_more</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="icons_outlined_more" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="common_icons_more" fill="#000000">
+            <path d="M6.75,12 C6.75,12.96635 5.96635,13.75 5,13.75 C4.03365,13.75 3.25,12.96635 3.25,12 C3.25,11.0333 4.03365,10.25 5,10.25 C5.96635,10.25 6.75,11.0333 6.75,12 Z M12,10.25 C12.96635,10.25 13.75,11.0333 13.75,12 C13.75,12.96635 12.96635,13.75 12,13.75 C11.03365,13.75 10.25,12.96635 10.25,12 C10.25,11.0333 11.03365,10.25 12,10.25 Z M19,10.25 C19.96635,10.25 20.75,11.0333 20.75,12 C20.75,12.96635 19.96635,13.75 19,13.75 C18.03365,13.75 17.25,12.96635 17.25,12 C17.25,11.0333 18.03365,10.25 19,10.25 Z" id="Combined-Shape"></path>
+        </g>
+    </g>
+</svg>

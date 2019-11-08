@@ -95,7 +95,7 @@ class ProfileHeader extends StatelessWidget {
                                 ),
                               ),
                               Image.asset(
-                                Constant.assetsImages +
+                                Constant.assetsImagesArrow +
                                     'tableview_arrow_8x13.png',
                                 width: 8.0,
                                 height: 13.0,

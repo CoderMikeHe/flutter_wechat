@@ -10,7 +10,7 @@ import 'package:flutter_wechat/views/login/login_router.dart';
 import 'package:flutter_wechat/views/profile/profile_rourer.dart';
 
 import 'package:flutter_wechat/widgets/common/common_group_widget.dart';
-import 'package:flutter_wechat/widgets/action_sheet/action_sheet.dart';
+import 'package:flutter_wechat/components/action_sheet/action_sheet.dart';
 import 'package:flutter_wechat/widgets/loading_dialog/loading_dialog.dart';
 
 import 'package:flutter_wechat/views/profile/general/general_page.dart';

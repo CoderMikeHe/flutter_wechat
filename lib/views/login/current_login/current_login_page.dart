@@ -10,7 +10,7 @@ import 'package:flutter_wechat/routers/routers.dart';
 
 import 'package:flutter_wechat/widgets/login/current_login_widget.dart';
 
-import 'package:flutter_wechat/widgets/action_sheet/action_sheet.dart';
+import 'package:flutter_wechat/components/action_sheet/action_sheet.dart';
 
 class CurrentLoginPage extends StatefulWidget {
   CurrentLoginPage({Key key}) : super(key: key);

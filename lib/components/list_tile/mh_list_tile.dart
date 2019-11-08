@@ -209,7 +209,7 @@ class _MHListTileState extends State<MHListTile> {
     }
 
     if (widget.trailing != null) {
-      children.add(widget.leading);
+      children.add(widget.trailing);
     }
 
     return Row(

@@ -107,7 +107,7 @@ class CacheKey {
   /// 自动下载
   static const String autoDownloadKey = "auto_download_key";
 
-  /// 照片
+  /// 不让他
   static const String resourcePictureKey = "resource_picture_key";
 
   /// 视频
@@ -115,4 +115,18 @@ class CacheKey {
 
   /// 自动播放
   static const String videoAutoPlayKey = "video_auto_play_key";
+
+  /// ---- 联系人-资料设置
+  /// 设为星标朋友
+  static const String settingToStarFriendKey = "setting_to_star_friend_key";
+
+  /// 不让他看朋友圈
+  static const String notAllowLookMyMomentsKey =
+      "not_allow_look_my_moments_key";
+
+  /// 不看他的朋友圈
+  static const String notLookHisMomentsKey = "not_look_his_moments_key";
+
+  /// 加入黑名单
+  static const String joinToBlacklistKey = "join_to_blacklist_key";
 }

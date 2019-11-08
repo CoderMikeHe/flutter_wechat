@@ -13,7 +13,7 @@ import 'package:flutter/widgets.dart';
 const TextStyle _kActionSheetActionStyle = TextStyle(
   fontFamily: '.SF UI Text',
   inherit: false,
-  fontSize: 17.0,
+  fontSize: 16.0,
   fontWeight: FontWeight.w400,
   color: Color.fromRGBO(0, 0, 0, 0.9),
   textBaseline: TextBaseline.alphabetic,

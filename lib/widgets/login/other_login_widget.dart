@@ -230,7 +230,7 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
               ),
             ),
             Image.asset(
-              Constant.assetsImages + 'tableview_arrow_8x13.png',
+              Constant.assetsImagesArrow + 'tableview_arrow_8x13.png',
               width: 8.0,
               height: 13.0,
             )

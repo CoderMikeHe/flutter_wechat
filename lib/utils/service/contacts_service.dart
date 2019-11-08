@@ -50,6 +50,7 @@ class ContactsService {
   Future fetchContacts() async {
     // 先清除掉数据
     _contactsList.clear();
+    _contactsMap.clear();
 
     // 获取用户信息列表
     final jsonStr =
@@ -60,7 +61,9 @@ class ContactsService {
 
     // 遍历
     contactsJson.forEach((json) {
-      _contactsList.add(User.fromJson(json));
+      final User user = User.fromJson(json);
+      _contactsList.add(user);
+      _contactsMap[user.idstr] = user;
     });
 
     for (int i = 0, length = _contactsList.length; i < length; i++) {
@@ -75,6 +78,7 @@ class ContactsService {
     }
     // 根据A-Z排序
     SuspensionUtil.sortListBySuspensionTag(_contactsList);
+
     // 返回数据
     return _contactsList;
   }
@@ -84,5 +88,9 @@ class ContactsService {
 
   /// 通讯录列表
   List<User> _contactsList = List();
+
+  /// 通讯录Map
+  Map<String, User> _contactsMap = Map();
   List<User> get contactsList => _contactsList;
+  Map<String, User> get contactsMap => _contactsMap;
 }

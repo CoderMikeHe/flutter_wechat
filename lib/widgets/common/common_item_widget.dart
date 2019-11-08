@@ -150,7 +150,7 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
         padding: EdgeInsets.only(right: Constant.pEdgeInset),
         child: Text(
           item.title,
-          style: TextStyle(fontSize: 17.0),
+          style: TextStyle(fontSize: 17.0, color: widget.item.titleColor),
         ),
       ),
     );
@@ -167,7 +167,7 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
     );
 
     Widget arrowWidget = Image.asset(
-      'assets/images/tableview_arrow_8x13.png',
+      Constant.assetsImagesArrow + 'tableview_arrow_8x13.png',
       width: 8.0,
       height: 13.0,
     );
@@ -258,7 +258,7 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
     );
 
     Widget arrowWidget = Image.asset(
-      'assets/images/tableview_arrow_8x13.png',
+      Constant.assetsImagesArrow + 'tableview_arrow_8x13.png',
       width: 8.0,
       height: 13.0,
     );
@@ -303,7 +303,7 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
     );
 
     Widget arrowWidget = Image.asset(
-      'assets/images/tableview_arrow_8x13.png',
+      Constant.assetsImagesArrow + 'tableview_arrow_8x13.png',
       width: 8.0,
       height: 13.0,
     );
@@ -320,7 +320,7 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
         Expanded(
           child: Text(
             item.title,
-            style: TextStyle(fontSize: 17.0),
+            style: TextStyle(fontSize: 17.0, color: widget.item.titleColor),
             textAlign: TextAlign.center,
           ),
         )
@@ -423,7 +423,7 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
     );
 
     Widget arrowWidget = Image.asset(
-      'assets/images/tableview_arrow_8x13.png',
+      Constant.assetsImagesArrow + 'tableview_arrow_8x13.png',
       width: 8.0,
       height: 13.0,
     );

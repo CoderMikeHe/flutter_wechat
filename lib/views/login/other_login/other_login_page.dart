@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_wechat/constant/constant.dart';
 
-import 'package:flutter_wechat/widgets/action_sheet/action_sheet.dart';
+import 'package:flutter_wechat/components/action_sheet/action_sheet.dart';
 
 import 'package:flutter_wechat/widgets/login/other_login_widget.dart';
 

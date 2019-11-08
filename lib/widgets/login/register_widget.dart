@@ -14,7 +14,7 @@ import 'package:flutter_wechat/utils/util.dart';
 import 'package:flutter_wechat/routers/fluro_navigator.dart';
 import 'package:flutter_wechat/routers/routers.dart';
 
-import 'package:flutter_wechat/widgets/action_sheet/action_sheet.dart';
+import 'package:flutter_wechat/components/action_sheet/action_sheet.dart';
 import 'package:flutter_wechat/widgets/text_field/mh_text_field.dart';
 import 'package:flutter_wechat/widgets/alert_dialog/mh_alert_dialog.dart';
 import 'package:flutter_wechat/widgets/loading_dialog/loading_dialog.dart';
@@ -412,7 +412,7 @@ class _RegisterWidgetState extends State<RegisterWidget>
               ),
             ),
             Image.asset(
-              Constant.assetsImages + 'tableview_arrow_8x13.png',
+              Constant.assetsImagesArrow + 'tableview_arrow_8x13.png',
               width: 8.0,
               height: 13.0,
             )

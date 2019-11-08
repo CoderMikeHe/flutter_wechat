@@ -11,6 +11,7 @@ class CommonItem {
   CommonItem({
     this.icon,
     this.title = "",
+    this.titleColor,
     this.subtitle = "",
     this.tapHighlight = true,
     this.padding = const EdgeInsets.all(Constant.pEdgeInset),
@@ -22,6 +23,9 @@ class CommonItem {
 
   /// 主标题 default is ‘’
   final String title;
+
+  /// 主标题颜色
+  final Color titleColor;
 
   /// 次标题 default is '', 这个可以修改
   String subtitle;
@@ -44,8 +48,9 @@ class CommonPluginItem extends CommonItem {
 
 class CommonCenterItem extends CommonItem {
   /// 构造函数
-  CommonCenterItem({String title, CommonGestureTapCallback onTap})
-      : super(title: title, onTap: onTap);
+  CommonCenterItem(
+      {String title, Color titleColor, CommonGestureTapCallback onTap})
+      : super(title: title, titleColor: titleColor, onTap: onTap);
 }
 
 /// 没有箭头的item

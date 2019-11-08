@@ -1,5 +1,6 @@
 import 'package:azlistview/azlistview.dart';
 
+///
 class User extends ISuspensionBean {
   String screenName;
   String idstr;
@@ -14,7 +15,12 @@ class User extends ISuspensionBean {
   String email;
   String phone;
   String channel;
+
+  /// 地区编码
   String zoneCode;
+
+  /// 地区
+  String region;
   List phones;
   List pictures;
   String remarks;
@@ -26,26 +32,28 @@ class User extends ISuspensionBean {
   String getSuspensionTag() => tagIndex;
 
   /// 构造函数
-  User(
-      {this.screenName,
-      this.idstr,
-      this.profileImageUrl,
-      this.avatarLarge,
-      this.coverImageUrl,
-      this.coverImage,
-      this.wechatId,
-      this.featureSign,
-      this.gender,
-      this.qq,
-      this.email,
-      this.phone,
-      this.channel,
-      this.zoneCode,
-      this.phones,
-      this.pictures,
-      this.remarks,
-      this.screenNamePinyin,
-      this.tagIndex});
+  User({
+    this.screenName,
+    this.idstr,
+    this.profileImageUrl,
+    this.avatarLarge,
+    this.coverImageUrl,
+    this.coverImage,
+    this.wechatId,
+    this.featureSign,
+    this.gender,
+    this.qq,
+    this.email,
+    this.phone,
+    this.channel,
+    this.zoneCode,
+    this.region,
+    this.phones,
+    this.pictures,
+    this.remarks,
+    this.screenNamePinyin,
+    this.tagIndex,
+  });
 
   User.fromJson(Map<String, dynamic> json) {
     screenName = json['screen_name'];
@@ -62,6 +70,7 @@ class User extends ISuspensionBean {
     phone = json['phone'];
     channel = json['channel'];
     zoneCode = json['zoneCode'];
+    region = json['region'];
     phones = json['phones'];
     pictures = json['pictures'];
     remarks = json['remarks'];
@@ -85,6 +94,7 @@ class User extends ISuspensionBean {
     data['phone'] = this.phone;
     data['channel'] = this.channel;
     data['zoneCode'] = this.zoneCode;
+    data['region'] = this.region;
     data['phones'] = this.phones;
     data['pictures'] = this.pictures;
     data['remarks'] = this.remarks;

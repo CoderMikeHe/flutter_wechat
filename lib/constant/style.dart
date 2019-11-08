@@ -20,4 +20,10 @@ class Style {
 
   /// 不重要 文字颜色
   static const Color mTextColor = Color.fromRGBO(0, 0, 0, 0.3);
+
+  /// 主要背景色
+  static const Color pBackgroundColor = Color(0xFFEDEDED);
+
+  /// 警告色
+  static const Color pTextWarnColor = Color(0xFFFA5151);
 }

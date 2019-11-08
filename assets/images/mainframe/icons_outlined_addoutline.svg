@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>icons_outlined_addoutline</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="icons_outlined_addoutline" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon21" fill="#000000">
+            <g id="Group-19" transform="translate(2.000000, 2.000000)">
+                <path d="M10,18.8 C14.8601058,18.8 18.8,14.8601058 18.8,10 C18.8,5.1398942 14.8601058,1.2 10,1.2 C5.1398942,1.2 1.2,5.1398942 1.2,10 C1.2,14.8601058 5.1398942,18.8 10,18.8 Z M10,20 C4.4771525,20 0,15.5228475 0,10 C0,4.4771525 4.4771525,0 10,0 C15.5228475,0 20,4.4771525 20,10 C20,15.5228475 15.5228475,20 10,20 Z" id="Oval-78" fill-rule="nonzero"></path>
+                <path d="M9.3999939,9.3999939 L9.3999939,5 L10.5999939,5 L10.5999939,9.3999939 L15,9.3999939 L15,10.5999939 L10.5999939,10.5999939 L10.5999939,15 L9.3999939,15 L9.3999939,10.5999939 L5,10.5999939 L5,9.3999939 L9.3999939,9.3999939 Z" id="Combined-Shape"></path>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:flutter_wechat/constant/constant.dart';
 import 'package:flutter_wechat/constant/style.dart';
@@ -8,16 +9,19 @@ import 'package:flutter_wechat/constant/style.dart';
 import 'package:flutter_wechat/model/user/user.dart';
 import 'package:flutter_wechat/utils/service/contacts_service.dart';
 
+import 'package:flutter_wechat/routers/fluro_navigator.dart';
+import 'package:flutter_wechat/views/contacts/contacts_router.dart';
+
 import 'package:flutter_wechat/components/list_tile/mh_list_tile.dart';
 import 'package:flutter_wechat/components/search_bar/search_bar.dart';
 
-class Contacts extends StatefulWidget {
-  Contacts({Key key}) : super(key: key);
+class ContactsPage extends StatefulWidget {
+  ContactsPage({Key key}) : super(key: key);
 
-  _ContactsState createState() => _ContactsState();
+  _ContactsPageState createState() => _ContactsPageState();
 }
 
-class _ContactsState extends State<Contacts> {
+class _ContactsPageState extends State<ContactsPage> {
   /// 联系人列表
   List<User> _contactsList = [];
   int _suspensionHeight = 40;
@@ -52,6 +56,7 @@ class _ContactsState extends State<Contacts> {
     });
   }
 
+  /// 索引标签被点击
   void _onSusTagChanged(String tag) {
     setState(() {
       _suspensionTag = tag;
@@ -67,21 +72,25 @@ class _ContactsState extends State<Contacts> {
           Constant.assetsImagesContacts + 'plugins_FriendNotify_36x36.png',
           '新的朋友',
           false,
+          onTap: () {},
         ),
         _buildItem(
           Constant.assetsImagesContacts + 'add_friend_icon_addgroup_36x36.png',
           '新的朋友',
           false,
+          onTap: () {},
         ),
         _buildItem(
           Constant.assetsImagesContacts + 'Contact_icon_ContactTag_36x36.png',
           '标签',
           false,
+          onTap: () {},
         ),
         _buildItem(
           Constant.assetsImagesContacts + 'add_friend_icon_offical_36x36.png',
           '公众号',
           false,
+          onTap: () {},
         ),
       ],
     );
@@ -118,7 +127,12 @@ class _ContactsState extends State<Contacts> {
           child: Column(
             children: <Widget>[
               Expanded(
-                child: _buildItem(user.profileImageUrl, user.screenName, true),
+                child: _buildItem(user.profileImageUrl, user.screenName, true,
+                    onTap: () {
+                  // 下钻联系人信息
+                  NavigatorUtils.push(context,
+                      '${ContactsRouter.contactInfoPage}?idstr=${user.idstr}');
+                }),
               )
             ],
           ),
@@ -140,22 +154,45 @@ class _ContactsState extends State<Contacts> {
   }
 
   /// 返回 item
-  Widget _buildItem(String icon, String title, bool isNetwork) {
+  Widget _buildItem(
+    String icon,
+    String title,
+    bool isNetwork, {
+    void Function() onTap,
+  }) {
     Widget leading = Padding(
-      padding: EdgeInsets.only(right: 16.0),
-      // Fixed Bug: 这里icon 没值就别去渲染了,直接为null,否则报错
-      child: isNetwork
-          ? CachedNetworkImage(
-              imageUrl: icon,
-              width: 36,
-              height: 36,
-            )
-          : Image.asset(
-              icon,
-              width: 36.0,
-              height: 36.0,
-            ),
-    );
+        padding: EdgeInsets.only(right: 16.0),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4.0),
+          ),
+          child: isNetwork
+              ? CachedNetworkImage(
+                  imageUrl: icon,
+                  width: 36,
+                  height: 36,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) {
+                    return Image.asset(
+                      Constant.assetsImagesDefault + 'DefaultHead_48x48.png',
+                      width: 36.0,
+                      height: 36.0,
+                    );
+                  },
+                  errorWidget: (context, url, error) {
+                    return Image.asset(
+                      Constant.assetsImagesDefault + 'DefaultHead_48x48.png',
+                      width: 36.0,
+                      height: 36.0,
+                    );
+                  },
+                )
+              : Image.asset(
+                  icon,
+                  width: 36.0,
+                  height: 36.0,
+                ),
+        ));
 
     Widget middle = Padding(
       padding: EdgeInsets.only(right: Constant.pEdgeInset),
@@ -165,6 +202,7 @@ class _ContactsState extends State<Contacts> {
       ),
     );
     return MHListTile(
+      onTap: onTap,
       leading: leading,
       middle: middle,
       height: _itemHeight.toDouble() - 0.5,
@@ -177,6 +215,17 @@ class _ContactsState extends State<Contacts> {
     return Scaffold(
       appBar: AppBar(
         title: Text('通讯录'),
+        actions: <Widget>[
+          IconButton(
+            icon: new SvgPicture.asset(
+              Constant.assetsImagesContacts + 'icons_outlined_add-friends.svg',
+              color: Color(0xFF333333),
+            ),
+            onPressed: () {
+              NavigatorUtils.push(context, ContactsRouter.addFriendPage);
+            },
+          )
+        ],
       ),
       body: Column(
         children: <Widget>[

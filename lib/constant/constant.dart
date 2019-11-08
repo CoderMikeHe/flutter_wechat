@@ -13,8 +13,17 @@ class Constant {
   /// 联系人模块相关的资源
   static const String assetsImagesContacts = 'assets/images/contacts/';
 
-  /// 联系人模块相关的资源
+  /// 搜索模块相关的资源
   static const String assetsImagesSearch = 'assets/images/search/';
+
+  /// 缺省页、图片占位符（placeholder）模块相关的资源
+  static const String assetsImagesDefault = 'assets/images/default/';
+
+  /// 箭头相关模块相关的资源
+  static const String assetsImagesArrow = 'assets/images/arrow/';
+
+  /// TabBar相关模块相关的资源
+  static const String assetsImagesTabbar = 'assets/images/tabbar/';
 
   /// 本地mock数据json
   static const String mockData = 'mock/';
