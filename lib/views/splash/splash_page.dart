@@ -4,6 +4,7 @@ import 'package:flustars/flustars.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart'
     as FlutterScreenUtil;
+import 'package:flutter_wechat/model/zone_code/zone_code.dart';
 import 'package:package_info/package_info.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
@@ -17,6 +18,7 @@ import 'package:flutter_wechat/constant/constant.dart';
 
 import 'package:flutter_wechat/utils/service/account_service.dart';
 import 'package:flutter_wechat/utils/service/contacts_service.dart';
+import 'package:flutter_wechat/utils/service/zone_code_service.dart';
 
 /// 闪屏跳转模式
 enum MHSplashSkipMode {
@@ -49,6 +51,9 @@ class _SplashPageState extends State<SplashPage> {
 
       // 获取一下通讯录数据，理论上是在跳转到主页时去请求
       ContactsService.sharedInstance;
+
+      // 读取一下全球手机区号编码
+      ZoneCodeService.sharedInstance;
 
       /// 获取App信息
       PackageInfo packageInfo = await PackageInfo.fromPlatform();

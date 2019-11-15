@@ -38,7 +38,6 @@ class _LanguagePickerPageState extends State<LanguagePickerPage> {
   @override
   void dispose() {
     super.dispose();
-    print('language picker over');
   }
 
   /// 配置数据
@@ -52,7 +51,7 @@ class _LanguagePickerPageState extends State<LanguagePickerPage> {
       "Bahasa Indonesia",
       "Bahasa Melayu",
       "español",
-      // Fixed Bug：这里如果显示了 韩语，会导致导航栏 文字显示异常，
+      // Fixed Bug：这里如果显示了 韩语，会导致导航栏 文字显示异常，Why
       // "한국어",
       "Italiano",
       "日本語",

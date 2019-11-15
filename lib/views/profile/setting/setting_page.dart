@@ -99,7 +99,13 @@ class SettingPage extends StatelessWidget {
       title: "帮助与反馈",
     );
     // 关于微信
-    final aboutUs = CommonItem(title: "关于微信", subtitle: "微信7.0.3");
+    final aboutUs = CommonItem(
+      title: "关于微信",
+      subtitle: "微信7.0.3",
+      onTap: (_) {
+        NavigatorUtils.push(context, ProfileRouter.aboutUsPage);
+      },
+    );
     final group2 = CommonGroup(
       items: [help, aboutUs],
     );

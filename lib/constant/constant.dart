@@ -25,6 +25,9 @@ class Constant {
   /// TabBar相关模块相关的资源
   static const String assetsImagesTabbar = 'assets/images/tabbar/';
 
+  /// 关于微信相关模块相关的资源
+  static const String assetsImagesAboutUs = 'assets/images/about_us/';
+
   /// 本地mock数据json
   static const String mockData = 'mock/';
 

@@ -21,6 +21,7 @@ class MHListTile extends StatefulWidget {
     this.allowTap = true,
     this.tapedColor = const Color(0xFFE5E5E5),
     this.dividerIndent = 0.0,
+    this.dividerEndIndent = 0.0,
     this.dividerHeight = 0.5,
     this.dividerColor = const Color(0xFFD8D8D8),
     this.height,
@@ -111,6 +112,9 @@ class MHListTile extends StatefulWidget {
   /// 分割线相对头部偏移量 default is 0.0
   final double dividerIndent;
 
+  /// 分割线相对尾部偏移量 default is 0.0
+  final double dividerEndIndent;
+
   /// The tile's internal height.
   final double height;
 
@@ -153,7 +157,7 @@ class _MHListTileState extends State<MHListTile> {
           ? _handleTapCancel
           : null,
       child: Container(
-        height: widget.height,
+        height: widget.height - (widget.dividerHeight ?? 0.5),
         color: _fetchColor(),
         padding:
             widget.contentPadding ?? EdgeInsets.symmetric(horizontal: 16.0),
@@ -223,6 +227,7 @@ class _MHListTileState extends State<MHListTile> {
       height: widget.dividerHeight ?? 0.5,
       color: widget.dividerColor ?? Color(0xFFD8D8D8),
       indent: widget.dividerIndent ?? 0.0,
+      endIndent: widget.dividerEndIndent ?? 0.0,
     );
   }
 }

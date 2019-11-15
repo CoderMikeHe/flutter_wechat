@@ -6,6 +6,7 @@ import 'language_picker/language_picker_page.dart';
 import 'current_login/current_login_page.dart';
 import 'phone_login/phone_login_page.dart';
 import 'register/register_page.dart';
+import 'zone_code_picker/zone_code_picker_page.dart';
 import 'login_page.dart';
 
 class LoginRouter implements IRouterProvider {
@@ -26,6 +27,9 @@ class LoginRouter implements IRouterProvider {
 
   /// 语言选择器
   static String languagePickerPage = "/login/language-picker";
+
+  /// 全球地区手机编码选择器
+  static String zoneCodePickerPage = "/login/zone-code-picker";
 
   @override
   void initRouter(Router router) {
@@ -49,6 +53,11 @@ class LoginRouter implements IRouterProvider {
         handler: Handler(handlerFunc: (_, params) {
       final String language = params['language']?.first;
       return LanguagePickerPage(value: language);
+    }));
+    router.define(zoneCodePickerPage,
+        handler: Handler(handlerFunc: (_, params) {
+      final String zoneCode = params['zone_code']?.first;
+      return ZoneCodePickerPage(value: zoneCode);
     }));
   }
 }

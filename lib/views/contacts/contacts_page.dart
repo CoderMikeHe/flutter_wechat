@@ -205,7 +205,7 @@ class _ContactsPageState extends State<ContactsPage> {
       onTap: onTap,
       leading: leading,
       middle: middle,
-      height: _itemHeight.toDouble() - 0.5,
+      height: _itemHeight.toDouble(),
       dividerIndent: 16.0 + 36.0 + 16.0,
     );
   }

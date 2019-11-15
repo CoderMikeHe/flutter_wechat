@@ -1,15 +1,15 @@
+import 'dart:convert';
+
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flustars/flustars.dart';
 
+import 'package:flutter_wechat/constant/cache_key.dart';
 import 'package:flutter_wechat/constant/constant.dart';
 import 'package:flutter_wechat/constant/style.dart';
 
 import 'package:flutter_wechat/routers/fluro_navigator.dart';
 import 'login_router.dart';
-
-import 'package:flutter_wechat/views/login/language_picker/language_picker_page.dart';
-import 'package:flutter_wechat/views/login/current_login/current_login_page.dart';
-import 'package:flutter_wechat/views/login/other_login/other_login_page.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -19,11 +19,13 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   // 当前选中语言
-  String _language = '简体中文';
+  String _language = '';
 
   @override
   void initState() {
     super.initState();
+    // 缓存中获取 language
+    _language = SpUtil.getString(CacheKey.appLanguageKey, defValue: '简体中文');
   }
 
   // 跳转登陆
@@ -33,24 +35,30 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   // 跳转注册
-  _register() {}
+  _register() {
+    NavigatorUtils.push(context, LoginRouter.registerPage,
+        transition: TransitionType.inFromBottom);
+  }
 
   // 跳转设置语言
-  void _skip2SettingLanguage() async {
-    final String result = await Navigator.of(context).push(
-      new MaterialPageRoute(
-        builder: (_) {
-          return LanguagePickerPage(
-            value: _language,
-          );
-        },
-      ),
+  void _skip2SettingLanguage() {
+    // 跳转到语言language 选择器
+    // https://blog.csdn.net/huchengzhiqiang/article/details/91415777
+    // Fixed Bug: 中文参数需要调用 Uri.encodeComponent()
+    NavigatorUtils.pushResult(
+      context,
+      '${LoginRouter.languagePickerPage}?language=${Uri.encodeComponent(_language)}',
+      (result) {
+        if (null != result && _language != result) {
+          setState(() {
+            _language = result;
+            // 保存缓存
+            SpUtil.putString(CacheKey.appLanguageKey, _language);
+          });
+        }
+      },
+      transition: TransitionType.inFromBottom,
     );
-    if (null != result && _language != result) {
-      setState(() {
-        _language = result;
-      });
-    }
   }
 
   // 生成整体小部件

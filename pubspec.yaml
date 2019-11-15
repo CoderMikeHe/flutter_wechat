@@ -76,6 +76,7 @@ flutter:
    - assets/images/default/
    - assets/images/arrow/
    - assets/images/tabbar/
+   - assets/images/about_us/
    - mock/
 
   # An image asset can refer to one or more resolution-specific "variants", see

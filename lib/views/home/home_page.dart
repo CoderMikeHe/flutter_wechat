@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:flutter_wechat/constant/constant.dart';
+import 'package:flutter_wechat/constant/style.dart';
 
 import 'package:flutter_wechat/views/mainframe/mainframe.dart';
 import 'package:flutter_wechat/views/contacts/contacts_page.dart';
@@ -34,23 +36,32 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   static List tabData = [
     // 7.0.0-
-    // _TabBarItem('微信', 'assets/images/tabbar_mainframe_25x23.png',
-    //     'assets/images/tabbar_mainframeHL_25x23.png'),
-    // _TabBarItem('通讯录', 'assets/images/tabbar_contacts_27x23.png',
-    //     'assets/images/tabbar_contactsHL_27x23.png'),
-    // _TabBarItem('发现', 'assets/images/tabbar_discover_23x23.png',
-    //     'assets/images/tabbar_discoverHL_23x23.png'),
-    // _TabBarItem('我', 'assets/images/tabbar_me_23x23.png',
-    //     'assets/images/tabbar_meHL_23x23.png'),
+    // _TabBarItem(
+    //     '微信',
+    //     Constant.assetsImagesTabbar + 'tabbar_mainframe_25x23.png',
+    //     Constant.assetsImagesTabbar + 'tabbar_mainframeHL_25x23.png'),
+    // _TabBarItem(
+    //     '通讯录',
+    //     Constant.assetsImagesTabbar + 'tabbar_contacts_27x23.png',
+    //     Constant.assetsImagesTabbar + 'tabbar_contactsHL_27x23.png'),
+    // _TabBarItem('发现', Constant.assetsImagesTabbar + 'tabbar_discover_23x23.png',
+    //     Constant.assetsImagesTabbar + 'tabbar_discoverHL_23x23.png'),
+    // _TabBarItem('我', Constant.assetsImagesTabbar + 'tabbar_me_23x23.png',
+    //     Constant.assetsImagesTabbar + 'tabbar_meHL_23x23.png'),
+
     // 7.0.0+
-    _TabBarItem('微信', 'assets/images/tabbar_mainframe_25x23.png',
-        'assets/images/tabbar_mainframeHL_25x23.png'),
-    _TabBarItem('通讯录', 'assets/images/tabbar_contacts_27x23.png',
-        'assets/images/tabbar_contactsHL_27x23.png'),
-    _TabBarItem('发现', 'assets/images/tabbar_discover_23x23.png',
-        'assets/images/tabbar_discoverHL_23x23.png'),
-    _TabBarItem('我', 'assets/images/tabbar_me_23x23.png',
-        'assets/images/tabbar_meHL_23x23.png'),
+    _TabBarItem('微信', Constant.assetsImagesTabbar + 'icons_outlined_chats.svg',
+        Constant.assetsImagesTabbar + 'icons_filled_chats.svg'),
+    _TabBarItem(
+        '通讯录',
+        Constant.assetsImagesTabbar + 'icons_outlined_contacts.svg',
+        Constant.assetsImagesTabbar + 'icons_filled_contacts.svg'),
+    _TabBarItem(
+        '发现',
+        Constant.assetsImagesTabbar + 'icons_outlined_discover.svg',
+        Constant.assetsImagesTabbar + 'icons_filled_discover.svg'),
+    _TabBarItem('我', Constant.assetsImagesTabbar + 'icons_outlined_me.svg',
+        Constant.assetsImagesTabbar + 'icons_filled_me.svg'),
   ];
 
   String appBarTitle = "微信";
@@ -65,24 +76,32 @@ class _HomePageState extends State<HomePage> {
     for (int i = 0; i < tabData.length; i++) {
       final item = tabData[i];
       myTabs.add(BottomNavigationBarItem(
+        // 7.0.0 之前版本
         // icon: Image.asset(
         //   item.image,
         //   width: 25.0,
         //   height: 23.0,
         // ),
+        // activeIcon: Image.asset(
+        //   item.selectedImage,
+        //   width: 25.0,
+        //   height: 23.0,
+        // ),
+        // 7.0.0 之后版本
         icon: new SvgPicture.asset(
-          Constant.assetsImagesContacts + 'icons_outlined_add-friends.svg',
-          color: Color(0xFF333333),
+          item.image,
         ),
-        activeIcon: Image.asset(
+        activeIcon: new SvgPicture.asset(
           item.selectedImage,
-          width: 25.0,
-          height: 23.0,
+          color: Style.pTintColor,
         ),
         title: Text(
           item.title,
+          textScaleFactor: 1.0,
           // Fixed Bug: 这个只需要设置字体大小即可，颜色不要设置
-          style: TextStyle(fontSize: 10.0),
+          style: TextStyle(
+            fontSize: 10.0,
+          ),
         ),
       ));
     }
@@ -110,11 +129,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  //  AppBar(
-  //       // Here we take the value from the HomePage object that was created by
-  //       // the App.build method, and use it to set our appbar title.
-  //       title: Text(appBarTitle),
-  //     )
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -126,18 +140,27 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: null,
       body: list[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
+      // Android
+      // bottomNavigationBar: BottomNavigationBar(
+      //   items: myTabs,
+      //   //高亮  被点击高亮
+      //   currentIndex: _currentIndex,
+      //   //修改 页面
+      //   onTap: _itemTapped,
+      //   //fixed：固定
+      //   type: BottomNavigationBarType.fixed,
+      //   // item选中颜色
+      //   selectedItemColor: Style.pTintColor,
+      //   // item非选中
+      //   unselectedItemColor: Color(0xFF191919),
+      // ),
+      // iOS
+      bottomNavigationBar: CupertinoTabBar(
         items: myTabs,
-        //高亮  被点击高亮
-        currentIndex: _currentIndex,
-        //修改 页面
         onTap: _itemTapped,
-        //fixed：固定
-        type: BottomNavigationBarType.fixed,
-        // item选中颜色
-        selectedItemColor: Color(0xFF57be6a),
-        // item非选中
-        unselectedItemColor: Color(0xFF191919),
+        currentIndex: _currentIndex,
+        activeColor: Style.pTintColor,
+        inactiveColor: Color(0xFF191919),
       ),
     );
   }

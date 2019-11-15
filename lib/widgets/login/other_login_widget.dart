@@ -22,6 +22,8 @@ import 'package:flutter_wechat/widgets/loading_dialog/loading_dialog.dart';
 
 import 'package:flutter_wechat/model/user/user.dart';
 import 'package:flutter_wechat/utils/service/account_service.dart';
+import 'package:flutter_wechat/model/zone_code/zone_code.dart';
+import 'package:flutter_wechat/utils/service/zone_code_service.dart';
 
 class OtherLoginWidget extends StatefulWidget {
   OtherLoginWidget({Key key}) : super(key: key);
@@ -47,8 +49,8 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
         : _accountController.text.isEmpty || _passwordController.text.isEmpty;
   }
 
-  // 屏幕宽
-  double _screenWidth = 0;
+  // 手机区号对应的国家名称
+  String _zoneCodeName = '中国大陆';
 
   /// 按钮
 
@@ -75,7 +77,6 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
 
   @override
   Widget build(BuildContext context) {
-    _screenWidth = MediaQuery.of(context).size.width;
     return _buildChidWidgets();
   }
 
@@ -87,7 +88,7 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
     if (_showPasswordWay) {
       // 跳转到手机登陆
       NavigatorUtils.push(context,
-          '${LoginRouter.phoneLoginPage}?phone=${_phoneController.text}&zone_code=${_zoneController.text}');
+          '${LoginRouter.phoneLoginPage}?phone=${Uri.encodeComponent(_phoneController.text)}&zone_code=${Uri.encodeComponent(_zoneController.text)}');
     } else {
       // 登陆
       // 对账号做验证
@@ -140,6 +141,29 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
             clearStack: true, transition: TransitionType.fadeIn);
       });
     }
+  }
+
+  /// 跳转到手机区号选择器
+  void _skip2ZoneCodePicker() {
+    final zoneCode = _zoneController.text;
+    // 获取
+    NavigatorUtils.pushResult(
+      context,
+      '${LoginRouter.zoneCodePickerPage}?zone_code=${Uri.encodeComponent(zoneCode)}',
+      (result) {
+        if (null != result && zoneCode != result) {
+          setState(() {
+            // 设置zoneCode
+            _zoneController.text = result;
+            // 设置zoneCodeName
+            _zoneCodeName =
+                ZoneCodeService.sharedInstance.zoneCodeMap[result].name ??
+                    '国家/地区代码无效';
+          });
+        }
+      },
+      transition: TransitionType.inFromBottom,
+    );
   }
 
   /// -------------------- UI --------------------
@@ -221,12 +245,15 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
               ),
             ),
             Expanded(
-              child: Text(
-                '中国大陆',
-                style: TextStyle(
-                  color: Style.pTextColor,
-                  fontSize: 17.0,
+              child: InkWell(
+                child: Text(
+                  _zoneCodeName,
+                  style: TextStyle(
+                    color: Style.pTextColor,
+                    fontSize: 17.0,
+                  ),
                 ),
+                onTap: _skip2ZoneCodePicker,
               ),
             ),
             Image.asset(
@@ -268,6 +295,13 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
+                    onChanged: (value) {
+                      setState(() {
+                        ZoneCode z =
+                            ZoneCodeService.sharedInstance.zoneCodeMap[value];
+                        _zoneCodeName = z != null ? z.name : '国家/地区代码无效';
+                      });
+                    },
                   ),
                 ),
               ],
@@ -291,7 +325,6 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
               controller: _phoneController,
               hintText: '请填写手机号码',
               onChanged: (value) {
-                // _phoneController.text = value;
                 setState(() {});
               },
             ),

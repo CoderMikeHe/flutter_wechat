@@ -13,6 +13,7 @@ import 'package:flutter_wechat/utils/util.dart';
 
 import 'package:flutter_wechat/routers/fluro_navigator.dart';
 import 'package:flutter_wechat/routers/routers.dart';
+import 'package:flutter_wechat/views/login/login_router.dart';
 
 import 'package:flutter_wechat/components/action_sheet/action_sheet.dart';
 import 'package:flutter_wechat/widgets/text_field/mh_text_field.dart';
@@ -21,6 +22,8 @@ import 'package:flutter_wechat/widgets/loading_dialog/loading_dialog.dart';
 
 import 'package:flutter_wechat/model/user/user.dart';
 import 'package:flutter_wechat/utils/service/account_service.dart';
+import 'package:flutter_wechat/model/zone_code/zone_code.dart';
+import 'package:flutter_wechat/utils/service/zone_code_service.dart';
 
 class RegisterWidget extends StatefulWidget {
   RegisterWidget({Key key}) : super(key: key);
@@ -41,6 +44,9 @@ class _RegisterWidgetState extends State<RegisterWidget>
 
   /// 是否需要抖动
   bool _shaked = false;
+
+  // 手机区号对应的国家名称
+  String _zoneCodeName = '中国大陆';
 
   /// 登录按钮是否无效
   bool get _registerBtnDisabled {
@@ -194,6 +200,29 @@ class _RegisterWidgetState extends State<RegisterWidget>
       NavigatorUtils.push(context, Routers.homePage,
           clearStack: true, transition: TransitionType.fadeIn);
     });
+  }
+
+  /// 跳转到手机区号选择器
+  void _skip2ZoneCodePicker() {
+    final zoneCode = _zoneController.text;
+    // 获取
+    NavigatorUtils.pushResult(
+      context,
+      '${LoginRouter.zoneCodePickerPage}?zone_code=${Uri.encodeComponent(zoneCode)}',
+      (result) {
+        if (null != result && zoneCode != result) {
+          setState(() {
+            // 设置zoneCode
+            _zoneController.text = result;
+            // 设置zoneCodeName
+            _zoneCodeName =
+                ZoneCodeService.sharedInstance.zoneCodeMap[result].name ??
+                    '国家/地区代码无效';
+          });
+        }
+      },
+      transition: TransitionType.inFromBottom,
+    );
   }
 
   /// 构建actionsheet
@@ -403,12 +432,15 @@ class _RegisterWidgetState extends State<RegisterWidget>
               ),
             ),
             Expanded(
-              child: Text(
-                '中国大陆',
-                style: TextStyle(
-                  color: Style.pTextColor,
-                  fontSize: 17.0,
+              child: InkWell(
+                child: Text(
+                  _zoneCodeName,
+                  style: TextStyle(
+                    color: Style.pTextColor,
+                    fontSize: 17.0,
+                  ),
                 ),
+                onTap: _skip2ZoneCodePicker,
               ),
             ),
             Image.asset(
@@ -455,6 +487,13 @@ class _RegisterWidgetState extends State<RegisterWidget>
                         fontWeight: FontWeight.w500,
                       ),
                     ),
+                    onChanged: (value) {
+                      setState(() {
+                        ZoneCode z =
+                            ZoneCodeService.sharedInstance.zoneCodeMap[value];
+                        _zoneCodeName = z != null ? z.name : '国家/地区代码无效';
+                      });
+                    },
                   ),
                 ),
               ],

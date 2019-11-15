@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-
+import 'package:flustars/flustars.dart';
+import 'package:fluro/fluro.dart';
 import 'package:flutter_wechat/constant/cache_key.dart';
+import 'package:flutter_wechat/routers/fluro_navigator.dart';
+import 'package:flutter_wechat/views/login/login_router.dart';
 
 import 'package:flutter_wechat/model/common/common_item.dart';
 import 'package:flutter_wechat/model/common/common_group.dart';
@@ -26,12 +29,34 @@ class GeneralPage extends StatelessWidget {
         ));
   }
 
+  // 跳转设置语言
+  void _skip2SettingLanguage(BuildContext context) {
+    // 获取缓存中语言
+    final String language =
+        SpUtil.getString(CacheKey.appLanguageKey, defValue: '简体中文');
+    // 跳转
+    NavigatorUtils.pushResult(
+      context,
+      '${LoginRouter.languagePickerPage}?language=${Uri.encodeComponent(language)}',
+      (result) {
+        if (null != result && language != result) {
+          // 保存缓存
+          SpUtil.putString(CacheKey.appLanguageKey, result);
+        }
+      },
+      transition: TransitionType.inFromBottom,
+    );
+  }
+
   /// 配置数据
   List<CommonGroup> _configData(BuildContext context) {
     // group0
     // 多语言
     final language = CommonItem(
       title: '多语言',
+      onTap: (_) {
+        _skip2SettingLanguage(context);
+      },
     );
     final group0 = CommonGroup(
       items: [language],

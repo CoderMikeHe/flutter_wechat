@@ -2,21 +2,18 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter_wechat/routers/router_init.dart';
 
 import 'setting/setting_page.dart';
-// import 'language_picker/language_picker_page.dart';
-// import 'current_login/current_login_page.dart';
-// import 'phone_login/phone_login_page.dart';
-// import 'register/register_page.dart';
+import 'package:flutter_wechat/views/profile/about_us/about_us_page.dart';
 import 'profile_page.dart';
 
 class ProfileRouter implements IRouterProvider {
   /// 我root页
   static String profilePage = "/profile";
 
-  /// 注册
+  /// 设置
   static String settingPage = "/profile/setting";
 
-  /// 其他账号登陆
-  static String otherprofilePage = "/profile/other-profile";
+  /// 关于微信
+  static String aboutUsPage = "/profile/about-us";
 
   /// 当前账号登陆
   static String currentprofilePage = "/profile/current-profile";
@@ -33,6 +30,8 @@ class ProfileRouter implements IRouterProvider {
         handler: Handler(handlerFunc: (_, params) => ProfilePage()));
     router.define(settingPage,
         handler: Handler(handlerFunc: (_, params) => SettingPage()));
+    router.define(aboutUsPage,
+        handler: Handler(handlerFunc: (_, params) => AboutUsPage()));
     // router.define(otherLoginPage,
     //     handler: Handler(handlerFunc: (_, params) => OtherLoginPage()));
     // router.define(currentLoginPage,
