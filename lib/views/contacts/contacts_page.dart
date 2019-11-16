@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 import 'package:flutter_wechat/constant/constant.dart';
 import 'package:flutter_wechat/constant/style.dart';
@@ -33,11 +34,43 @@ class _ContactsPageState extends State<ContactsPage> {
 
   /// 最后一个联系人
   User _lastContact;
+
+  // 侧滑controller
+  SlidableController _slidableController;
+
   @override
   void initState() {
     super.initState();
     // 请求联系人
     _fetchContacts();
+    // 配制数字居
+    _slidableController = SlidableController(
+      onSlideAnimationChanged: _handleSlideAnimationChanged,
+      onSlideIsOpenChanged: _handleSlideIsOpenChanged,
+    );
+  }
+
+  void _handleSlideAnimationChanged(Animation<double> slideAnimation) {
+    print('handleSlideAnimationChanged');
+  }
+
+  void _handleSlideIsOpenChanged(bool isOpen) {
+    print('handleSlideIsOpenChanged');
+  }
+
+  static Widget _getActionPane(int index) {
+    switch (index % 4) {
+      case 0:
+        return SlidableBehindActionPane();
+      case 1:
+        return SlidableStrechActionPane();
+      case 2:
+        return SlidableScrollActionPane();
+      case 3:
+        return SlidableDrawerActionPane();
+      default:
+        return null;
+    }
   }
 
   /// 请求联系人列表
@@ -76,7 +109,7 @@ class _ContactsPageState extends State<ContactsPage> {
         ),
         _buildItem(
           Constant.assetsImagesContacts + 'add_friend_icon_addgroup_36x36.png',
-          '新的朋友',
+          '群聊',
           false,
           onTap: () {},
         ),
@@ -159,6 +192,7 @@ class _ContactsPageState extends State<ContactsPage> {
     String title,
     bool isNetwork, {
     void Function() onTap,
+    bool needSlidable = false,
   }) {
     Widget leading = Padding(
         padding: EdgeInsets.only(right: 16.0),
@@ -201,12 +235,40 @@ class _ContactsPageState extends State<ContactsPage> {
         style: TextStyle(fontSize: 17.0, color: Style.pTextColor),
       ),
     );
-    return MHListTile(
+
+    Widget listTile = MHListTile(
       onTap: onTap,
       leading: leading,
       middle: middle,
       height: _itemHeight.toDouble(),
       dividerIndent: 16.0 + 36.0 + 16.0,
+    );
+
+    //
+    return Slidable(
+      key: Key(title),
+      controller: _slidableController,
+      dismissal: SlidableDismissal(
+        child: SlidableDrawerDismissal(),
+        onDismissed: (actionType) {},
+      ),
+      actionPane: _getActionPane(2),
+      actionExtentRatio: 0.2,
+      child: listTile,
+      secondaryActions: <Widget>[
+        Container(
+          color: Colors.grey,
+          child: Text(
+            '备注',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20.0,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          alignment: Alignment.center,
+        )
+      ],
     );
   }
 
