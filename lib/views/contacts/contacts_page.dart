@@ -37,6 +37,8 @@ class _ContactsPageState extends State<ContactsPage> {
 
   // 侧滑controller
   SlidableController _slidableController;
+  // 是否展开
+  bool _slideIsOpen = false;
 
   @override
   void initState() {
@@ -51,11 +53,14 @@ class _ContactsPageState extends State<ContactsPage> {
   }
 
   void _handleSlideAnimationChanged(Animation<double> slideAnimation) {
-    print('handleSlideAnimationChanged');
+    // print('handleSlideAnimationChanged');
   }
 
   void _handleSlideIsOpenChanged(bool isOpen) {
-    print('handleSlideIsOpenChanged');
+    print('handleSlideIsOpenChanged $isOpen');
+    setState(() {
+      _slideIsOpen = isOpen;
+    });
   }
 
   static Widget _getActionPane(int index) {
@@ -98,6 +103,7 @@ class _ContactsPageState extends State<ContactsPage> {
 
   /// 构建头部
   Widget _buildHeader() {
+    print('_buildHeader');
     return Column(
       children: <Widget>[
         SearchBar(),
@@ -105,25 +111,21 @@ class _ContactsPageState extends State<ContactsPage> {
           Constant.assetsImagesContacts + 'plugins_FriendNotify_36x36.png',
           '新的朋友',
           false,
-          onTap: () {},
         ),
         _buildItem(
           Constant.assetsImagesContacts + 'add_friend_icon_addgroup_36x36.png',
           '群聊',
           false,
-          onTap: () {},
         ),
         _buildItem(
           Constant.assetsImagesContacts + 'Contact_icon_ContactTag_36x36.png',
           '标签',
           false,
-          onTap: () {},
         ),
         _buildItem(
           Constant.assetsImagesContacts + 'add_friend_icon_offical_36x36.png',
           '公众号',
           false,
-          onTap: () {},
         ),
       ],
     );
@@ -147,6 +149,7 @@ class _ContactsPageState extends State<ContactsPage> {
   }
 
   Widget _buildListItem(User user) {
+    print('_buildListItem');
     String susTag = user.getSuspensionTag();
     return Column(
       children: <Widget>[
@@ -161,10 +164,18 @@ class _ContactsPageState extends State<ContactsPage> {
             children: <Widget>[
               Expanded(
                 child: _buildItem(user.profileImageUrl, user.screenName, true,
-                    onTap: () {
+                    needSlidable: true, onTap: (context0) {
+                  print(
+                      'onnnntap ${Slidable.of(context0)}    xxx  ${Slidable.of(context0)?.renderingMode} ');
                   // 下钻联系人信息
-                  NavigatorUtils.push(context,
-                      '${ContactsRouter.contactInfoPage}?idstr=${user.idstr}');
+                  // _slideIsOpen
+                  //     ? Slidable.of(context0)?.close()
+                  //     : NavigatorUtils.push(context0,
+                  //         '${ContactsRouter.contactInfoPage}?idstr=${user.idstr}');
+                  Slidable.of(context0)?.renderingMode ==
+                          SlidableRenderingMode.none
+                      ? Slidable.of(context0)?.open()
+                      : Slidable.of(context0)?.close();
                 }),
               )
             ],
@@ -191,42 +202,42 @@ class _ContactsPageState extends State<ContactsPage> {
     String icon,
     String title,
     bool isNetwork, {
-    void Function() onTap,
+    void Function(BuildContext context) onTap,
     bool needSlidable = false,
   }) {
-    Widget leading = Padding(
-        padding: EdgeInsets.only(right: 16.0),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(4.0),
-          ),
-          child: isNetwork
-              ? CachedNetworkImage(
-                  imageUrl: icon,
-                  width: 36,
-                  height: 36,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) {
-                    return Image.asset(
-                      Constant.assetsImagesDefault + 'DefaultHead_48x48.png',
-                      width: 36.0,
-                      height: 36.0,
-                    );
-                  },
-                  errorWidget: (context, url, error) {
-                    return Image.asset(
-                      Constant.assetsImagesDefault + 'DefaultHead_48x48.png',
-                      width: 36.0,
-                      height: 36.0,
-                    );
-                  },
-                )
-              : Image.asset(
-                  icon,
-                  width: 36.0,
-                  height: 36.0,
-                ),
-        ));
+    // Widget leading = Padding(
+    //     padding: EdgeInsets.only(right: 16.0),
+    //     child: Container(
+    //       decoration: BoxDecoration(
+    //         borderRadius: BorderRadius.circular(4.0),
+    //       ),
+    //       child: isNetwork
+    //           ? CachedNetworkImage(
+    //               imageUrl: icon,
+    //               width: 36,
+    //               height: 36,
+    //               fit: BoxFit.cover,
+    //               placeholder: (context, url) {
+    //                 return Image.asset(
+    //                   Constant.assetsImagesDefault + 'DefaultHead_48x48.png',
+    //                   width: 36.0,
+    //                   height: 36.0,
+    //                 );
+    //               },
+    //               errorWidget: (context, url, error) {
+    //                 return Image.asset(
+    //                   Constant.assetsImagesDefault + 'DefaultHead_48x48.png',
+    //                   width: 36.0,
+    //                   height: 36.0,
+    //                 );
+    //               },
+    //             )
+    //           : Image.asset(
+    //               icon,
+    //               width: 36.0,
+    //               height: 36.0,
+    //             ),
+    //     ));
 
     Widget middle = Padding(
       padding: EdgeInsets.only(right: Constant.pEdgeInset),
@@ -236,34 +247,43 @@ class _ContactsPageState extends State<ContactsPage> {
       ),
     );
 
-    Widget listTile = MHListTile(
-      onTap: onTap,
-      leading: leading,
-      middle: middle,
-      height: _itemHeight.toDouble(),
-      dividerIndent: 16.0 + 36.0 + 16.0,
-    );
+    // Widget listTile = MHListTile(
+    //   onTapValue: onTap,
+    //   allowTap: !_slideIsOpen,
+    //   // leading: leading,
+    //   middle: middle,
+    //   height: _itemHeight.toDouble(),
+    //   dividerIndent: 16.0 + 36.0 + 16.0,
+    // );
 
-    //
+    // // 不需要侧滑事件
+    // if (!needSlidable) {
+    //   return listTile;
+    // }
+    // 需要侧滑事件
     return Slidable(
       key: Key(title),
       controller: _slidableController,
       dismissal: SlidableDismissal(
+        closeOnCanceled: true,
+        dragDismissible: true,
         child: SlidableDrawerDismissal(),
-        onDismissed: (actionType) {},
+        onWillDismiss: (actionType) {
+          return false;
+        },
       ),
       actionPane: _getActionPane(2),
       actionExtentRatio: 0.2,
-      child: listTile,
+      child: VerticalListItem(title),
       secondaryActions: <Widget>[
         Container(
-          color: Colors.grey,
+          color: Color(0xFFD9D9D9),
           child: Text(
             '备注',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 20.0,
-              fontWeight: FontWeight.w500,
+              fontSize: 18.0,
+              fontWeight: FontWeight.w400,
             ),
           ),
           alignment: Alignment.center,
@@ -289,39 +309,96 @@ class _ContactsPageState extends State<ContactsPage> {
           )
         ],
       ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-              flex: 1,
-              child: AzListView(
-                data: _contactsList,
-                itemBuilder: (context, model) => _buildListItem(model),
-                suspensionWidget: _buildSusWidget(_suspensionTag),
-                isUseRealIndex: true,
-                itemHeight: _itemHeight,
-                suspensionHeight: _suspensionHeight,
-                onSusTagChanged: _onSusTagChanged,
-                header: AzListViewHeader(
-                    // - [特殊字符](https://blog.csdn.net/cfxy666/article/details/87609526)
-                    // - [特殊字符](http://www.fhdq.net/)
-                    tag: "♀",
-                    height: 5 * _itemHeight,
-                    builder: (context) {
-                      return _buildHeader();
-                    }),
-                indexHintBuilder: (context, hint) {
-                  return Container(
-                    alignment: Alignment.center,
-                    width: 80.0,
-                    height: 80.0,
-                    decoration: BoxDecoration(
-                        color: Colors.red, shape: BoxShape.circle),
-                    child: Text(hint,
-                        style: TextStyle(color: Colors.white, fontSize: 30.0)),
-                  );
-                },
-              )),
-        ],
+      // body: Column(
+      //   children: <Widget>[
+      //     Expanded(
+      //         flex: 1,
+      //         child: AzListView(
+      //           data: _contactsList,
+      //           itemBuilder: (context, model) => _buildListItem(model),
+      //           suspensionWidget: _buildSusWidget(_suspensionTag),
+      //           isUseRealIndex: true,
+      //           itemHeight: _itemHeight,
+      //           suspensionHeight: _suspensionHeight,
+      //           onSusTagChanged: _onSusTagChanged,
+      //           header: AzListViewHeader(
+      //               // - [特殊字符](https://blog.csdn.net/cfxy666/article/details/87609526)
+      //               // - [特殊字符](http://www.fhdq.net/)
+      //               tag: "♀",
+      //               height: 5 * _itemHeight,
+      //               builder: (context) {
+      //                 return _buildHeader();
+      //               }),
+      //           indexHintBuilder: (context, hint) {
+      //             return Container(
+      //               alignment: Alignment.center,
+      //               width: 80.0,
+      //               height: 80.0,
+      //               decoration: BoxDecoration(
+      //                   color: Colors.red, shape: BoxShape.circle),
+      //               child: Text(hint,
+      //                   style: TextStyle(color: Colors.white, fontSize: 30.0)),
+      //             );
+      //           },
+      //         )),
+      //   ],
+      // ),
+      body: _buildList(context, Axis.horizontal),
+    );
+  }
+
+  Widget _buildList(BuildContext context, Axis direction) {
+    return ListView.builder(
+      itemBuilder: (context, index) {
+        var user = _contactsList[index];
+        return _buildItem(user.profileImageUrl, user.screenName, true,
+            needSlidable: true, onTap: (context0) {
+          print(
+              'onnnntap ${Slidable.of(context0)}    xxx  ${Slidable.of(context0)?.renderingMode} ');
+          // 下钻联系人信息
+          // _slideIsOpen
+          //     ? Slidable.of(context0)?.close()
+          //     : NavigatorUtils.push(context0,
+          //         '${ContactsRouter.contactInfoPage}?idstr=${user.idstr}');
+          // Slidable.of(context0)?.renderingMode == SlidableRenderingMode.none
+          //     ? Slidable.of(context0)?.open()
+          //     : Slidable.of(context0)?.close();
+        });
+        // return VerticalListItem(user.screenName);
+      },
+      itemCount: _contactsList.length,
+    );
+  }
+}
+
+class VerticalListItem extends StatelessWidget {
+  VerticalListItem(this.item);
+  final String item;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        print(
+            ' GestureDetector ooontap ${Slidable.of(context)?.renderingMode}');
+        if (Slidable.of(context)?.renderingMode == SlidableRenderingMode.none) {
+          Slidable.of(context)?.open(actionType: SlideActionType.primary);
+          NavigatorUtils.push(context, ContactsRouter.addFriendPage);
+        } else {
+          Slidable.of(context)?.close();
+        }
+        //
+      },
+      child: Container(
+        color: Colors.white,
+        child: ListTile(
+          leading: CircleAvatar(
+            backgroundColor: Colors.red,
+            child: Text('aa'),
+            foregroundColor: Colors.white,
+          ),
+          title: Text(item),
+        ),
       ),
     );
   }

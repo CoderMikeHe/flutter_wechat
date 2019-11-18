@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_slidable/flutter_slidable.dart';
+
 class MHListTile extends StatefulWidget {
   /// Creates a list tile.
   ///
@@ -15,7 +17,9 @@ class MHListTile extends StatefulWidget {
     this.enabled = true,
     this.disabledColor = const Color(0xFFE5E5E5),
     this.onTap,
+    this.onTapValue,
     this.onLongPress,
+    this.onLongPressValue,
     this.selected = false,
     this.selectedColor = const Color(0xFFE5E5E5),
     this.allowTap = true,
@@ -77,11 +81,13 @@ class MHListTile extends StatefulWidget {
   ///
   /// Inoperative if [enabled] is false.
   final GestureTapCallback onTap;
+  final void Function(BuildContext context) onTapValue;
 
   /// Called when the user long-presses on this list tile.
   ///
   /// Inoperative if [enabled] is false.
   final GestureLongPressCallback onLongPress;
+  final void Function(BuildContext context) onLongPressValue;
 
   /// If this tile is also [enabled] then icons and text are rendered with the same color.
   ///
@@ -151,13 +157,33 @@ class _MHListTileState extends State<MHListTile> {
       onTapUp: (widget.allowTap && widget.enabled && !widget.selected)
           ? _handleTapUp
           : null, // they occur: down, up, tap, cancel
-      onTap: widget.enabled ? widget.onTap : null,
-      onLongPress: widget.enabled ? widget.onLongPress : null,
+      onTap: widget.enabled
+          ? () {
+              if (widget.onTapValue != null && widget.onTapValue is Function) {
+                widget.onTapValue(context);
+              } else if (widget.onTap != null && widget.onTap is Function) {
+                widget.onTap();
+              }
+            }
+          : null,
+      onLongPress: widget.enabled
+          ? () {
+              if (widget.onLongPressValue != null &&
+                  widget.onLongPressValue is Function) {
+                widget.onTapValue(context);
+              } else if (widget.onLongPress != null &&
+                  widget.onLongPress is Function) {
+                widget.onTap();
+              }
+            }
+          : null,
       onTapCancel: (widget.allowTap && widget.enabled && !widget.selected)
           ? _handleTapCancel
           : null,
       child: Container(
-        height: widget.height - (widget.dividerHeight ?? 0.5),
+        height: widget.height == null
+            ? null
+            : widget.height - (widget.dividerHeight ?? 0.5),
         color: _fetchColor(),
         padding:
             widget.contentPadding ?? EdgeInsets.symmetric(horizontal: 16.0),
