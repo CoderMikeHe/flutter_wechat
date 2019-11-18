@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false, // 去掉Debug
       onGenerateRoute: Application.router.generator,
       theme: ThemeData(
         // This is the theme of your application.

@@ -3,6 +3,7 @@ import 'package:azlistview/azlistview.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:flutter_wechat/constant/constant.dart';
 import 'package:flutter_wechat/constant/style.dart';
@@ -25,8 +26,14 @@ class ContactsPage extends StatefulWidget {
 class _ContactsPageState extends State<ContactsPage> {
   /// 联系人列表
   List<User> _contactsList = [];
-  int _suspensionHeight = 40;
-  int _itemHeight = 56;
+
+  /// 悬浮view 高度 向上取整
+  int _suspensionHeight =
+      (ScreenUtil.getInstance().setHeight(99.0) as double).ceil();
+
+  /// 每个item 高度 向上取整
+  int _itemHeight =
+      (ScreenUtil.getInstance().setHeight(168.0) as double).ceil();
   String _suspensionTag = "";
 
   /// 联系人总数
@@ -61,21 +68,6 @@ class _ContactsPageState extends State<ContactsPage> {
     setState(() {
       _slideIsOpen = isOpen;
     });
-  }
-
-  static Widget _getActionPane(int index) {
-    switch (index % 4) {
-      case 0:
-        return SlidableBehindActionPane();
-      case 1:
-        return SlidableStrechActionPane();
-      case 2:
-        return SlidableScrollActionPane();
-      case 3:
-        return SlidableDrawerActionPane();
-      default:
-        return null;
-    }
   }
 
   /// 请求联系人列表
@@ -131,25 +123,31 @@ class _ContactsPageState extends State<ContactsPage> {
     );
   }
 
-  Widget _buildSusWidget(String susTag) {
+  /// 构建悬浮部件
+  Widget _buildSusWidget(String susTag, {bool isFloat = false}) {
     return Container(
       height: _suspensionHeight.toDouble(),
-      padding: const EdgeInsets.only(left: 15.0),
-      color: Color(0xfff3f4f5),
+      padding: EdgeInsets.only(left: ScreenUtil.getInstance().setWidth(51.0)),
+      decoration: BoxDecoration(
+        color: isFloat ? Colors.white : Style.pBackgroundColor,
+        border: isFloat
+            ? Border(bottom: BorderSide(color: Color(0xFFE6E6E6), width: 0.5))
+            : null,
+      ),
       alignment: Alignment.centerLeft,
       child: Text(
         '$susTag',
         softWrap: false,
         style: TextStyle(
-          fontSize: 14.0,
-          color: Color(0xff999999),
+          fontSize: ScreenUtil.getInstance().setSp(39.0),
+          color: isFloat ? Style.pTintColor : Color(0xff777777),
         ),
       ),
     );
   }
 
+  /// 构建列表项
   Widget _buildListItem(User user) {
-    print('_buildListItem');
     String susTag = user.getSuspensionTag();
     return Column(
       children: <Widget>[
@@ -185,11 +183,13 @@ class _ContactsPageState extends State<ContactsPage> {
           offstage: _lastContact.idstr != user.idstr,
           child: Container(
             width: double.infinity,
-            height: 44.0,
+            height: ScreenUtil.getInstance().setHeight(150.0),
             alignment: Alignment.center,
             child: Text(
               _contactsCount,
-              style: TextStyle(fontSize: 16.0, color: Style.sTextColor),
+              style: TextStyle(
+                  fontSize: ScreenUtil.getInstance().setSp(48.0),
+                  color: Style.sTextColor),
             ),
           ),
         ),
@@ -205,61 +205,66 @@ class _ContactsPageState extends State<ContactsPage> {
     void Function(BuildContext context) onTap,
     bool needSlidable = false,
   }) {
-    // Widget leading = Padding(
-    //     padding: EdgeInsets.only(right: 16.0),
-    //     child: Container(
-    //       decoration: BoxDecoration(
-    //         borderRadius: BorderRadius.circular(4.0),
-    //       ),
-    //       child: isNetwork
-    //           ? CachedNetworkImage(
-    //               imageUrl: icon,
-    //               width: 36,
-    //               height: 36,
-    //               fit: BoxFit.cover,
-    //               placeholder: (context, url) {
-    //                 return Image.asset(
-    //                   Constant.assetsImagesDefault + 'DefaultHead_48x48.png',
-    //                   width: 36.0,
-    //                   height: 36.0,
-    //                 );
-    //               },
-    //               errorWidget: (context, url, error) {
-    //                 return Image.asset(
-    //                   Constant.assetsImagesDefault + 'DefaultHead_48x48.png',
-    //                   width: 36.0,
-    //                   height: 36.0,
-    //                 );
-    //               },
-    //             )
-    //           : Image.asset(
-    //               icon,
-    //               width: 36.0,
-    //               height: 36.0,
-    //             ),
-    //     ));
+    final double iconWH = ScreenUtil.getInstance().setWidth(123.0);
+    Widget leading = Padding(
+        padding:
+            EdgeInsets.only(right: ScreenUtil.getInstance().setWidth(39.0)),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(6.0),
+          ),
+          child: isNetwork
+              ? CachedNetworkImage(
+                  imageUrl: icon,
+                  width: iconWH,
+                  height: iconWH,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) {
+                    return Image.asset(
+                      Constant.assetsImagesDefault + 'DefaultHead_48x48.png',
+                      width: iconWH,
+                      height: iconWH,
+                    );
+                  },
+                  errorWidget: (context, url, error) {
+                    return Image.asset(
+                      Constant.assetsImagesDefault + 'DefaultHead_48x48.png',
+                      width: iconWH,
+                      height: iconWH,
+                    );
+                  },
+                )
+              : Image.asset(
+                  icon,
+                  width: iconWH,
+                  height: iconWH,
+                ),
+        ));
 
     Widget middle = Padding(
       padding: EdgeInsets.only(right: Constant.pEdgeInset),
       child: Text(
         title,
-        style: TextStyle(fontSize: 17.0, color: Style.pTextColor),
+        style: TextStyle(
+            fontSize: ScreenUtil.getInstance().setSp(51.0),
+            color: Style.pTextColor),
       ),
     );
 
-    // Widget listTile = MHListTile(
-    //   onTapValue: onTap,
-    //   allowTap: !_slideIsOpen,
-    //   // leading: leading,
-    //   middle: middle,
-    //   height: _itemHeight.toDouble(),
-    //   dividerIndent: 16.0 + 36.0 + 16.0,
-    // );
+    Widget listTile = MHListTile(
+      dividerColor: Color(0xFFE6E6E6),
+      onTapValue: onTap,
+      allowTap: !_slideIsOpen,
+      leading: leading,
+      middle: middle,
+      height: _itemHeight.toDouble(),
+      dividerIndent: ScreenUtil.getInstance().setWidth(210.0),
+    );
 
-    // // 不需要侧滑事件
-    // if (!needSlidable) {
-    //   return listTile;
-    // }
+    // 不需要侧滑事件
+    if (!needSlidable) {
+      return listTile;
+    }
     // 需要侧滑事件
     return Slidable(
       key: Key(title),
@@ -272,17 +277,17 @@ class _ContactsPageState extends State<ContactsPage> {
           return false;
         },
       ),
-      actionPane: _getActionPane(2),
+      actionPane: SlidableScrollActionPane(),
       actionExtentRatio: 0.2,
-      child: VerticalListItem(title),
+      child: listTile,
       secondaryActions: <Widget>[
         Container(
-          color: Color(0xFFD9D9D9),
+          color: Color(0xFFC7C7CB),
           child: Text(
             '备注',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 18.0,
+              fontSize: ScreenUtil.getInstance().setSp(51.0),
               fontWeight: FontWeight.w400,
             ),
           ),
@@ -309,41 +314,42 @@ class _ContactsPageState extends State<ContactsPage> {
           )
         ],
       ),
-      // body: Column(
-      //   children: <Widget>[
-      //     Expanded(
-      //         flex: 1,
-      //         child: AzListView(
-      //           data: _contactsList,
-      //           itemBuilder: (context, model) => _buildListItem(model),
-      //           suspensionWidget: _buildSusWidget(_suspensionTag),
-      //           isUseRealIndex: true,
-      //           itemHeight: _itemHeight,
-      //           suspensionHeight: _suspensionHeight,
-      //           onSusTagChanged: _onSusTagChanged,
-      //           header: AzListViewHeader(
-      //               // - [特殊字符](https://blog.csdn.net/cfxy666/article/details/87609526)
-      //               // - [特殊字符](http://www.fhdq.net/)
-      //               tag: "♀",
-      //               height: 5 * _itemHeight,
-      //               builder: (context) {
-      //                 return _buildHeader();
-      //               }),
-      //           indexHintBuilder: (context, hint) {
-      //             return Container(
-      //               alignment: Alignment.center,
-      //               width: 80.0,
-      //               height: 80.0,
-      //               decoration: BoxDecoration(
-      //                   color: Colors.red, shape: BoxShape.circle),
-      //               child: Text(hint,
-      //                   style: TextStyle(color: Colors.white, fontSize: 30.0)),
-      //             );
-      //           },
-      //         )),
-      //   ],
-      // ),
-      body: _buildList(context, Axis.horizontal),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+              flex: 1,
+              child: AzListView(
+                data: _contactsList,
+                itemBuilder: (context, model) => _buildListItem(model),
+                suspensionWidget:
+                    _buildSusWidget(_suspensionTag, isFloat: true),
+                isUseRealIndex: true,
+                itemHeight: _itemHeight,
+                suspensionHeight: _suspensionHeight,
+                onSusTagChanged: _onSusTagChanged,
+                header: AzListViewHeader(
+                    // - [特殊字符](https://blog.csdn.net/cfxy666/article/details/87609526)
+                    // - [特殊字符](http://www.fhdq.net/)
+                    tag: "♀",
+                    height: 5 * _itemHeight,
+                    builder: (context) {
+                      return _buildHeader();
+                    }),
+                indexHintBuilder: (context, hint) {
+                  return Container(
+                    alignment: Alignment.center,
+                    width: 80.0,
+                    height: 80.0,
+                    decoration: BoxDecoration(
+                        color: Color(0xFFC7C7CB), shape: BoxShape.circle),
+                    child: Text(hint,
+                        style: TextStyle(color: Colors.white, fontSize: 30.0)),
+                  );
+                },
+              )),
+        ],
+      ),
+      // body: _buildList(context, Axis.horizontal),
     );
   }
 
