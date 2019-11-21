@@ -103,6 +103,19 @@ class _ContactsPageState extends State<ContactsPage> {
           Constant.assetsImagesContacts + 'plugins_FriendNotify_36x36.png',
           '新的朋友',
           false,
+          onTap: (cxt) {
+            if (Slidable.of(cxt)?.renderingMode == SlidableRenderingMode.none) {
+              // 细节：这里由于 SlideActionType.primary 对应 actions 为空，所以虽然看似展开空，目的就是关闭 上一个打开的 secondary action
+              Slidable.of(cxt)?.open(actionType: SlideActionType.primary);
+              // 上面的虽然打开了一个空的 但是系统还是会认为是 打开的 也就是 _slideIsOpen = true
+              // 手动设置为true
+              _slideIsOpen = false;
+            } else {
+              Slidable.of(cxt)?.close();
+            }
+
+            // 下钻
+          },
         ),
         _buildItem(
           Constant.assetsImagesContacts + 'add_friend_icon_addgroup_36x36.png',
@@ -124,6 +137,8 @@ class _ContactsPageState extends State<ContactsPage> {
   }
 
   /// 构建悬浮部件
+  /// [susTag] 标签名称
+  /// [isFloat] 是否悬浮
   Widget _buildSusWidget(String susTag, {bool isFloat = false}) {
     return Container(
       height: _suspensionHeight.toDouble(),
@@ -162,23 +177,27 @@ class _ContactsPageState extends State<ContactsPage> {
             children: <Widget>[
               Expanded(
                 child: _buildItem(user.profileImageUrl, user.screenName, true,
-                    needSlidable: true, onTap: (context0) {
-                  print(
-                      'onnnntap ${Slidable.of(context0)}    xxx  ${Slidable.of(context0)?.renderingMode} ');
+                    needSlidable: true, onTap: (cxt) {
+                  print('3333 ---- $cxt');
                   // 下钻联系人信息
-                  // _slideIsOpen
-                  //     ? Slidable.of(context0)?.close()
-                  //     : NavigatorUtils.push(context0,
-                  //         '${ContactsRouter.contactInfoPage}?idstr=${user.idstr}');
-                  Slidable.of(context0)?.renderingMode ==
-                          SlidableRenderingMode.none
-                      ? Slidable.of(context0)?.open()
-                      : Slidable.of(context0)?.close();
+                  if (Slidable.of(cxt)?.renderingMode ==
+                      SlidableRenderingMode.none) {
+                    // 细节：这里由于 SlideActionType.primary 对应 actions 为空，所以虽然看似展开空，目的就是关闭 上一个打开的 secondary action
+                    Slidable.of(cxt)?.open(actionType: SlideActionType.primary);
+                    // 上面的虽然打开了一个空的 但是系统还是会认为是 打开的 也就是 _slideIsOpen = true
+                    // 手动设置为true
+                    _slideIsOpen = false;
+                    NavigatorUtils.push(cxt,
+                        '${ContactsRouter.contactInfoPage}?idstr=${user.idstr}');
+                  } else {
+                    Slidable.of(cxt)?.close();
+                  }
                 }),
               )
             ],
           ),
         ),
+        // 底部显示共有多人
         Offstage(
           offstage: _lastContact.idstr != user.idstr,
           child: Container(
@@ -206,6 +225,7 @@ class _ContactsPageState extends State<ContactsPage> {
     bool needSlidable = false,
   }) {
     final double iconWH = ScreenUtil.getInstance().setWidth(123.0);
+    // 头部分
     Widget leading = Padding(
         padding:
             EdgeInsets.only(right: ScreenUtil.getInstance().setWidth(39.0)),
@@ -240,7 +260,7 @@ class _ContactsPageState extends State<ContactsPage> {
                   height: iconWH,
                 ),
         ));
-
+    // 中部分
     Widget middle = Padding(
       padding: EdgeInsets.only(right: Constant.pEdgeInset),
       child: Text(
@@ -250,7 +270,7 @@ class _ContactsPageState extends State<ContactsPage> {
             color: Style.pTextColor),
       ),
     );
-
+    // 组成cell
     Widget listTile = MHListTile(
       dividerColor: Color(0xFFE6E6E6),
       onTapValue: onTap,
@@ -261,12 +281,13 @@ class _ContactsPageState extends State<ContactsPage> {
       dividerIndent: ScreenUtil.getInstance().setWidth(210.0),
     );
 
-    // 不需要侧滑事件
-    if (!needSlidable) {
-      return listTile;
-    }
+    // Fixed Bug： 不需要侧滑事件 尽管不需要侧滑事件，但是还是得需要 Slidable
+    // if (!needSlidable) {
+    //   return listTile;
+    // }
     // 需要侧滑事件
     return Slidable(
+      // 必须的有key
       key: Key(title),
       controller: _slidableController,
       dismissal: SlidableDismissal(
@@ -280,20 +301,23 @@ class _ContactsPageState extends State<ContactsPage> {
       actionPane: SlidableScrollActionPane(),
       actionExtentRatio: 0.2,
       child: listTile,
-      secondaryActions: <Widget>[
-        Container(
-          color: Color(0xFFC7C7CB),
-          child: Text(
-            '备注',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: ScreenUtil.getInstance().setSp(51.0),
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-          alignment: Alignment.center,
-        )
-      ],
+      // 不需要侧滑，设为null 后期有妙用
+      secondaryActions: needSlidable
+          ? <Widget>[
+              Container(
+                color: Color(0xFFC7C7CB),
+                child: Text(
+                  '备注',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: ScreenUtil.getInstance().setSp(51.0),
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                alignment: Alignment.center,
+              )
+            ]
+          : null,
     );
   }
 
@@ -317,95 +341,87 @@ class _ContactsPageState extends State<ContactsPage> {
       body: Column(
         children: <Widget>[
           Expanded(
-              flex: 1,
-              child: AzListView(
-                data: _contactsList,
-                itemBuilder: (context, model) => _buildListItem(model),
-                suspensionWidget:
-                    _buildSusWidget(_suspensionTag, isFloat: true),
-                isUseRealIndex: true,
-                itemHeight: _itemHeight,
-                suspensionHeight: _suspensionHeight,
-                onSusTagChanged: _onSusTagChanged,
-                header: AzListViewHeader(
-                    // - [特殊字符](https://blog.csdn.net/cfxy666/article/details/87609526)
-                    // - [特殊字符](http://www.fhdq.net/)
-                    tag: "♀",
-                    height: 5 * _itemHeight,
-                    builder: (context) {
-                      return _buildHeader();
-                    }),
-                indexHintBuilder: (context, hint) {
-                  return Container(
-                    alignment: Alignment.center,
-                    width: 80.0,
-                    height: 80.0,
-                    decoration: BoxDecoration(
-                        color: Color(0xFFC7C7CB), shape: BoxShape.circle),
-                    child: Text(hint,
-                        style: TextStyle(color: Colors.white, fontSize: 30.0)),
-                  );
-                },
-              )),
+            flex: 1,
+            child: _buildContactsList(true),
+          ),
         ],
       ),
-      // body: _buildList(context, Axis.horizontal),
     );
   }
 
-  Widget _buildList(BuildContext context, Axis direction) {
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        var user = _contactsList[index];
-        return _buildItem(user.profileImageUrl, user.screenName, true,
-            needSlidable: true, onTap: (context0) {
-          print(
-              'onnnntap ${Slidable.of(context0)}    xxx  ${Slidable.of(context0)?.renderingMode} ');
-          // 下钻联系人信息
-          // _slideIsOpen
-          //     ? Slidable.of(context0)?.close()
-          //     : NavigatorUtils.push(context0,
-          //         '${ContactsRouter.contactInfoPage}?idstr=${user.idstr}');
-          // Slidable.of(context0)?.renderingMode == SlidableRenderingMode.none
-          //     ? Slidable.of(context0)?.open()
-          //     : Slidable.of(context0)?.close();
-        });
-        // return VerticalListItem(user.screenName);
-      },
-      itemCount: _contactsList.length,
-    );
+  /// 构建联系人列表
+  Widget _buildContactsList(bool defaultMode) {
+    if (defaultMode) {
+      return _buildDefaultIndexBarList();
+    } else {
+      return _buildCustomIndexBarList();
+    }
   }
-}
 
-class VerticalListItem extends StatelessWidget {
-  VerticalListItem(this.item);
-  final String item;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        print(
-            ' GestureDetector ooontap ${Slidable.of(context)?.renderingMode}');
-        if (Slidable.of(context)?.renderingMode == SlidableRenderingMode.none) {
-          Slidable.of(context)?.open(actionType: SlideActionType.primary);
-          NavigatorUtils.push(context, ContactsRouter.addFriendPage);
-        } else {
-          Slidable.of(context)?.close();
-        }
-        //
-      },
-      child: Container(
-        color: Colors.white,
-        child: ListTile(
-          leading: CircleAvatar(
-            backgroundColor: Colors.red,
-            child: Text('aa'),
-            foregroundColor: Colors.white,
-          ),
-          title: Text(item),
-        ),
+  /// 构建默认索引条的列表
+  /// AzListView 默认提供的
+  Widget _buildDefaultIndexBarList() {
+    return AzListView(
+      data: _contactsList,
+      itemBuilder: (context, model) => _buildListItem(model),
+      suspensionWidget: _buildSusWidget(_suspensionTag, isFloat: true),
+      isUseRealIndex: true,
+      itemHeight: _itemHeight,
+      suspensionHeight: _suspensionHeight,
+      onSusTagChanged: _onSusTagChanged,
+      header: AzListViewHeader(
+        // - [特殊字符](https://blog.csdn.net/cfxy666/article/details/87609526)
+        // - [特殊字符](http://www.fhdq.net/)
+        tag: "♀",
+        height: 5 * _itemHeight,
+        builder: (context) {
+          return _buildHeader();
+        },
       ),
+      indexHintBuilder: (context, hint) {
+        return Container(
+          alignment: Alignment.center,
+          width: 80.0,
+          height: 80.0,
+          decoration:
+              BoxDecoration(color: Color(0xFFC7C7CB), shape: BoxShape.circle),
+          child:
+              Text(hint, style: TextStyle(color: Colors.white, fontSize: 30.0)),
+        );
+      },
+    );
+  }
+
+  // 构建自定义索引条的
+  Widget _buildCustomIndexBarList() {
+    return AzListView(
+      data: _contactsList,
+      itemBuilder: (context, model) => _buildListItem(model),
+      suspensionWidget: _buildSusWidget(_suspensionTag, isFloat: true),
+      isUseRealIndex: true,
+      itemHeight: _itemHeight,
+      suspensionHeight: _suspensionHeight,
+      onSusTagChanged: _onSusTagChanged,
+      header: AzListViewHeader(
+        // - [特殊字符](https://blog.csdn.net/cfxy666/article/details/87609526)
+        // - [特殊字符](http://www.fhdq.net/)
+        tag: "♀",
+        height: 5 * _itemHeight,
+        builder: (context) {
+          return _buildHeader();
+        },
+      ),
+      indexHintBuilder: (context, hint) {
+        return Container(
+          alignment: Alignment.center,
+          width: 80.0,
+          height: 80.0,
+          decoration:
+              BoxDecoration(color: Color(0xFFC7C7CB), shape: BoxShape.circle),
+          child:
+              Text(hint, style: TextStyle(color: Colors.white, fontSize: 30.0)),
+        );
+      },
     );
   }
 }

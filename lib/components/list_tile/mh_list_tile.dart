@@ -133,6 +133,7 @@ class _MHListTileState extends State<MHListTile> {
 
   @override
   Widget build(BuildContext context) {
+    print('1111 ---- $context');
     return Container(
       child: _buildChildWidget(),
     );
@@ -140,6 +141,7 @@ class _MHListTileState extends State<MHListTile> {
 
   /// 构建子部件
   Widget _buildChildWidget() {
+    print('2222 ---- $context');
     return Column(
       children: <Widget>[
         _buildItemWidget(),
