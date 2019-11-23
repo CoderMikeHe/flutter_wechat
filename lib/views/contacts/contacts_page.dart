@@ -16,6 +16,7 @@ import 'package:flutter_wechat/views/contacts/contacts_router.dart';
 
 import 'package:flutter_wechat/components/list_tile/mh_list_tile.dart';
 import 'package:flutter_wechat/components/search_bar/search_bar.dart';
+import 'package:flutter_wechat/components/index_bar/mh_index_bar.dart';
 
 class ContactsPage extends StatefulWidget {
   ContactsPage({Key key}) : super(key: key);
@@ -47,6 +48,12 @@ class _ContactsPageState extends State<ContactsPage> {
   // 是否展开
   bool _slideIsOpen = false;
 
+  // 记录slidable cxt
+  Map<String, BuildContext> _slidableCxtMap = Map();
+
+  // 滚动
+  ScrollController _scrollController;
+
   @override
   void initState() {
     super.initState();
@@ -57,12 +64,18 @@ class _ContactsPageState extends State<ContactsPage> {
       onSlideAnimationChanged: _handleSlideAnimationChanged,
       onSlideIsOpenChanged: _handleSlideIsOpenChanged,
     );
+    // 初始化滚动条
+    _scrollController = ScrollController();
   }
 
-  void _handleSlideAnimationChanged(Animation<double> slideAnimation) {
-    // print('handleSlideAnimationChanged');
+  @override
+  void dispose() {
+    _scrollController?.dispose();
+    super.dispose();
   }
 
+  // 监听事件
+  void _handleSlideAnimationChanged(Animation<double> slideAnimation) {}
   void _handleSlideIsOpenChanged(bool isOpen) {
     print('handleSlideIsOpenChanged $isOpen');
     setState(() {
@@ -93,9 +106,25 @@ class _ContactsPageState extends State<ContactsPage> {
     });
   }
 
+  /// 关闭slidable
+  void _closeSlidable() {
+    // 容错处理
+    if (!_slideIsOpen) return;
+
+    final cxts = _slidableCxtMap.values.toList();
+    final len = cxts.length;
+    for (var i = 0; i < len; i++) {
+      final value = cxts[i];
+      if (Slidable.of(value)?.renderingMode != SlidableRenderingMode.none) {
+        // 关掉上一个
+        Slidable.of(value)?.close();
+        return;
+      }
+    }
+  }
+
   /// 构建头部
   Widget _buildHeader() {
-    print('_buildHeader');
     return Column(
       children: <Widget>[
         SearchBar(),
@@ -103,17 +132,9 @@ class _ContactsPageState extends State<ContactsPage> {
           Constant.assetsImagesContacts + 'plugins_FriendNotify_36x36.png',
           '新的朋友',
           false,
-          onTap: (cxt) {
-            if (Slidable.of(cxt)?.renderingMode == SlidableRenderingMode.none) {
-              // 细节：这里由于 SlideActionType.primary 对应 actions 为空，所以虽然看似展开空，目的就是关闭 上一个打开的 secondary action
-              Slidable.of(cxt)?.open(actionType: SlideActionType.primary);
-              // 上面的虽然打开了一个空的 但是系统还是会认为是 打开的 也就是 _slideIsOpen = true
-              // 手动设置为true
-              _slideIsOpen = false;
-            } else {
-              Slidable.of(cxt)?.close();
-            }
-
+          onTap: (_) {
+            // 关掉侧滑
+            _closeSlidable();
             // 下钻
           },
         ),
@@ -121,16 +142,28 @@ class _ContactsPageState extends State<ContactsPage> {
           Constant.assetsImagesContacts + 'add_friend_icon_addgroup_36x36.png',
           '群聊',
           false,
+          onTap: (_) {
+            // 关掉侧滑
+            _closeSlidable();
+          },
         ),
         _buildItem(
           Constant.assetsImagesContacts + 'Contact_icon_ContactTag_36x36.png',
           '标签',
           false,
+          onTap: (_) {
+            // 关掉侧滑
+            _closeSlidable();
+          },
         ),
         _buildItem(
           Constant.assetsImagesContacts + 'add_friend_icon_offical_36x36.png',
           '公众号',
           false,
+          onTap: (_) {
+            // 关掉侧滑
+            _closeSlidable();
+          },
         ),
       ],
     );
@@ -178,15 +211,27 @@ class _ContactsPageState extends State<ContactsPage> {
               Expanded(
                 child: _buildItem(user.profileImageUrl, user.screenName, true,
                     needSlidable: true, onTap: (cxt) {
-                  print('3333 ---- $cxt');
+                  // 没有侧滑展开项 就直接下钻
+                  if (!_slideIsOpen) {
+                    NavigatorUtils.push(cxt,
+                        '${ContactsRouter.contactInfoPage}?idstr=${user.idstr}');
+                    return;
+                  }
+
                   // 下钻联系人信息
                   if (Slidable.of(cxt)?.renderingMode ==
                       SlidableRenderingMode.none) {
+                    // 方案一： 针对cell点击 和下钻容易处理  但是一但 点击导航栏上的 添加联系人按钮 ，因为获取不到 cxt 而力不从心
                     // 细节：这里由于 SlideActionType.primary 对应 actions 为空，所以虽然看似展开空，目的就是关闭 上一个打开的 secondary action
-                    Slidable.of(cxt)?.open(actionType: SlideActionType.primary);
+                    // Slidable.of(cxt)?.open(actionType: SlideActionType.primary);
                     // 上面的虽然打开了一个空的 但是系统还是会认为是 打开的 也就是 _slideIsOpen = true
                     // 手动设置为true
-                    _slideIsOpen = false;
+                    // _slideIsOpen = false;
+
+                    // 方案二： 每次生成一个 cell ,就用 Map[key] = cxt 记录起来，特别注意，这里用Map 而不是 List or Set
+                    // 关闭上一个侧滑
+                    _closeSlidable();
+                    // 下钻
                     NavigatorUtils.push(cxt,
                         '${ContactsRouter.contactInfoPage}?idstr=${user.idstr}');
                   } else {
@@ -224,7 +269,7 @@ class _ContactsPageState extends State<ContactsPage> {
     void Function(BuildContext context) onTap,
     bool needSlidable = false,
   }) {
-    final double iconWH = ScreenUtil.getInstance().setWidth(123.0);
+    final double iconWH = ScreenUtil.getInstance().setWidth(120.0);
     // 头部分
     Widget leading = Padding(
         padding:
@@ -274,17 +319,22 @@ class _ContactsPageState extends State<ContactsPage> {
     Widget listTile = MHListTile(
       dividerColor: Color(0xFFE6E6E6),
       onTapValue: onTap,
-      allowTap: !_slideIsOpen,
+      allowTap: !_slideIsOpen || !needSlidable,
       leading: leading,
       middle: middle,
       height: _itemHeight.toDouble(),
-      dividerIndent: ScreenUtil.getInstance().setWidth(210.0),
+      dividerIndent: ScreenUtil.getInstance().setWidth(208.0),
+      callbackContext: needSlidable
+          ? (BuildContext cxt) {
+              _slidableCxtMap[title] = cxt;
+            }
+          : null,
     );
 
-    // Fixed Bug： 不需要侧滑事件 尽管不需要侧滑事件，但是还是得需要 Slidable
-    // if (!needSlidable) {
-    //   return listTile;
-    // }
+    // 头部是不需要侧滑的
+    if (!needSlidable) {
+      return listTile;
+    }
     // 需要侧滑事件
     return Slidable(
       // 必须的有key
@@ -302,22 +352,25 @@ class _ContactsPageState extends State<ContactsPage> {
       actionExtentRatio: 0.2,
       child: listTile,
       // 不需要侧滑，设为null 后期有妙用
-      secondaryActions: needSlidable
-          ? <Widget>[
-              Container(
-                color: Color(0xFFC7C7CB),
-                child: Text(
-                  '备注',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: ScreenUtil.getInstance().setSp(51.0),
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                alignment: Alignment.center,
-              )
-            ]
-          : null,
+      secondaryActions: <Widget>[
+        GestureDetector(
+          child: Container(
+            color: Color(0xFFC7C7CB),
+            child: Text(
+              '备注',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: ScreenUtil.getInstance().setSp(51.0),
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            alignment: Alignment.center,
+          ),
+          onTap: () {
+            print('object');
+          },
+        ),
+      ],
     );
   }
 
@@ -330,9 +383,11 @@ class _ContactsPageState extends State<ContactsPage> {
           IconButton(
             icon: new SvgPicture.asset(
               Constant.assetsImagesContacts + 'icons_outlined_add-friends.svg',
-              color: Color(0xFF333333),
+              color: Color(0xFF181818),
             ),
             onPressed: () {
+              // 关掉侧滑
+              _closeSlidable();
               NavigatorUtils.push(context, ContactsRouter.addFriendPage);
             },
           )
@@ -342,7 +397,7 @@ class _ContactsPageState extends State<ContactsPage> {
         children: <Widget>[
           Expanded(
             flex: 1,
-            child: _buildContactsList(true),
+            child: _buildContactsList(defaultMode: false),
           ),
         ],
       ),
@@ -350,7 +405,7 @@ class _ContactsPageState extends State<ContactsPage> {
   }
 
   /// 构建联系人列表
-  Widget _buildContactsList(bool defaultMode) {
+  Widget _buildContactsList({bool defaultMode = false}) {
     if (defaultMode) {
       return _buildDefaultIndexBarList();
     } else {
@@ -411,15 +466,22 @@ class _ContactsPageState extends State<ContactsPage> {
           return _buildHeader();
         },
       ),
-      indexHintBuilder: (context, hint) {
-        return Container(
-          alignment: Alignment.center,
-          width: 80.0,
-          height: 80.0,
-          decoration:
-              BoxDecoration(color: Color(0xFFC7C7CB), shape: BoxShape.circle),
-          child:
-              Text(hint, style: TextStyle(color: Colors.white, fontSize: 30.0)),
+      // 隐藏默认提供的
+      showIndexHint: false,
+      indexBarBuilder: (context, tagList, onTouch) {
+        return MHIndexBar(
+          data: tagList,
+          tag: _suspensionTag,
+          ignoreTags: ['♀'],
+          mapTag: {
+            "♀": new SvgPicture.asset(
+              Constant.assetsImagesSearch + 'icons_filled_search.svg',
+              color: Color(0xFF181818),
+              width: 8.0,
+              height: 8.0,
+            ),
+          },
+          onTouch: onTouch,
         );
       },
     );

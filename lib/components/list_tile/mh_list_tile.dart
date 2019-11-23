@@ -20,6 +20,7 @@ class MHListTile extends StatefulWidget {
     this.onTapValue,
     this.onLongPress,
     this.onLongPressValue,
+    this.callbackContext,
     this.selected = false,
     this.selectedColor = const Color(0xFFE5E5E5),
     this.allowTap = true,
@@ -89,6 +90,9 @@ class MHListTile extends StatefulWidget {
   final GestureLongPressCallback onLongPress;
   final void Function(BuildContext context) onLongPressValue;
 
+  /// 回调 BuildContext context 用于侧滑
+  final void Function(BuildContext context) callbackContext;
+
   /// If this tile is also [enabled] then icons and text are rendered with the same color.
   ///
   /// By default the selected color is the theme's primary color. The selected color [selectedColor]
@@ -133,7 +137,9 @@ class _MHListTileState extends State<MHListTile> {
 
   @override
   Widget build(BuildContext context) {
-    print('1111 ---- $context');
+    if (widget.callbackContext != null && widget.callbackContext is Function) {
+      widget.callbackContext(context);
+    }
     return Container(
       child: _buildChildWidget(),
     );
@@ -141,7 +147,6 @@ class _MHListTileState extends State<MHListTile> {
 
   /// 构建子部件
   Widget _buildChildWidget() {
-    print('2222 ---- $context');
     return Column(
       children: <Widget>[
         _buildItemWidget(),

@@ -1,64 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:azlistview/azlistview.dart';
 
 /// IndexBar touch callback IndexModel.
 typedef void IndexBarTouchCallback(IndexBarDetails model);
 
-/// IndexModel.
-class IndexBarDetails {
-  String tag; //current touch tag.
-  int position; //current touch position.
-  bool isTouchDown; //is touch down.
-
-  IndexBarDetails({this.tag, this.position, this.isTouchDown});
-}
-
-///Default Index data.
-const List<String> INDEX_DATA_DEF = const [
-  "A",
-  "B",
-  "C",
-  "D",
-  "E",
-  "F",
-  "G",
-  "H",
-  "I",
-  "J",
-  "K",
-  "L",
-  "M",
-  "N",
-  "O",
-  "P",
-  "Q",
-  "R",
-  "S",
-  "T",
-  "U",
-  "V",
-  "W",
-  "X",
-  "Y",
-  "Z",
-  "#"
-];
-
-/// IndexBar.
-class IndexBar extends StatefulWidget {
-  IndexBar(
-      {Key key,
-      this.data = INDEX_DATA_DEF,
-      @required this.onTouch,
-      this.width = 20,
-      this.tag = '',
-      this.ignoreTags = const [],
-      this.itemHeight = 16,
-      this.color = Colors.transparent,
-      this.textStyle =
-          const TextStyle(fontSize: 10.0, color: Color(0xFF666666)),
-      this.touchDownColor = const Color(0xffeeeeee),
-      this.touchDownTextStyle =
-          const TextStyle(fontSize: 10.0, color: Colors.black)});
+/// MHIndexBar.
+class MHIndexBar extends StatefulWidget {
+  MHIndexBar({
+    Key key,
+    this.data = INDEX_DATA_DEF,
+    @required this.onTouch,
+    this.width = 24,
+    this.tag = '',
+    this.ignoreTags = const [],
+    this.mapTag,
+    this.mapSelTag,
+    this.itemHeight = 16,
+    this.color = Colors.transparent,
+    this.textStyle = const TextStyle(fontSize: 10.0, color: Color(0xFF666666)),
+    this.touchDownColor = const Color(0xffeeeeee),
+    this.touchDownTextStyle =
+        const TextStyle(fontSize: 10.0, color: Colors.black),
+  });
 
   /// index data.
   final List<String> data;
@@ -69,19 +32,25 @@ class IndexBar extends StatefulWidget {
   /// 忽略的Tags，这些忽略Tag, 不会高亮显示，点击或长按 不会弹出 tagHint
   final List<String> ignoreTags;
 
-  /// IndexBar width(def:30).
+  /// 针对某个Tag显示其他部件的映射,一般都是映射 图片
+  final Map<String, Widget> mapTag;
+
+  /// 针对某个Tag显示高亮其他部件的映射,一般都是映射 图片
+  final Map<String, Widget> mapSelTag;
+
+  /// MHIndexBar width(def:24).
   final int width;
 
-  /// IndexBar item height(def:16).
+  /// MHIndexBar item height(def:16).
   final int itemHeight;
 
   /// Background color
   final Color color;
 
-  /// IndexBar touch down color.
+  /// MHIndexBar touch down color.
   final Color touchDownColor;
 
-  /// IndexBar text style.
+  /// MHIndexBar text style.
   final TextStyle textStyle;
 
   final TextStyle touchDownTextStyle;
@@ -94,20 +63,16 @@ class IndexBar extends StatefulWidget {
       _SuspensionListViewIndexBarState();
 }
 
-class _SuspensionListViewIndexBarState extends State<IndexBar> {
+class _SuspensionListViewIndexBarState extends State<MHIndexBar> {
   bool _isTouchDown = false;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-
-    print('吴娟傻逼 ----- ${widget.ignoreTags}');
   }
 
   @override
   Widget build(BuildContext context) {
-    print('吴娟傻逼====== ${widget.tag}');
     return Container(
       alignment: Alignment.center,
       color: widget.color,
@@ -159,17 +124,17 @@ class _IndexBar extends StatefulWidget {
   /// Item touch callback.
   final IndexBarTouchCallback onTouch;
 
-  _IndexBar(
-      {Key key,
-      this.data = INDEX_DATA_DEF,
-      this.tag = '',
-      this.ignoreTags = const [],
-      @required this.onTouch,
-      this.width = 30,
-      this.itemHeight = 16,
-      this.textStyle,
-      this.touchDownTextStyle})
-      : assert(onTouch != null),
+  _IndexBar({
+    Key key,
+    this.data = INDEX_DATA_DEF,
+    this.tag = '',
+    this.ignoreTags = const [],
+    @required this.onTouch,
+    this.width = 30,
+    this.itemHeight = 16,
+    this.textStyle,
+    this.touchDownTextStyle,
+  })  : assert(onTouch != null),
         super(key: key);
 
   @override
@@ -244,10 +209,7 @@ class _IndexBarState extends State<_IndexBar> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-
-    print('🔥火🔥 ------ ');
   }
 
   @override
@@ -258,7 +220,6 @@ class _IndexBarState extends State<_IndexBar> {
     }
     _init();
 
-    print('🔥火🔥 =======${widget.tag} ${_indexModel.tag}');
     // 配置 _indexModel tag 可能是用户滚动列表的数据 导致tag
     if (widget.tag != null &&
         widget.tag.isNotEmpty &&
@@ -287,7 +248,7 @@ class _IndexBarState extends State<_IndexBar> {
               ),
               child: new Text(v,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 10.0, color: _fetchTextColor(v))),
+                  style: TextStyle(fontSize: 8.0, color: _fetchTextColor(v))),
               width: 14.0,
               height: 14.0,
             ),
@@ -302,7 +263,7 @@ class _IndexBarState extends State<_IndexBar> {
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage(
-                          'assets/images/ContactIndexShape_60x50.png'),
+                          'assets/images/contacts/ContactIndexShape_60x50.png'),
                       fit: BoxFit.contain,
                     ),
                   ),
