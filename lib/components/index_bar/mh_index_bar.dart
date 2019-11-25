@@ -193,9 +193,9 @@ class _IndexBarState extends State<_IndexBar> {
   Color _fetchTextColor(String v) {
     if (_indexModel.tag == v) {
       final List<String> ignoreTags = widget.ignoreTags ?? [];
-      return ignoreTags.indexOf(v) != -1 ? Colors.black : Colors.white;
+      return ignoreTags.indexOf(v) != -1 ? Color(0xFF555555) : Colors.white;
     }
-    return Colors.black;
+    return Color(0xFF555555);
   }
 
   // 获取Offstage
@@ -248,7 +248,10 @@ class _IndexBarState extends State<_IndexBar> {
               ),
               child: new Text(v,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 8.0, color: _fetchTextColor(v))),
+                  style: TextStyle(
+                      fontSize: 10.0,
+                      color: _fetchTextColor(v),
+                      fontWeight: FontWeight.w500)),
               width: 14.0,
               height: 14.0,
             ),

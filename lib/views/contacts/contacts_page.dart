@@ -35,6 +35,8 @@ class _ContactsPageState extends State<ContactsPage> {
   /// 每个item 高度 向上取整
   int _itemHeight =
       (ScreenUtil.getInstance().setHeight(168.0) as double).ceil();
+
+  /// 标签名
   String _suspensionTag = "";
 
   /// 联系人总数
@@ -393,18 +395,20 @@ class _ContactsPageState extends State<ContactsPage> {
           )
         ],
       ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            flex: 1,
-            child: _buildContactsList(defaultMode: false),
-          ),
-        ],
-      ),
+      // body: Column(
+      //   children: <Widget>[
+      //     Expanded(
+      //       flex: 1,
+      //       child: _buildContactsList(defaultMode: false),
+      //     ),
+      //   ],
+      // ),
+      body: _buildContactsList(defaultMode: true),
     );
   }
 
   /// 构建联系人列表
+  /// [defaultMode] 是否使用默认的IndexBar
   Widget _buildContactsList({bool defaultMode = false}) {
     if (defaultMode) {
       return _buildDefaultIndexBarList();
