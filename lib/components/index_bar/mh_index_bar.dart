@@ -137,6 +137,8 @@ class _SuspensionListViewIndexBarState extends State<MHIndexBar> {
         hintOffsetX: widget.hintOffsetX,
         tagColor: widget.tagColor,
         selectedTagColor: widget.selectedTagColor,
+        indexBarTagBuilder: widget.indexBarTagBuilder,
+        indexBarHintBuilder: widget.indexBarHintBuilder,
         onTouch: (details) {
           if (widget.onTouch != null) {
             if (_isTouchDown != details.isTouchDown) {
@@ -201,7 +203,11 @@ class _IndexBar extends StatefulWidget {
   /// 标签默认的背景色 默认是 0xFF07C160
   final Color selectedTagColor;
 
-  ///
+  /// 自定义标签，且 跟标签相关的属性将全部失效
+  final IndexBarTagBuilder indexBarTagBuilder;
+
+  /// 自定义气泡弹出Hint， 且 跟hint相关的属性将全部失效
+  final IndexBarHintBuilder indexBarHintBuilder;
 
   _IndexBar({
     Key key,
@@ -223,6 +229,8 @@ class _IndexBar extends StatefulWidget {
     this.hintOffsetX = 20.0,
     this.tagColor = Colors.transparent,
     this.selectedTagColor = const Color(0xFF07C160),
+    this.indexBarTagBuilder,
+    this.indexBarHintBuilder,
   })  : assert(onTouch != null),
         super(key: key);
 
@@ -287,8 +295,8 @@ class _IndexBarState extends State<_IndexBar> {
     return true;
   }
 
-  /// 构建索引标签部件
-  Widget _buildIndexTagWidget(String tag) {
+  /// 构建索引标签Item部件
+  Widget _buildIndexTagItemWidget(String tag) {
     return new Container(
       width: widget.itemWidth.toDouble(),
       height: widget.itemHeight.toDouble(),
@@ -297,39 +305,30 @@ class _IndexBarState extends State<_IndexBar> {
         // 设置超出部分可见
         overflow: Overflow.visible,
         children: <Widget>[
-          Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: _fetchColor(tag),
-              borderRadius: BorderRadius.circular(widget.tagWidth * 0.5),
-            ),
-            child: _buildTagWidget(tag),
-            width: widget.tagWidth.toDouble(),
-            height: widget.tagHeight.toDouble(),
-          ),
-          Positioned(
-            left: -(60 + widget.hintOffsetX ?? 20),
-            top: -(50 - widget.itemHeight) * 0.5,
-            child: Offstage(
-              offstage: _fetchOffstage(tag),
-              child: Container(
-                width: 60.0,
-                height: 50.0,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(
-                        'assets/images/contacts/ContactIndexShape_60x50.png'),
-                    fit: BoxFit.contain,
-                  ),
-                ),
-                alignment: Alignment(-0.25, 0.0),
-                child: _buildHintChildWidget(tag),
-              ),
-            ),
-          ),
+          _buildIndexBarTagWidget(context, tag, _indexModel),
+          _buildIndexBarHintWidget(context, tag, _indexModel),
         ],
       ),
     );
+  }
+
+  /// 构建tag
+  Widget _buildIndexBarTagWidget(
+      BuildContext context, String tag, IndexBarDetails indexModel) {
+    if (widget.indexBarTagBuilder != null) {
+      return widget.indexBarTagBuilder(context, tag, _indexModel);
+    } else {
+      return Container(
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: _fetchColor(tag),
+          borderRadius: BorderRadius.circular(widget.tagWidth * 0.5),
+        ),
+        child: _buildTagWidget(tag),
+        width: widget.tagWidth.toDouble(),
+        height: widget.tagHeight.toDouble(),
+      );
+    }
   }
 
   /// 构建某个tag
@@ -397,6 +396,35 @@ class _IndexBarState extends State<_IndexBar> {
     }
   }
 
+  /// 构建tag
+  Widget _buildIndexBarHintWidget(
+      BuildContext context, String tag, IndexBarDetails indexModel) {
+    if (widget.indexBarHintBuilder != null) {
+      return widget.indexBarHintBuilder(context, tag, indexModel);
+    } else {
+      return Positioned(
+        left: -(60 + widget.hintOffsetX ?? 20),
+        top: -(50 - widget.itemHeight) * 0.5,
+        child: Offstage(
+          offstage: _fetchOffstage(tag),
+          child: Container(
+            width: 60.0,
+            height: 50.0,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(
+                    'assets/images/contacts/ContactIndexShape_60x50.png'),
+                fit: BoxFit.contain,
+              ),
+            ),
+            alignment: Alignment(-0.25, 0.0),
+            child: _buildHintChildWidget(tag),
+          ),
+        ),
+      );
+    }
+  }
+
   /// 构建某个hint中子部件
   Widget _buildHintChildWidget(String tag) {
     if (widget.mapHintTag != null && widget.mapHintTag[tag] != null) {
@@ -437,7 +465,7 @@ class _IndexBarState extends State<_IndexBar> {
 
     // 配置数据源Widget
     widget.data.forEach((tag) {
-      final tagWidget = _buildIndexTagWidget(tag);
+      final tagWidget = _buildIndexTagItemWidget(tag);
       children.add(tagWidget);
     });
 

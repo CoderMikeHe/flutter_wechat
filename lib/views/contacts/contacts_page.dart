@@ -18,6 +18,13 @@ import 'package:flutter_wechat/components/list_tile/mh_list_tile.dart';
 import 'package:flutter_wechat/components/search_bar/search_bar.dart';
 import 'package:flutter_wechat/components/index_bar/mh_index_bar.dart';
 
+// 用作测试用
+const List<String> INDEX_DATA_0 = ['★', '♀', '↑', '@', 'A', 'B', 'C', 'D'];
+const List<String> INDEX_DATA_1 = ['E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
+const List<String> INDEX_DATA_2 = ['M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T'];
+const List<String> INDEX_DATA_3 = ['U', 'V', 'W', 'X', 'Y', 'Z', '#', '↓'];
+const List<String> IGNORE_TAGS = [];
+
 class ContactsPage extends StatefulWidget {
   ContactsPage({Key key}) : super(key: key);
 
@@ -98,6 +105,7 @@ class _ContactsPageState extends State<ContactsPage> {
       _contactsList = list;
       _lastContact = list.last;
       _contactsCount = "${list.length}位联系人";
+      _suspensionTag = '♀';
     });
   }
 
@@ -452,7 +460,7 @@ class _ContactsPageState extends State<ContactsPage> {
   }
 
   // 构建自定义索引条的
-  Widget _buildCustomIndexBarList() {
+  Widget _buildCustomIndexBarList({bool builderMode = true}) {
     return AzListView(
       data: _contactsList,
       itemBuilder: (context, model) => _buildListItem(model),
@@ -473,39 +481,246 @@ class _ContactsPageState extends State<ContactsPage> {
       // 隐藏默认提供的
       showIndexHint: false,
       indexBarBuilder: (context, tagList, onTouch) {
-        return MHIndexBar(
-          data: tagList,
-          tag: _suspensionTag,
-          hintOffsetX: 20,
-          ignoreTags: [],
-          // selectedTagColor: Colors.red,
-          mapTag: {
-            "♀": new SvgPicture.asset(
-              Constant.assetsImagesSearch + 'icons_filled_search.svg',
-              color: Color(0xFF555555),
-              width: 12,
-              height: 12,
-            ),
-          },
-          mapSelTag: {
-            "♀": new SvgPicture.asset(
-              Constant.assetsImagesSearch + 'icons_filled_search.svg',
-              color: Color(0xFFFFFFFF),
-              width: 12,
-              height: 12,
-            ),
-          },
-          mapHintTag: {
-            "♀": new SvgPicture.asset(
-              Constant.assetsImagesSearch + 'icons_filled_search.svg',
-              color: Colors.white70,
-              width: 30,
-              height: 30,
-            ),
-          },
-          onTouch: onTouch,
-        );
+        if (builderMode) {
+          return _buildCustomIndexBarByBuilder(context, tagList, onTouch);
+        } else {
+          return _buildCustomIndexBarByDefault(context, tagList, onTouch);
+        }
       },
     );
+  }
+
+  /// 构建自定义IndexBar by default
+  Widget _buildCustomIndexBarByDefault(BuildContext context,
+      List<String> tagList, IndexBarTouchCallback onTouch) {
+    return MHIndexBar(
+      data: tagList,
+      tag: _suspensionTag,
+      hintOffsetX: 20,
+      ignoreTags: [],
+      // selectedTagColor: Colors.red,
+      mapTag: {
+        "♀": new SvgPicture.asset(
+          Constant.assetsImagesSearch + 'icons_filled_search.svg',
+          color: Color(0xFF555555),
+          width: 12,
+          height: 12,
+        ),
+      },
+      mapSelTag: {
+        "♀": new SvgPicture.asset(
+          Constant.assetsImagesSearch + 'icons_filled_search.svg',
+          color: Color(0xFFFFFFFF),
+          width: 12,
+          height: 12,
+        ),
+      },
+      mapHintTag: {
+        "♀": new SvgPicture.asset(
+          Constant.assetsImagesSearch + 'icons_filled_search.svg',
+          color: Colors.white70,
+          width: 30,
+          height: 30,
+        ),
+      },
+      onTouch: onTouch,
+    );
+  }
+
+  /// 构建自定义IndexBar by builder
+  Widget _buildCustomIndexBarByBuilder(BuildContext context,
+      List<String> tagList, IndexBarTouchCallback onTouch) {
+    return MHIndexBar(
+      data: tagList,
+      tag: _suspensionTag,
+      onTouch: onTouch,
+      indexBarTagBuilder: (context, tag, indexModel) {
+        return _buildIndexBarTagWidget(context, tag, indexModel);
+      },
+      indexBarHintBuilder: (context, tag, indexModel) {
+        return _buildIndexBarHintWidget(context, tag, indexModel);
+      },
+    );
+  }
+
+  /// 构建tag
+  Widget _buildIndexBarTagWidget(
+      BuildContext context, String tag, IndexBarDetails indexModel) {
+    return Container(
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: _fetchColor(tag, indexModel),
+        borderRadius: BorderRadius.circular(7),
+      ),
+      child: _buildTagWidget(tag, indexModel),
+      width: 14.0,
+      height: 14.0,
+    );
+  }
+
+  /// 获取背景色
+  Color _fetchColor(String tag, IndexBarDetails indexModel) {
+    Color color = Color(0xFF07C160);
+    if (INDEX_DATA_0.indexOf(tag) != -1) {
+      color = Colors.red;
+    } else if (INDEX_DATA_1.indexOf(tag) != -1) {
+      color = Colors.green;
+    } else if (INDEX_DATA_2.indexOf(tag) != -1) {
+      color = Colors.blue;
+    }
+    if (indexModel.tag == tag) {
+      return IGNORE_TAGS.indexOf(tag) != -1 ? Colors.transparent : color;
+    }
+    return Colors.transparent;
+  }
+
+  /// 构建某个tag
+  Widget _buildTagWidget(String tag, IndexBarDetails indexModel) {
+    Color textColor;
+    Color selTextColor;
+    if (INDEX_DATA_0.indexOf(tag) != -1) {
+      // 浅黑
+      textColor = Color(0xFF555555);
+      selTextColor = Colors.white;
+    } else if (INDEX_DATA_1.indexOf(tag) != -1) {
+      // 红色
+      textColor = Color(0xFFFA5151);
+      selTextColor = Colors.white;
+    } else if (INDEX_DATA_2.indexOf(tag) != -1) {
+      // 绿色
+      textColor = Color(0xFF07C160);
+      selTextColor = Colors.white;
+    } else {
+      // 蓝色
+      textColor = Color(0xFF10AEFF);
+      selTextColor = Colors.white;
+    }
+    // 当前选中的tag, 也就是高亮的场景
+    if (indexModel.tag == tag) {
+      final isIgnore = IGNORE_TAGS.indexOf(tag) != -1;
+      // 如果是忽略
+      if (isIgnore) {
+        // 获取mapTag
+        if (tag == '♀') {
+          // 返回映射的部件
+          return new SvgPicture.asset(
+            Constant.assetsImagesSearch + 'icons_filled_search.svg',
+            color: Color(0xFF555555),
+            width: 12,
+            height: 12,
+          );
+        } else {
+          // 返回默认的部件
+          return Text(
+            tag,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 10.0,
+              color: textColor,
+              fontWeight: FontWeight.w500,
+            ),
+          );
+        }
+      } else {
+        // 不忽略，则显示高亮组件
+        if (tag == '♀') {
+          // 返回映射高亮的部件
+          return new SvgPicture.asset(
+            Constant.assetsImagesSearch + 'icons_filled_search.svg',
+            color: selTextColor,
+            width: 12,
+            height: 12,
+          );
+        } else {
+          // 返回默认的部件
+          return Text(
+            tag,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 10.0,
+              color: selTextColor,
+              fontWeight: FontWeight.w500,
+            ),
+          );
+        }
+      }
+    }
+    // 非高亮场景
+    // 获取mapTag
+    if (tag == '♀') {
+      // 返回映射的部件
+      return new SvgPicture.asset(
+        Constant.assetsImagesSearch + 'icons_filled_search.svg',
+        color: Color(0xFF555555),
+        width: 12,
+        height: 12,
+      );
+    } else {
+      // 返回默认的部件
+      return Text(
+        tag,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 10.0,
+          color: textColor,
+          fontWeight: FontWeight.w500,
+        ),
+      );
+    }
+  }
+
+  /// 构建tag
+  Widget _buildIndexBarHintWidget(
+      BuildContext context, String tag, IndexBarDetails indexModel) {
+    return Positioned(
+      left: -80,
+      top: -(50 - 16) * 0.5,
+      child: Offstage(
+        offstage: _fetchOffstage(tag, indexModel),
+        child: Container(
+          width: 60.0,
+          height: 50.0,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                  'assets/images/contacts/ContactIndexShape_60x50.png'),
+              fit: BoxFit.contain,
+            ),
+          ),
+          alignment: Alignment(-0.25, 0.0),
+          child: _buildHintChildWidget(tag, indexModel),
+        ),
+      ),
+    );
+  }
+
+  /// 构建某个hint中子部件
+  Widget _buildHintChildWidget(String tag, IndexBarDetails indexModel) {
+    if (tag == '♀') {
+      // 返回映射高亮的部件
+      return new SvgPicture.asset(
+        Constant.assetsImagesSearch + 'icons_filled_search.svg',
+        color: Colors.white70,
+        width: 30,
+        height: 30,
+      );
+    }
+    return Text(
+      tag,
+      style: TextStyle(
+        color: Colors.white70,
+        fontSize: 30.0,
+        fontWeight: FontWeight.w700,
+      ),
+    );
+  }
+
+  // 获取Offstage 是否隐居幕后
+  bool _fetchOffstage(String tag, IndexBarDetails indexModel) {
+    if (indexModel.tag == tag) {
+      final List<String> ignoreTags = [];
+      return ignoreTags.indexOf(tag) != -1 ? true : !indexModel.isTouchDown;
+    }
+    return true;
   }
 }
