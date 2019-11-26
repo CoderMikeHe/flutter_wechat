@@ -273,40 +273,40 @@ class _ContactsPageState extends State<ContactsPage> {
   }) {
     final double iconWH = ScreenUtil.getInstance().setWidth(120.0);
     // 头部分
-    Widget leading = Padding(
-        padding:
-            EdgeInsets.only(right: ScreenUtil.getInstance().setWidth(39.0)),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(6.0),
-          ),
-          child: isNetwork
-              ? CachedNetworkImage(
-                  imageUrl: icon,
-                  width: iconWH,
-                  height: iconWH,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) {
-                    return Image.asset(
-                      Constant.assetsImagesDefault + 'DefaultHead_48x48.png',
-                      width: iconWH,
-                      height: iconWH,
-                    );
-                  },
-                  errorWidget: (context, url, error) {
-                    return Image.asset(
-                      Constant.assetsImagesDefault + 'DefaultHead_48x48.png',
-                      width: iconWH,
-                      height: iconWH,
-                    );
-                  },
-                )
-              : Image.asset(
-                  icon,
-                  width: iconWH,
-                  height: iconWH,
-                ),
-        ));
+    // Widget leading = Padding(
+    //   padding: EdgeInsets.only(right: ScreenUtil.getInstance().setWidth(39.0)),
+    //   child: Container(
+    //     decoration: BoxDecoration(
+    //       borderRadius: BorderRadius.circular(6.0),
+    //     ),
+    //     child: isNetwork
+    //         ? CachedNetworkImage(
+    //             imageUrl: icon,
+    //             width: iconWH,
+    //             height: iconWH,
+    //             fit: BoxFit.cover,
+    //             placeholder: (context, url) {
+    //               return Image.asset(
+    //                 Constant.assetsImagesDefault + 'DefaultHead_48x48.png',
+    //                 width: iconWH,
+    //                 height: iconWH,
+    //               );
+    //             },
+    //             errorWidget: (context, url, error) {
+    //               return Image.asset(
+    //                 Constant.assetsImagesDefault + 'DefaultHead_48x48.png',
+    //                 width: iconWH,
+    //                 height: iconWH,
+    //               );
+    //             },
+    //           )
+    //         : Image.asset(
+    //             icon,
+    //             width: iconWH,
+    //             height: iconWH,
+    //           ),
+    //   ),
+    // );
     // 中部分
     Widget middle = Padding(
       padding: EdgeInsets.only(right: Constant.pEdgeInset),
@@ -322,7 +322,7 @@ class _ContactsPageState extends State<ContactsPage> {
       dividerColor: Color(0xFFE6E6E6),
       onTapValue: onTap,
       allowTap: !_slideIsOpen || !needSlidable,
-      leading: leading,
+      // leading: leading,
       middle: middle,
       height: _itemHeight.toDouble(),
       dividerIndent: ScreenUtil.getInstance().setWidth(208.0),
@@ -403,7 +403,7 @@ class _ContactsPageState extends State<ContactsPage> {
       //     ),
       //   ],
       // ),
-      body: _buildContactsList(defaultMode: true),
+      body: _buildContactsList(defaultMode: false),
     );
   }
 
@@ -476,13 +476,31 @@ class _ContactsPageState extends State<ContactsPage> {
         return MHIndexBar(
           data: tagList,
           tag: _suspensionTag,
-          ignoreTags: ['♀'],
+          hintOffsetX: 20,
+          ignoreTags: [],
+          // selectedTagColor: Colors.red,
           mapTag: {
             "♀": new SvgPicture.asset(
               Constant.assetsImagesSearch + 'icons_filled_search.svg',
-              color: Color(0xFF181818),
-              width: 8.0,
-              height: 8.0,
+              color: Color(0xFF555555),
+              width: 12,
+              height: 12,
+            ),
+          },
+          mapSelTag: {
+            "♀": new SvgPicture.asset(
+              Constant.assetsImagesSearch + 'icons_filled_search.svg',
+              color: Color(0xFFFFFFFF),
+              width: 12,
+              height: 12,
+            ),
+          },
+          mapHintTag: {
+            "♀": new SvgPicture.asset(
+              Constant.assetsImagesSearch + 'icons_filled_search.svg',
+              color: Colors.white70,
+              width: 30,
+              height: 30,
             ),
           },
           onTouch: onTouch,

@@ -2,7 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:azlistview/azlistview.dart';
 
 /// IndexBar touch callback IndexModel.
-typedef void IndexBarTouchCallback(IndexBarDetails model);
+// typedef void IndexBarTouchCallback(IndexBarDetails model);
+
+/// Called to build index hint. 自定义气泡弹出Hint
+/// [tag] 标签值
+/// [indexModel] 当前选中的标签Model
+typedef Widget IndexBarHintBuilder(
+    BuildContext context, String tag, IndexBarDetails indexModel);
+
+/// Called to build index tag. 自定义气标签
+typedef Widget IndexBarTagBuilder(
+    BuildContext context, String tag, IndexBarDetails indexModel);
 
 /// MHIndexBar.
 class MHIndexBar extends StatefulWidget {
@@ -10,17 +20,26 @@ class MHIndexBar extends StatefulWidget {
     Key key,
     this.data = INDEX_DATA_DEF,
     @required this.onTouch,
-    this.width = 24,
+    this.itemWidth = 24,
+    this.itemHeight = 16,
+    this.tagWidth = 14,
+    this.tagHeight = 14,
     this.tag = '',
     this.ignoreTags = const [],
     this.mapTag,
     this.mapSelTag,
-    this.itemHeight = 16,
+    this.mapHintTag,
     this.color = Colors.transparent,
-    this.textStyle = const TextStyle(fontSize: 10.0, color: Color(0xFF666666)),
-    this.touchDownColor = const Color(0xffeeeeee),
-    this.touchDownTextStyle =
-        const TextStyle(fontSize: 10.0, color: Colors.black),
+    this.touchDownColor = Colors.transparent,
+    this.tagColor = Colors.transparent,
+    this.selectedTagColor = const Color(0xFF07C160),
+    this.textStyle = const TextStyle(
+        fontSize: 10.0, color: Color(0xFF555555), fontWeight: FontWeight.w500),
+    this.selectedTextStyle = const TextStyle(
+        fontSize: 10.0, color: Color(0xFFFFFFFF), fontWeight: FontWeight.w500),
+    this.hintOffsetX = 20.0,
+    this.indexBarTagBuilder,
+    this.indexBarHintBuilder,
   });
 
   /// index data.
@@ -32,31 +51,56 @@ class MHIndexBar extends StatefulWidget {
   /// 忽略的Tags，这些忽略Tag, 不会高亮显示，点击或长按 不会弹出 tagHint
   final List<String> ignoreTags;
 
-  /// 针对某个Tag显示其他部件的映射,一般都是映射 图片
+  /// 针对某个Tag显示其他部件的映射,一般都是映射 图片/svg
   final Map<String, Widget> mapTag;
 
-  /// 针对某个Tag显示高亮其他部件的映射,一般都是映射 图片
+  /// 针对某个Tag显示高亮其他部件的映射,一般都是映射 图片/svg
   final Map<String, Widget> mapSelTag;
 
-  /// MHIndexBar width(def:24).
-  final int width;
+  /// 长按弹出气泡显示的内容,一般都是映射 图片/svg
+  final Map<String, Widget> mapHintTag;
+
+  /// MHIndexBar item width(def:24).
+  final int itemWidth;
 
   /// MHIndexBar item height(def:16).
   final int itemHeight;
 
-  /// Background color
+  /// MHIndexBar item 中的tag width(def:14). 尽量保证 tagWidth = tagHeight 且 tagWidth <= itemWidth
+  final int tagWidth;
+
+  /// MHIndexBar item 中的tag height(def:14). 尽量保证 tagWidth = tagHeight 且 tagHeight <= itemHeight
+  final int tagHeight;
+
+  /// Background color 默认是透明
   final Color color;
 
-  /// MHIndexBar touch down color.
+  /// MHIndexBar touch down color. 默认是透明
   final Color touchDownColor;
 
-  /// MHIndexBar text style.
+  /// 标签默认的背景色 默认是透明色
+  final Color tagColor;
+
+  /// 标签选中的背景色 默认是 0xFF07C160
+  final Color selectedTagColor;
+
+  /// MHIndexBar default text style. default is TextStyle(fontSize: 10.0, color: Color(0xFF555555), fontWeight: FontWeight.w500)
   final TextStyle textStyle;
 
-  final TextStyle touchDownTextStyle;
+  /// MHIndexBar highlight text style. default is TextStyle(fontSize: 10.0, color: Color(0xFFFFFFFF), fontWeight: FontWeight.w500)
+  final TextStyle selectedTextStyle;
 
   /// Item touch callback.
   final IndexBarTouchCallback onTouch;
+
+  /// hint右侧距离indexBar左侧的边距 默认是20.0
+  final double hintOffsetX;
+
+  /// 自定义标签，且 跟标签相关的属性将全部失效
+  final IndexBarTagBuilder indexBarTagBuilder;
+
+  /// 自定义气泡弹出Hint， 且 跟hint相关的属性将全部失效
+  final IndexBarHintBuilder indexBarHintBuilder;
 
   @override
   _SuspensionListViewIndexBarState createState() =>
@@ -75,16 +119,24 @@ class _SuspensionListViewIndexBarState extends State<MHIndexBar> {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      color: widget.color,
-      width: widget.width.toDouble(),
+      color: _isTouchDown ? widget.touchDownColor : widget.color,
+      width: widget.itemWidth.toDouble(),
       child: _IndexBar(
         tag: widget.tag,
         ignoreTags: widget.ignoreTags,
+        mapTag: widget.mapTag,
+        mapSelTag: widget.mapSelTag,
+        mapHintTag: widget.mapHintTag,
         data: widget.data,
-        width: widget.width,
+        itemWidth: widget.itemWidth,
         itemHeight: widget.itemHeight,
+        tagWidth: widget.tagWidth,
+        tagHeight: widget.tagHeight,
         textStyle: widget.textStyle,
-        touchDownTextStyle: widget.touchDownTextStyle,
+        selectedTextStyle: widget.selectedTextStyle,
+        hintOffsetX: widget.hintOffsetX,
+        tagColor: widget.tagColor,
+        selectedTagColor: widget.selectedTagColor,
         onTouch: (details) {
           if (widget.onTouch != null) {
             if (_isTouchDown != details.isTouchDown) {
@@ -110,30 +162,67 @@ class _IndexBar extends StatefulWidget {
   /// 忽略的Tags，这些忽略Tag, 不会高亮显示，点击或长按 不会弹出 tagHint
   final List<String> ignoreTags;
 
-  /// IndexBar width(def:30).
-  final int width;
+  /// 针对某个Tag显示其他部件的映射,一般都是映射 图片/svg
+  final Map<String, Widget> mapTag;
+
+  /// 针对某个Tag显示高亮其他部件的映射,一般都是映射 图片/svg
+  final Map<String, Widget> mapSelTag;
+
+  /// 长按弹出气泡显示的内容,一般都是映射 图片/svg
+  final Map<String, Widget> mapHintTag;
+
+  /// IndexBar item width(def:24).
+  final int itemWidth;
 
   /// IndexBar item height(def:16).
   final int itemHeight;
 
-  /// IndexBar text style.
+  /// MHIndexBar item 中的tag width(def:14). 尽量保证 tagWidth = tagHeight 且 tagWidth <= itemWidth
+  final int tagWidth;
+
+  /// MHIndexBar item 中的tag height(def:14). 尽量保证 tagWidth = tagHeight 且 tagHeight <= itemHeight
+  final int tagHeight;
+
+  /// MHIndexBar default text style. default is TextStyle(fontSize: 10.0, color: Color(0xFF555555), fontWeight: FontWeight.w500)
   final TextStyle textStyle;
 
-  final TextStyle touchDownTextStyle;
+  /// MHIndexBar highlight text style. default is TextStyle(fontSize: 10.0, color: Color(0xFFFFFFFF), fontWeight: FontWeight.w500)
+  final TextStyle selectedTextStyle;
 
   /// Item touch callback.
   final IndexBarTouchCallback onTouch;
+
+  /// hint右侧距离indexBar左侧的边距 默认是20.0
+  final double hintOffsetX;
+
+  /// 标签默认的背景色 默认是透明色
+  final Color tagColor;
+
+  /// 标签默认的背景色 默认是 0xFF07C160
+  final Color selectedTagColor;
+
+  ///
 
   _IndexBar({
     Key key,
     this.data = INDEX_DATA_DEF,
     this.tag = '',
     this.ignoreTags = const [],
+    this.mapTag,
+    this.mapSelTag,
+    this.mapHintTag,
     @required this.onTouch,
-    this.width = 30,
+    this.itemWidth = 30,
     this.itemHeight = 16,
-    this.textStyle,
-    this.touchDownTextStyle,
+    this.tagWidth = 14,
+    this.tagHeight = 14,
+    this.textStyle = const TextStyle(
+        fontSize: 10.0, color: Color(0xFF555555), fontWeight: FontWeight.w500),
+    this.selectedTextStyle = const TextStyle(
+        fontSize: 10.0, color: Color(0xFFFFFFFF), fontWeight: FontWeight.w500),
+    this.hintOffsetX = 20.0,
+    this.tagColor = Colors.transparent,
+    this.selectedTagColor = const Color(0xFF07C160),
   })  : assert(onTouch != null),
         super(key: key);
 
@@ -178,33 +267,150 @@ class _IndexBarState extends State<_IndexBar> {
     }
   }
 
-  // 获取背景色
-  Color _fetchColor(String v) {
-    if (_indexModel.tag == v) {
+  /// 获取背景色
+  Color _fetchColor(String tag) {
+    if (_indexModel.tag == tag) {
       final List<String> ignoreTags = widget.ignoreTags ?? [];
-      return ignoreTags.indexOf(v) != -1
-          ? Colors.transparent
-          : Color(0xFF07C160);
+      return ignoreTags.indexOf(tag) != -1
+          ? widget.tagColor ?? Colors.transparent
+          : widget.selectedTagColor ?? Color(0xFF07C160);
     }
-    return Colors.transparent;
+    return widget.tagColor ?? Colors.transparent;
   }
 
-  // 获取文字颜色
-  Color _fetchTextColor(String v) {
-    if (_indexModel.tag == v) {
+  // 获取Offstage 是否隐居幕后
+  bool _fetchOffstage(String tag) {
+    if (_indexModel.tag == tag) {
       final List<String> ignoreTags = widget.ignoreTags ?? [];
-      return ignoreTags.indexOf(v) != -1 ? Color(0xFF555555) : Colors.white;
-    }
-    return Color(0xFF555555);
-  }
-
-  // 获取Offstage
-  bool _fetchOffstageColor(String v) {
-    if (_indexModel.tag == v) {
-      final List<String> ignoreTags = widget.ignoreTags ?? [];
-      return ignoreTags.indexOf(v) != -1 ? true : !_indexModel.isTouchDown;
+      return ignoreTags.indexOf(tag) != -1 ? true : !_indexModel.isTouchDown;
     }
     return true;
+  }
+
+  /// 构建索引标签部件
+  Widget _buildIndexTagWidget(String tag) {
+    return new Container(
+      width: widget.itemWidth.toDouble(),
+      height: widget.itemHeight.toDouble(),
+      alignment: Alignment.center,
+      child: Stack(
+        // 设置超出部分可见
+        overflow: Overflow.visible,
+        children: <Widget>[
+          Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: _fetchColor(tag),
+              borderRadius: BorderRadius.circular(widget.tagWidth * 0.5),
+            ),
+            child: _buildTagWidget(tag),
+            width: widget.tagWidth.toDouble(),
+            height: widget.tagHeight.toDouble(),
+          ),
+          Positioned(
+            left: -(60 + widget.hintOffsetX ?? 20),
+            top: -(50 - widget.itemHeight) * 0.5,
+            child: Offstage(
+              offstage: _fetchOffstage(tag),
+              child: Container(
+                width: 60.0,
+                height: 50.0,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(
+                        'assets/images/contacts/ContactIndexShape_60x50.png'),
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                alignment: Alignment(-0.25, 0.0),
+                child: _buildHintChildWidget(tag),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 构建某个tag
+  Widget _buildTagWidget(String tag) {
+    // 当前选中的tag, 也就是高亮的场景
+    if (_indexModel.tag == tag) {
+      final List<String> ignoreTags = widget.ignoreTags ?? [];
+      final isIgnore = ignoreTags.indexOf(tag) != -1;
+      // 如果是忽略
+      if (isIgnore) {
+        // 获取mapTag
+        if (widget.mapTag != null && widget.mapTag[tag] != null) {
+          // 返回映射的部件
+          return widget.mapTag[tag];
+        } else {
+          // 返回默认的部件
+          return Text(
+            tag,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 10.0,
+              color: Color(0xFF555555),
+              fontWeight: FontWeight.w500,
+            ),
+          );
+        }
+      } else {
+        // 不忽略，则显示高亮组件
+        if (widget.mapSelTag != null && widget.mapSelTag[tag] != null) {
+          // 返回映射高亮的部件
+          return widget.mapSelTag[tag];
+        } else if (widget.mapTag != null && widget.mapTag[tag] != null) {
+          // 返回映射的部件
+          return widget.mapTag[tag];
+        } else {
+          // 返回默认的部件
+          return Text(
+            tag,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 10.0,
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
+          );
+        }
+      }
+    }
+    // 非高亮场景
+    // 获取mapTag
+    if (widget.mapTag != null && widget.mapTag[tag] != null) {
+      // 返回映射的部件
+      return widget.mapTag[tag];
+    } else {
+      // 返回默认的部件
+      return Text(
+        tag,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 10.0,
+          color: Color(0xFF555555),
+          fontWeight: FontWeight.w500,
+        ),
+      );
+    }
+  }
+
+  /// 构建某个hint中子部件
+  Widget _buildHintChildWidget(String tag) {
+    if (widget.mapHintTag != null && widget.mapHintTag[tag] != null) {
+      // 返回映射高亮的部件
+      return widget.mapHintTag[tag];
+    }
+    return Text(
+      tag,
+      style: TextStyle(
+        color: Colors.white70,
+        fontSize: 30.0,
+        fontWeight: FontWeight.w700,
+      ),
+    );
   }
 
   @override
@@ -214,10 +420,7 @@ class _IndexBarState extends State<_IndexBar> {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle _style = widget.textStyle;
-    if (_indexModel.isTouchDown == true) {
-      _style = widget.touchDownTextStyle;
-    }
+    // 初始化
     _init();
 
     // 配置 _indexModel tag 可能是用户滚动列表的数据 导致tag
@@ -229,62 +432,13 @@ class _IndexBarState extends State<_IndexBar> {
       _indexModel.position = widget.data.indexOf(widget.tag);
     }
 
-    // 部件数据源
+    // ��件数据源
     List<Widget> children = new List();
 
-    widget.data.forEach((v) {
-      children.add(new Container(
-        width: widget.width.toDouble(),
-        height: widget.itemHeight.toDouble(),
-        alignment: Alignment.center,
-        child: Stack(
-          overflow: Overflow.visible,
-          children: <Widget>[
-            Container(
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: _fetchColor(v),
-                borderRadius: BorderRadius.circular(7),
-              ),
-              child: new Text(v,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 10.0,
-                      color: _fetchTextColor(v),
-                      fontWeight: FontWeight.w500)),
-              width: 14.0,
-              height: 14.0,
-            ),
-            Positioned(
-              left: -80.0,
-              top: -17.0,
-              child: Offstage(
-                offstage: _fetchOffstageColor(v),
-                child: Container(
-                  width: 60.0,
-                  height: 50.0,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(
-                          'assets/images/contacts/ContactIndexShape_60x50.png'),
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                  alignment: Alignment(-0.25, 0.0),
-                  child: Text(
-                    v,
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 30.0,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ));
+    // 配置数据源Widget
+    widget.data.forEach((tag) {
+      final tagWidget = _buildIndexTagWidget(tag);
+      children.add(tagWidget);
     });
 
     return GestureDetector(
