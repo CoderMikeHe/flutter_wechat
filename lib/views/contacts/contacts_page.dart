@@ -351,7 +351,7 @@ class _ContactsPageState extends State<ContactsPage> {
       key: Key(title),
       controller: _slidableController,
       dismissal: SlidableDismissal(
-        closeOnCanceled: true,
+        closeOnCanceled: false,
         dragDismissible: true,
         child: SlidableDrawerDismissal(),
         onWillDismiss: (actionType) {
@@ -565,7 +565,9 @@ class _ContactsPageState extends State<ContactsPage> {
     Color color;
     if (INDEX_DATA_0.indexOf(tag) != -1) {
       // 灰
-      color = Color(0xFFC9C9C9);
+      // color = Color(0xFFC9C9C9);
+      // 黄
+      color = Color(0xFFFFC300);
     } else if (INDEX_DATA_1.indexOf(tag) != -1) {
       // 红
       color = Color(0xFFFA5151);
@@ -579,11 +581,6 @@ class _ContactsPageState extends State<ContactsPage> {
     if (indexModel.tag == tag) {
       return IGNORE_TAGS.indexOf(tag) != -1 ? Colors.transparent : color;
     }
-
-    //
-    if (tag == 'D' || tag == 'L' || tag == 'T' || tag == 'Z') {
-      return color;
-    }
     return Colors.transparent;
   }
 
@@ -592,8 +589,8 @@ class _ContactsPageState extends State<ContactsPage> {
     Color textColor;
     Color selTextColor;
     if (INDEX_DATA_0.indexOf(tag) != -1) {
-      // 浅黑
-      textColor = Color(0xFF555555);
+      // 浅黑 Color(0xFF555555)
+      textColor = Color(0xFFFFC300);
       selTextColor = Colors.white;
     } else if (INDEX_DATA_1.indexOf(tag) != -1) {
       // 红色
@@ -618,7 +615,7 @@ class _ContactsPageState extends State<ContactsPage> {
           // 返回映射的部件
           return new SvgPicture.asset(
             Constant.assetsImagesSearch + 'icons_filled_search.svg',
-            color: Color(0xFF555555),
+            color: Color(0xFFFFC300),
             width: 12,
             height: 12,
           );
@@ -676,9 +673,7 @@ class _ContactsPageState extends State<ContactsPage> {
         textAlign: TextAlign.center,
         style: TextStyle(
           fontSize: 10.0,
-          color: (tag == 'D' || tag == 'L' || tag == 'T' || tag == 'Z')
-              ? selTextColor
-              : textColor,
+          color: textColor,
           fontWeight: FontWeight.w500,
         ),
       );
@@ -751,8 +746,6 @@ class _ContactsPageState extends State<ContactsPage> {
       final List<String> ignoreTags = [];
       return ignoreTags.indexOf(tag) != -1 ? true : !indexModel.isTouchDown;
     }
-    return (tag == 'D' || tag == 'L' || tag == 'T' || tag == 'Z')
-        ? false
-        : true;
+    return true;
   }
 }
