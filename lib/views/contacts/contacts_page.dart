@@ -281,40 +281,40 @@ class _ContactsPageState extends State<ContactsPage> {
   }) {
     final double iconWH = ScreenUtil.getInstance().setWidth(120.0);
     // 头部分
-    // Widget leading = Padding(
-    //   padding: EdgeInsets.only(right: ScreenUtil.getInstance().setWidth(39.0)),
-    //   child: Container(
-    //     decoration: BoxDecoration(
-    //       borderRadius: BorderRadius.circular(6.0),
-    //     ),
-    //     child: isNetwork
-    //         ? CachedNetworkImage(
-    //             imageUrl: icon,
-    //             width: iconWH,
-    //             height: iconWH,
-    //             fit: BoxFit.cover,
-    //             placeholder: (context, url) {
-    //               return Image.asset(
-    //                 Constant.assetsImagesDefault + 'DefaultHead_48x48.png',
-    //                 width: iconWH,
-    //                 height: iconWH,
-    //               );
-    //             },
-    //             errorWidget: (context, url, error) {
-    //               return Image.asset(
-    //                 Constant.assetsImagesDefault + 'DefaultHead_48x48.png',
-    //                 width: iconWH,
-    //                 height: iconWH,
-    //               );
-    //             },
-    //           )
-    //         : Image.asset(
-    //             icon,
-    //             width: iconWH,
-    //             height: iconWH,
-    //           ),
-    //   ),
-    // );
+    Widget leading = Padding(
+      padding: EdgeInsets.only(right: ScreenUtil.getInstance().setWidth(39.0)),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(6.0),
+        ),
+        child: isNetwork
+            ? CachedNetworkImage(
+                imageUrl: icon,
+                width: iconWH,
+                height: iconWH,
+                fit: BoxFit.cover,
+                placeholder: (context, url) {
+                  return Image.asset(
+                    Constant.assetsImagesDefault + 'DefaultHead_48x48.png',
+                    width: iconWH,
+                    height: iconWH,
+                  );
+                },
+                errorWidget: (context, url, error) {
+                  return Image.asset(
+                    Constant.assetsImagesDefault + 'DefaultHead_48x48.png',
+                    width: iconWH,
+                    height: iconWH,
+                  );
+                },
+              )
+            : Image.asset(
+                icon,
+                width: iconWH,
+                height: iconWH,
+              ),
+      ),
+    );
     // 中部分
     Widget middle = Padding(
       padding: EdgeInsets.only(right: Constant.pEdgeInset),
@@ -330,7 +330,7 @@ class _ContactsPageState extends State<ContactsPage> {
       dividerColor: Color(0xFFE6E6E6),
       onTapValue: onTap,
       allowTap: !_slideIsOpen || !needSlidable,
-      // leading: leading,
+      leading: leading,
       middle: middle,
       height: _itemHeight.toDouble(),
       dividerIndent: ScreenUtil.getInstance().setWidth(208.0),
@@ -421,7 +421,9 @@ class _ContactsPageState extends State<ContactsPage> {
     if (defaultMode) {
       return _buildDefaultIndexBarList();
     } else {
-      return _buildCustomIndexBarList();
+      // 自定义IndexBar
+      // builderMode 是否启用 builder 这种模式来 构建 tag 和 hint
+      return _buildCustomIndexBarList(builderMode: true);
     }
   }
 
@@ -496,7 +498,7 @@ class _ContactsPageState extends State<ContactsPage> {
     return MHIndexBar(
       data: tagList,
       tag: _suspensionTag,
-      hintOffsetX: 20,
+      hintOffsetX: -80,
       ignoreTags: [],
       // selectedTagColor: Colors.red,
       mapTag: {
@@ -527,7 +529,7 @@ class _ContactsPageState extends State<ContactsPage> {
     );
   }
 
-  /// 构建自定义IndexBar by builder
+  /// 🔥🔥🔥 构建自定义IndexBar by builder  使用Builder的形式控件 更加强大 更高定制度
   Widget _buildCustomIndexBarByBuilder(BuildContext context,
       List<String> tagList, IndexBarTouchCallback onTouch) {
     return MHIndexBar(
@@ -560,16 +562,27 @@ class _ContactsPageState extends State<ContactsPage> {
 
   /// 获取背景色
   Color _fetchColor(String tag, IndexBarDetails indexModel) {
-    Color color = Color(0xFF07C160);
+    Color color;
     if (INDEX_DATA_0.indexOf(tag) != -1) {
-      color = Colors.red;
+      // 灰
+      color = Color(0xFFC9C9C9);
     } else if (INDEX_DATA_1.indexOf(tag) != -1) {
-      color = Colors.green;
+      // 红
+      color = Color(0xFFFA5151);
     } else if (INDEX_DATA_2.indexOf(tag) != -1) {
-      color = Colors.blue;
+      // 绿
+      color = Color(0xFF07C160);
+    } else {
+      // 蓝
+      color = Color(0xFF10AEFF);
     }
     if (indexModel.tag == tag) {
       return IGNORE_TAGS.indexOf(tag) != -1 ? Colors.transparent : color;
+    }
+
+    //
+    if (tag == 'D' || tag == 'L' || tag == 'T' || tag == 'Z') {
+      return color;
     }
     return Colors.transparent;
   }
@@ -600,7 +613,7 @@ class _ContactsPageState extends State<ContactsPage> {
       final isIgnore = IGNORE_TAGS.indexOf(tag) != -1;
       // 如果是忽略
       if (isIgnore) {
-        // 获取mapTag
+        // 你可以针对某个标签 做更加高的定制
         if (tag == '♀') {
           // 返回映射的部件
           return new SvgPicture.asset(
@@ -657,33 +670,50 @@ class _ContactsPageState extends State<ContactsPage> {
       );
     } else {
       // 返回默认的部件
+
       return Text(
         tag,
         textAlign: TextAlign.center,
         style: TextStyle(
           fontSize: 10.0,
-          color: textColor,
+          color: (tag == 'D' || tag == 'L' || tag == 'T' || tag == 'Z')
+              ? selTextColor
+              : textColor,
           fontWeight: FontWeight.w500,
         ),
       );
     }
   }
 
-  /// 构建tag
+  /// 构建Hint
   Widget _buildIndexBarHintWidget(
       BuildContext context, String tag, IndexBarDetails indexModel) {
+    // 图片名
+    String imageName;
+    if (INDEX_DATA_0.indexOf(tag) != -1) {
+      // 浅黑
+      imageName = 'contact_index_bar_bubble_0.png';
+    } else if (INDEX_DATA_1.indexOf(tag) != -1) {
+      // 红色
+      imageName = 'contact_index_bar_bubble_1.png';
+    } else if (INDEX_DATA_2.indexOf(tag) != -1) {
+      // 绿色
+      imageName = 'contact_index_bar_bubble_2.png';
+    } else {
+      // 蓝色
+      imageName = 'contact_index_bar_bubble_3.png';
+    }
     return Positioned(
       left: -80,
-      top: -(50 - 16) * 0.5,
+      top: -(64 - 16) * 0.5,
       child: Offstage(
         offstage: _fetchOffstage(tag, indexModel),
         child: Container(
-          width: 60.0,
-          height: 50.0,
+          width: 64.0,
+          height: 64.0,
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage(
-                  'assets/images/contacts/ContactIndexShape_60x50.png'),
+              image: AssetImage('assets/images/contacts/$imageName'),
               fit: BoxFit.contain,
             ),
           ),
@@ -721,6 +751,8 @@ class _ContactsPageState extends State<ContactsPage> {
       final List<String> ignoreTags = [];
       return ignoreTags.indexOf(tag) != -1 ? true : !indexModel.isTouchDown;
     }
-    return true;
+    return (tag == 'D' || tag == 'L' || tag == 'T' || tag == 'Z')
+        ? false
+        : true;
   }
 }

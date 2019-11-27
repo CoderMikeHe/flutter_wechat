@@ -37,7 +37,10 @@ class MHIndexBar extends StatefulWidget {
         fontSize: 10.0, color: Color(0xFF555555), fontWeight: FontWeight.w500),
     this.selectedTextStyle = const TextStyle(
         fontSize: 10.0, color: Color(0xFFFFFFFF), fontWeight: FontWeight.w500),
-    this.hintOffsetX = 20.0,
+    this.hintOffsetX = -80.0,
+    this.hintOffsetY = -17.0,
+    this.hintImagePath,
+    this.hintContentAlignment = const Alignment(-0.25, 0.0),
     this.indexBarTagBuilder,
     this.indexBarHintBuilder,
   });
@@ -93,8 +96,17 @@ class MHIndexBar extends StatefulWidget {
   /// Item touch callback.
   final IndexBarTouchCallback onTouch;
 
-  /// hint右侧距离indexBar左侧的边距 默认是20.0
+  /// hint左距离indexBar左侧的边距 默认是-80.0 = -(hintW + 20) // hintW = 60
   final double hintOffsetX;
+
+  /// hint顶部距离indexBar顶部侧的边距 默认是-17.0 = -(hintH - itemHeight) * 0.5 // hintH = 50, itemHeight = 16
+  final double hintOffsetY;
+
+  /// hint背景图 只支持本地图片
+  final String hintImagePath;
+
+  /// hint内容对其方式
+  final Alignment hintContentAlignment;
 
   /// 自定义标签，且 跟标签相关的属性将全部失效
   final IndexBarTagBuilder indexBarTagBuilder;
@@ -135,6 +147,9 @@ class _SuspensionListViewIndexBarState extends State<MHIndexBar> {
         textStyle: widget.textStyle,
         selectedTextStyle: widget.selectedTextStyle,
         hintOffsetX: widget.hintOffsetX,
+        hintOffsetY: widget.hintOffsetY,
+        hintImagePath: widget.hintImagePath,
+        hintContentAlignment: widget.hintContentAlignment,
         tagColor: widget.tagColor,
         selectedTagColor: widget.selectedTagColor,
         indexBarTagBuilder: widget.indexBarTagBuilder,
@@ -194,8 +209,17 @@ class _IndexBar extends StatefulWidget {
   /// Item touch callback.
   final IndexBarTouchCallback onTouch;
 
-  /// hint右侧距离indexBar左侧的边距 默认是20.0
+  /// hint左距离indexBar左侧的边距 默认是-80.0 = -(hintW + 20) // hintW = 60
   final double hintOffsetX;
+
+  /// hint顶部距离indexBar顶部侧的边距 默认是-17.0 = -(hintH - itemHeight) * 0.5 // hintH = 50, itemHeight = 16
+  final double hintOffsetY;
+
+  /// hint背景图 只支持本地图片
+  final String hintImagePath;
+
+  /// hint内容对其方式
+  final Alignment hintContentAlignment;
 
   /// 标签默认的背景色 默认是透明色
   final Color tagColor;
@@ -226,9 +250,12 @@ class _IndexBar extends StatefulWidget {
         fontSize: 10.0, color: Color(0xFF555555), fontWeight: FontWeight.w500),
     this.selectedTextStyle = const TextStyle(
         fontSize: 10.0, color: Color(0xFFFFFFFF), fontWeight: FontWeight.w500),
-    this.hintOffsetX = 20.0,
+    this.hintOffsetX = -80.0,
+    this.hintOffsetY = -17.0,
     this.tagColor = Colors.transparent,
     this.selectedTagColor = const Color(0xFF07C160),
+    this.hintImagePath,
+    this.hintContentAlignment = const Alignment(-0.25, 0.0),
     this.indexBarTagBuilder,
     this.indexBarHintBuilder,
   })  : assert(onTouch != null),
@@ -348,11 +375,12 @@ class _IndexBarState extends State<_IndexBar> {
           return Text(
             tag,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 10.0,
-              color: Color(0xFF555555),
-              fontWeight: FontWeight.w500,
-            ),
+            style: widget.textStyle ??
+                TextStyle(
+                  fontSize: 10.0,
+                  color: Color(0xFF555555),
+                  fontWeight: FontWeight.w500,
+                ),
           );
         }
       } else {
@@ -361,18 +389,19 @@ class _IndexBarState extends State<_IndexBar> {
           // 返回映射高亮的部件
           return widget.mapSelTag[tag];
         } else if (widget.mapTag != null && widget.mapTag[tag] != null) {
-          // 返回映射的部件
+          // 返回映射默认的部件
           return widget.mapTag[tag];
         } else {
           // 返回默认的部件
           return Text(
             tag,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 10.0,
-              color: Colors.white,
-              fontWeight: FontWeight.w500,
-            ),
+            style: widget.selectedTextStyle ??
+                TextStyle(
+                  fontSize: 10.0,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
           );
         }
       }
@@ -387,24 +416,29 @@ class _IndexBarState extends State<_IndexBar> {
       return Text(
         tag,
         textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 10.0,
-          color: Color(0xFF555555),
-          fontWeight: FontWeight.w500,
-        ),
+        style: widget.textStyle ??
+            TextStyle(
+              fontSize: 10.0,
+              color: Color(0xFF555555),
+              fontWeight: FontWeight.w500,
+            ),
       );
     }
   }
 
-  /// 构建tag
+  /// 构建indexBar hint
   Widget _buildIndexBarHintWidget(
       BuildContext context, String tag, IndexBarDetails indexModel) {
+    // 如果外界自定义 indexbarHint
     if (widget.indexBarHintBuilder != null) {
       return widget.indexBarHintBuilder(context, tag, indexModel);
     } else {
+      // 图片路径
+      final String hintImagePath = widget.hintImagePath ??
+          'assets/images/contacts/ContactIndexShape_60x50.png';
       return Positioned(
-        left: -(60 + widget.hintOffsetX ?? 20),
-        top: -(50 - widget.itemHeight) * 0.5,
+        left: widget.hintOffsetX ?? -80,
+        top: widget.hintOffsetY ?? -(50 - widget.itemHeight) * 0.5,
         child: Offstage(
           offstage: _fetchOffstage(tag),
           child: Container(
@@ -412,12 +446,11 @@ class _IndexBarState extends State<_IndexBar> {
             height: 50.0,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(
-                    'assets/images/contacts/ContactIndexShape_60x50.png'),
+                image: AssetImage(hintImagePath),
                 fit: BoxFit.contain,
               ),
             ),
-            alignment: Alignment(-0.25, 0.0),
+            alignment: widget.hintContentAlignment ?? Alignment(-0.25, 0.0),
             child: _buildHintChildWidget(tag),
           ),
         ),
