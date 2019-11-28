@@ -1,6 +1,6 @@
 # flutter_wechat
 
-<img src="snapshots/logo.png"/>
+<img src="snapshots/logo.png" width="512px" height="512px" />
 
 ### 一、概述
 - 利用`Flutter` 来构建和模仿`微信7.0.0+ App`，且都是按照`原生微信App`页面，来开发和模仿滴，从而达到与原生app相近的视觉效果。
