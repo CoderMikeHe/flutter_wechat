@@ -34,6 +34,7 @@
 ---
 
 ### 四、文档
+- [Flutter 玩转微信——通讯录](https://www.jianshu.com/p/8d136f31b8a2)
 
 
 ### 五、预览
