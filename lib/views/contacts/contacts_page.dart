@@ -86,7 +86,6 @@ class _ContactsPageState extends State<ContactsPage> {
   // 监听事件
   void _handleSlideAnimationChanged(Animation<double> slideAnimation) {}
   void _handleSlideIsOpenChanged(bool isOpen) {
-    print('handleSlideIsOpenChanged $isOpen');
     setState(() {
       _slideIsOpen = isOpen;
     });
@@ -121,16 +120,20 @@ class _ContactsPageState extends State<ContactsPage> {
     // 容错处理
     if (!_slideIsOpen) return;
 
-    final cxts = _slidableCxtMap.values.toList();
-    final len = cxts.length;
-    for (var i = 0; i < len; i++) {
-      final value = cxts[i];
-      if (Slidable.of(value)?.renderingMode != SlidableRenderingMode.none) {
-        // 关掉上一个
-        Slidable.of(value)?.close();
-        return;
-      }
-    }
+    // 方案三：
+    _slidableController.activeState?.close();
+
+    // 方案二：
+    // final cxts = _slidableCxtMap.values.toList();
+    // final len = cxts.length;
+    // for (var i = 0; i < len; i++) {
+    //   final value = cxts[i];
+    //   if (Slidable.of(value)?.renderingMode != SlidableRenderingMode.none) {
+    //     // 关掉上一个
+    //     Slidable.of(value)?.close();
+    //     return;
+    //   }
+    // }
   }
 
   /// 构建头部
@@ -235,12 +238,16 @@ class _ContactsPageState extends State<ContactsPage> {
                     // 细节：这里由于 SlideActionType.primary 对应 actions 为空，所以虽然看似展开空，目的就是关闭 上一个打开的 secondary action
                     // Slidable.of(cxt)?.open(actionType: SlideActionType.primary);
                     // 上面的虽然打开了一个空的 但是系统还是会认为是 打开的 也就是 _slideIsOpen = true
-                    // 手动设置为true
+                    // 手动设置为false
                     // _slideIsOpen = false;
 
                     // 方案二： 每次生成一个 cell ,就用 Map[key] = cxt 记录起来，特别注意，这里用Map 而不是 List or Set
                     // 关闭上一个侧滑
                     _closeSlidable();
+
+                    // 方案三： 直接拿这个activaState 注：已经封装到了 _closeSlidable
+                    // _slidableController.activeState?.close();
+
                     // 下钻
                     NavigatorUtils.push(cxt,
                         '${ContactsRouter.contactInfoPage}?idstr=${user.idstr}');
@@ -355,7 +362,11 @@ class _ContactsPageState extends State<ContactsPage> {
         dragDismissible: true,
         child: SlidableDrawerDismissal(),
         onWillDismiss: (actionType) {
+          print('🔥🔥🔥 $title');
           return false;
+        },
+        onDismissed: (_) {
+          print('🔥🔥🔥 xx $title');
         },
       ),
       actionPane: SlidableScrollActionPane(),
@@ -499,7 +510,7 @@ class _ContactsPageState extends State<ContactsPage> {
       data: tagList,
       tag: _suspensionTag,
       hintOffsetX: -80,
-      ignoreTags: [],
+      ignoreTags: ['♀'],
       // selectedTagColor: Colors.red,
       mapTag: {
         "♀": new SvgPicture.asset(
