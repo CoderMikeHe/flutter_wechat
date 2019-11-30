@@ -22,10 +22,11 @@ import 'package:flutter_wechat/utils/service/zone_code_service.dart';
 
 /// 闪屏跳转模式
 enum MHSplashSkipMode {
-  newFeature, // 新特性
+  newFeature, // 新特性（引导页）
   login, // 登陆
   currentLogin, // 账号登陆
   homePage, // 主页
+  ad, // 广告页
 }
 
 /// 闪屏界面主要用来中转（新特性界面、登陆界面、主页面）
@@ -77,7 +78,10 @@ class _SplashPageState extends State<SplashPage> {
           _skipMode = MHSplashSkipMode.newFeature;
         });
       } else {
-        _switchRootView();
+        // _switchRootView();
+        setState(() {
+          _skipMode = MHSplashSkipMode.ad;
+        });
       }
     });
   }
@@ -133,12 +137,15 @@ class _SplashPageState extends State<SplashPage> {
 
     /// If you use a dependent context-free method to obtain screen parameters and adaptions, you need to call this method.
     MediaQuery.of(context);
-
-    return Material(
-      child: _skipMode == MHSplashSkipMode.newFeature
-          ? _buildNewFeatureWidget()
-          : _buildDefaultLaunchImage(),
-    );
+    Widget child;
+    if (_skipMode == MHSplashSkipMode.newFeature) {
+      child = _buildNewFeatureWidget();
+    } else if (_skipMode == MHSplashSkipMode.ad) {
+      child = _buildAdWidget();
+    } else {
+      child = _buildDefaultLaunchImage();
+    }
+    return Material(child: child);
   }
 
   /// 默认情况是一个启动页 1200x530
@@ -151,7 +158,7 @@ class _SplashPageState extends State<SplashPage> {
         // 这里设置颜色 跟启动页一致的背景色，以免发生白屏闪烁
         color: Color.fromRGBO(0, 10, 24, 1),
         image: DecorationImage(
-          // 启动页 别搞太大 以免加载慢
+          // 注意：启动页 别搞太大 以免加载慢
           image: AssetImage(Constant.assetsImages + 'LaunchImage.png'),
           fit: BoxFit.cover,
         ),
@@ -167,7 +174,6 @@ class _SplashPageState extends State<SplashPage> {
       itemBuilder: (_, index) {
         final String name =
             Constant.assetsImagesNewFeature + 'intro_page_${index + 1}.png';
-        print(name);
         Widget widget = Image.asset(
           name,
           fit: BoxFit.cover,
@@ -201,6 +207,74 @@ class _SplashPageState extends State<SplashPage> {
           return widget;
         }
       },
+    );
+  }
+
+  /// 广告页
+  Widget _buildAdWidget() {
+    return Container(
+      child: _buildAdChildWidget(),
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(Constant.assetsImagesBg + 'SkyBg01_320x490.png'),
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAdChildWidget() {
+    final double horizontal =
+        FlutterScreenUtil.ScreenUtil.getInstance().setWidth(30.0);
+    final double vertical =
+        FlutterScreenUtil.ScreenUtil.getInstance().setHeight(9.0);
+    final double fontSize =
+        FlutterScreenUtil.ScreenUtil.getInstance().setSp(42.0);
+    final lineHeight =
+        FlutterScreenUtil.ScreenUtil.getInstance().setHeight(20.0 * 3 / 14.0);
+    final radius = FlutterScreenUtil.ScreenUtil.getInstance().setWidth(108.0);
+    return Stack(
+      children: <Widget>[
+        Swiper(
+          onTap: (idx) {
+            print('onTap $idx');
+            // 跳转到Web
+          },
+          itemCount: 4,
+          loop: true,
+          autoplay: true,
+          itemBuilder: (_, index) {
+            return Center(
+              child: Image.asset(
+                Constant.assetsImagesAds + '121-bigskin-${index + 1}.jpg',
+                fit: BoxFit.cover,
+              ),
+            );
+          },
+        ),
+        Positioned(
+          top: FlutterScreenUtil.ScreenUtil.getInstance().setWidth(60.0),
+          right: FlutterScreenUtil.ScreenUtil.getInstance().setWidth(60.0),
+          child: Container(
+            padding: EdgeInsets.symmetric(
+                horizontal: horizontal, vertical: vertical),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Colors.white10,
+              border: Border.all(color: Colors.white, width: 0),
+              borderRadius: BorderRadius.all(Radius.circular(radius)),
+            ),
+            child: Text(
+              '跳过 5',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Colors.white, fontSize: fontSize, height: lineHeight),
+            ),
+          ),
+        )
+      ],
     );
   }
 }

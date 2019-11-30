@@ -28,6 +28,12 @@ class Constant {
   /// 关于微信相关模块相关的资源
   static const String assetsImagesAboutUs = 'assets/images/about_us/';
 
+  /// 广告相关模块相关的资源
+  static const String assetsImagesAds = 'assets/images/ads/';
+
+  /// 背景相关模块相关的资源
+  static const String assetsImagesBg = 'assets/images/bg/';
+
   /// 本地mock数据json
   static const String mockData = 'mock/';
 
