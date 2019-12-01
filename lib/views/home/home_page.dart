@@ -5,9 +5,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_wechat/constant/constant.dart';
 import 'package:flutter_wechat/constant/style.dart';
 
-import 'package:flutter_wechat/views/mainframe/mainframe.dart';
+import 'package:flutter_wechat/views/mainframe/mainframe_page.dart';
 import 'package:flutter_wechat/views/contacts/contacts_page.dart';
-import 'package:flutter_wechat/views/discover/discover.dart';
+import 'package:flutter_wechat/views/discover/discover_page.dart';
 import 'package:flutter_wechat/views/profile/profile_page.dart';
 
 class _TabBarItem {
@@ -106,9 +106,9 @@ class _HomePageState extends State<HomePage> {
       ));
     }
     list
-      ..add(MainFrame())
+      ..add(MainframePage())
       ..add(ContactsPage())
-      ..add(Discover())
+      ..add(DiscoverPage())
       ..add(ProfilePage());
   }
 

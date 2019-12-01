@@ -88,9 +88,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Scaffold(
-        body: CustomScrollView(
+    return Scaffold(
+      body: Container(
+        child: CustomScrollView(
           slivers: <Widget>[
             // 头部
             ProfileHeader(

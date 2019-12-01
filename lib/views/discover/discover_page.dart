@@ -6,15 +6,15 @@ import 'package:flutter_wechat/model/common/common_group.dart';
 
 import 'package:flutter_wechat/widgets/common/common_group_widget.dart';
 
-class Discover extends StatefulWidget {
-  Discover({Key key}) : super(key: key);
+class DiscoverPage extends StatefulWidget {
+  DiscoverPage({Key key}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
-    return new _DiscoverState();
+    return new _DiscoverPageState();
   }
 }
 
-class _DiscoverState extends State<Discover> {
+class _DiscoverPageState extends State<DiscoverPage> {
   // 数据源
   List<CommonGroup> dataSource = [];
 
@@ -98,14 +98,19 @@ class _DiscoverState extends State<Discover> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: ListView.builder(
-        itemCount: dataSource.length,
-        itemBuilder: (BuildContext context, int index) {
-          return CommonGroupWidget(
-            group: dataSource[index],
-          );
-        },
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('发现'),
+      ),
+      body: Container(
+        child: ListView.builder(
+          itemCount: dataSource.length,
+          itemBuilder: (BuildContext context, int index) {
+            return CommonGroupWidget(
+              group: dataSource[index],
+            );
+          },
+        ),
       ),
     );
   }

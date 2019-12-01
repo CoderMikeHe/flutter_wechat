@@ -4,7 +4,6 @@ import 'package:flustars/flustars.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart'
     as FlutterScreenUtil;
-import 'package:flutter_wechat/model/zone_code/zone_code.dart';
 import 'package:package_info/package_info.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
@@ -38,6 +37,23 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   /// 跳转方式
   MHSplashSkipMode _skipMode;
+
+  /// 定时器相关
+  TimerUtil _timerUtil;
+
+  /// 计数
+  int _count = 5;
+
+  /// 点击是否高亮
+  bool _highlight = false;
+
+  @override
+  void dispose() {
+    super.dispose();
+    print('🔥 Splash Page is Over 👉');
+    // 记得中dispose里面把timer cancel。
+    if (_timerUtil != null) _timerUtil.cancel();
+  }
 
   @override
   void initState() {
@@ -78,10 +94,12 @@ class _SplashPageState extends State<SplashPage> {
           _skipMode = MHSplashSkipMode.newFeature;
         });
       } else {
-        // _switchRootView();
-        setState(() {
-          _skipMode = MHSplashSkipMode.ad;
-        });
+        _switchRootView();
+        // setState(() {
+        //   _skipMode = MHSplashSkipMode.ad;
+        // });
+        // // 配置定时器
+        // _configureCountDown();
       }
     });
   }
@@ -120,6 +138,23 @@ class _SplashPageState extends State<SplashPage> {
             clearStack: true, transition: TransitionType.fadeIn);
       },
     );
+  }
+
+  /// 配置倒计时
+  void _configureCountDown() {
+    _timerUtil = TimerUtil(mTotalTime: 5000);
+    _timerUtil.setOnTimerTickCallback((int tick) {
+      double _tick = tick / 1000;
+      if (_tick == 0) {
+        // 切换到主页面
+        _switchRootView();
+      } else {
+        setState(() {
+          _count = _tick.toInt();
+        });
+      }
+    });
+    _timerUtil.startCountDown();
   }
 
   @override
@@ -217,6 +252,8 @@ class _SplashPageState extends State<SplashPage> {
       width: double.infinity,
       height: double.infinity,
       decoration: BoxDecoration(
+        // 这里设置颜色 跟背景一致的背景色，以免发生白屏闪烁
+        color: Color.fromRGBO(21, 5, 27, 1),
         image: DecorationImage(
           image: AssetImage(Constant.assetsImagesBg + 'SkyBg01_320x490.png'),
           fit: BoxFit.cover,
@@ -243,6 +280,7 @@ class _SplashPageState extends State<SplashPage> {
             // 跳转到Web
           },
           itemCount: 4,
+          autoplayDelay: 1500,
           loop: true,
           autoplay: true,
           itemBuilder: (_, index) {
@@ -257,20 +295,35 @@ class _SplashPageState extends State<SplashPage> {
         Positioned(
           top: FlutterScreenUtil.ScreenUtil.getInstance().setWidth(60.0),
           right: FlutterScreenUtil.ScreenUtil.getInstance().setWidth(60.0),
-          child: Container(
-            padding: EdgeInsets.symmetric(
-                horizontal: horizontal, vertical: vertical),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: Colors.white10,
-              border: Border.all(color: Colors.white, width: 0),
-              borderRadius: BorderRadius.all(Radius.circular(radius)),
-            ),
-            child: Text(
-              '跳过 5',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Colors.white, fontSize: fontSize, height: lineHeight),
+          child: InkWell(
+            onTap: () {
+              if (_timerUtil != null) {
+                _timerUtil.cancel();
+              }
+              _switchRootView();
+            },
+            onHighlightChanged: (highlight) {
+              setState(() {
+                _highlight = highlight;
+              });
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                  horizontal: horizontal, vertical: vertical),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: _highlight ? Colors.white30 : Colors.white10,
+                border: Border.all(color: Colors.white, width: 0),
+                borderRadius: BorderRadius.all(Radius.circular(radius)),
+              ),
+              child: Text(
+                '跳过 $_count',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: fontSize,
+                    height: lineHeight),
+              ),
             ),
           ),
         )

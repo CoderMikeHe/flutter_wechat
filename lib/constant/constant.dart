@@ -10,6 +10,9 @@ class Constant {
   /// 新特性模块相关的资源
   static const String assetsImagesNewFeature = 'assets/images/new_feature/';
 
+  /// 微信模块相关的资源
+  static const String assetsImagesMainframe = 'assets/images/mainframe/';
+
   /// 联系人模块相关的资源
   static const String assetsImagesContacts = 'assets/images/contacts/';
 
