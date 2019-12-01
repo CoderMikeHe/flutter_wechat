@@ -137,7 +137,7 @@ class _MainframePageState extends State<MainframePage> {
               ),
             ),
             Offstage(
-              offstage: false,
+              offstage: m.screenName != '貂蝉',
               child: Image.asset(
                 Constant.assetsImagesMainframe +
                     'AlbumMessageDisableNotifyIcon_15x15.png',
