@@ -128,7 +128,7 @@ class _LanguagePickerPageState extends State<LanguagePickerPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '设置性别',
+          '设置语言',
           textAlign: TextAlign.center,
           textScaleFactor: 1.0,
         ),

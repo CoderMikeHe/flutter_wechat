@@ -55,15 +55,6 @@ class _MainframePageState extends State<MainframePage> {
       _dataSource.add(m);
     });
 
-    // rootBundle.loadString(Constant.mockData + 'mainframe.json').then((onValue) {
-    //   print(onValue);
-    //   final List mainframeJson = json.decode(onValue);
-    // }).catchError((err) {
-    //   print(err);
-    // }).whenComplete(() {
-    //   print('object');
-    // });
-
     setState(() {});
   }
 
@@ -137,7 +128,7 @@ class _MainframePageState extends State<MainframePage> {
               ),
             ),
             Offstage(
-              offstage: m.screenName != '貂蝉',
+              offstage: !m.messageFree,
               child: Image.asset(
                 Constant.assetsImagesMainframe +
                     'AlbumMessageDisableNotifyIcon_15x15.png',

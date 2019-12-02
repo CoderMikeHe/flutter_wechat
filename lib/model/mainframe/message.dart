@@ -10,6 +10,9 @@ class Message {
   String text;
   Badge badge;
 
+  /// 消息免打扰
+  bool messageFree;
+
   Message({
     this.idstr,
     this.users,
@@ -17,6 +20,7 @@ class Message {
     this.createdAt,
     this.text,
     this.badge,
+    this.messageFree,
   });
 
   Message.fromJson(Map<String, dynamic> json) {
@@ -31,6 +35,7 @@ class Message {
     createdAt = json['created_at'];
     text = json['text'];
     badge = json['badge'] != null ? new Badge.fromJson(json['badge']) : null;
+    messageFree = json['messageFree'];
   }
 
   Map<String, dynamic> toJson() {
@@ -42,6 +47,7 @@ class Message {
     data['screen_name'] = this.screenName;
     data['created_at'] = this.createdAt;
     data['text'] = this.text;
+    data['messageFree'] = this.messageFree;
     if (this.badge != null) {
       data['badge'] = this.badge.toJson();
     }

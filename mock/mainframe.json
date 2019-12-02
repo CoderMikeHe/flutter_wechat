@@ -15,7 +15,8 @@
       "text": "2",
       "show": true,
       "dot": false
-    }
+    },
+    "messageFree": false
   },
   {
     "idstr": "10001",
@@ -27,7 +28,8 @@
     "screen_name": "芈月",
     "created_at": "Tue Apr 09 00:05:03 +0800 2019",
     "text": "整容手术都是骗人的，青春美貌全靠把你吸干",
-    "badge": null
+    "badge": null,
+    "messageFree": false
   },
   {
     "idstr": "10002",
@@ -45,7 +47,8 @@
       "text": "4",
       "show": true,
       "dot": false
-    }
+    },
+    "messageFree": false
   },
   {
     "idstr": "10003",
@@ -57,7 +60,8 @@
     "screen_name": "貂蝉",
     "created_at": "Tue Apr 09 00:05:03 +0800 2019",
     "text": "想欣赏妾身的舞姿吗？",
-    "badge": null
+    "badge": null,
+    "messageFree": false
   },
   {
     "idstr": "10004",
@@ -75,7 +79,8 @@
       "text": "1",
       "show": true,
       "dot": false
-    }
+    },
+    "messageFree": false
   },
   {
     "idstr": "10005",
@@ -87,7 +92,8 @@
     "screen_name": "不知火舞",
     "created_at": "Tue Apr 09 00:05:03 +0800 2019",
     "text": "りゅうえんぶ",
-    "badge": null
+    "badge": null,
+    "messageFree": false
   },
   {
     "idstr": "10006",
@@ -99,7 +105,8 @@
     "screen_name": "花木兰",
     "created_at": "Tue Apr 09 00:05:03 +0800 2019",
     "text": "[动画表情]",
-    "badge": null
+    "badge": null,
+    "messageFree": false
   },
   {
     "idstr": "10007",
@@ -117,7 +124,8 @@
       "text": "9",
       "show": true,
       "dot": false
-    }
+    },
+    "messageFree": false
   },
   {
     "idstr": "10008",
@@ -129,7 +137,8 @@
     "screen_name": "武则天",
     "created_at": "Tue Apr 09 00:05:03 +0800 2019",
     "text": "普天之下莫非王土 做女人难做女帝更难....",
-    "badge": null
+    "badge": null,
+    "messageFree": false
   },
   {
     "idstr": "10009",
@@ -147,7 +156,8 @@
       "text": "7",
       "show": true,
       "dot": false
-    }
+    },
+    "messageFree": false
   },
   {
     "idstr": "10010",
@@ -159,7 +169,8 @@
     "screen_name": "元歌",
     "created_at": "Tue Apr 09 00:05:03 +0800 2019",
     "text": "用头脑，而不是武力。",
-    "badge": null
+    "badge": null,
+    "messageFree": false
   },
   {
     "idstr": "10011",
@@ -177,7 +188,8 @@
       "text": "6",
       "show": true,
       "dot": false
-    }
+    },
+    "messageFree": false
   },
   {
     "idstr": "10012",
@@ -195,7 +207,8 @@
     "screen_name": "草丛三婊",
     "created_at": "Tue Apr 09 00:05:03 +0800 2019",
     "text": "王昭君：凛冬已至，故乡的梅花开了吗？",
-    "badge": null
+    "badge": null,
+    "messageFree": false
   },
   {
     "idstr": "10013",
@@ -213,7 +226,8 @@
       "text": "",
       "show": true,
       "dot": true
-    }
+    },
+    "messageFree": false
   },
   {
     "idstr": "10014",
@@ -234,7 +248,8 @@
     "screen_name": "回血四人帮",
     "created_at": "Tue Apr 09 00:05:03 +0800 2019",
     "text": "蔡文姬：左三圈~右三圈~扭一扭转一转~人家也作萝莉控~",
-    "badge": null
+    "badge": null,
+    "messageFree": true
   },
   {
     "idstr": "10015",
@@ -264,7 +279,8 @@
       "text": "136",
       "show": true,
       "dot": false
-    }
+    },
+    "messageFree": false
   },
   {
     "idstr": "10016",
@@ -291,7 +307,8 @@
     "screen_name": "六亲不认",
     "created_at": "Tue Apr 09 00:05:03 +0800 2019",
     "text": "程咬金：一个字,干！",
-    "badge": null
+    "badge": null,
+    "messageFree": false
   },
   {
     "idstr": "10017",
@@ -321,7 +338,8 @@
     "screen_name": "刺客信条",
     "created_at": "Tue Apr 09 00:05:03 +0800 2019",
     "text": "李白：可以赶尽，无法杀绝。",
-    "badge": null
+    "badge": null,
+    "messageFree": false
   },
   {
     "idstr": "10018",
@@ -354,6 +372,44 @@
     "screen_name": "仙侠豪情",
     "created_at": "Tue Apr 09 00:05:03 +0800 2019",
     "text": "孙悟空：超出三界之外，不在五行之中",
-    "badge": null
+    "badge": null,
+    "messageFree": false
+  },
+  {
+    "idstr": "10019",
+    "users": [
+      {
+        "profile_image_url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/199/199.jpg"
+      },
+      {
+        "profile_image_url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/111/111.jpg"
+      },
+      {
+        "profile_image_url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/174/174.jpg"
+      },
+      {
+        "profile_image_url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/523/523.jpg"
+      },
+      {
+        "profile_image_url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/515/515.jpg"
+      },
+      {
+        "profile_image_url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/191/191.jpg"
+      },
+      {
+        "profile_image_url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/106/106.jpg"
+      },
+      {
+        "profile_image_url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/127/127.jpg"
+      },
+      {
+        "profile_image_url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/513/513.jpg"
+      }
+    ],
+    "screen_name": "小姐姐✨",
+    "created_at": "Tue Apr 09 00:05:03 +0800 2019",
+    "text": "孙尚香：大小姐驾到，通通闪开！",
+    "badge": null,
+    "messageFree": false
   }
 ]

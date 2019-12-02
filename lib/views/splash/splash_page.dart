@@ -94,12 +94,12 @@ class _SplashPageState extends State<SplashPage> {
           _skipMode = MHSplashSkipMode.newFeature;
         });
       } else {
-        _switchRootView();
-        // setState(() {
-        //   _skipMode = MHSplashSkipMode.ad;
-        // });
-        // // 配置定时器
-        // _configureCountDown();
+        // _switchRootView();
+        setState(() {
+          _skipMode = MHSplashSkipMode.ad;
+        });
+        // 配置定时器
+        _configureCountDown();
       }
     });
   }
