@@ -18,12 +18,18 @@ import 'package:flutter_wechat/components/list_tile/mh_list_tile.dart';
 import 'package:flutter_wechat/components/search_bar/search_bar.dart';
 import 'package:flutter_wechat/components/index_bar/mh_index_bar.dart';
 
-// 用作测试用
+/// 用作测试用
 const List<String> INDEX_DATA_0 = ['★', '♀', '↑', '@', 'A', 'B', 'C', 'D'];
 const List<String> INDEX_DATA_1 = ['E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
 const List<String> INDEX_DATA_2 = ['M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T'];
 const List<String> INDEX_DATA_3 = ['U', 'V', 'W', 'X', 'Y', 'Z', '#', '↓'];
 const List<String> IGNORE_TAGS = [];
+
+/// 是否使用自定义IndexBar
+const bool USE_CUSTOM_BAR = true;
+
+/// 是否使用自定义IndexBar 的Builder Mode  条件： USE_CUSTOM_BAR = true
+const bool USE_CUSTOM_BAR_BUILDER = true;
 
 class ContactsPage extends StatefulWidget {
   ContactsPage({Key key}) : super(key: key);
@@ -241,7 +247,7 @@ class _ContactsPageState extends State<ContactsPage> {
                     // 手动设置为false
                     // _slideIsOpen = false;
 
-                    // 方案二： 每次生成一个 cell ,就用 Map[key] = cxt 记录起来，特别注意，这里用Map 而不是 List or Set
+                    // 方案二： 每次生���一个 cell ,就用 Map[key] = cxt 记录起来，特别注意，这里用Map 而不是 List or Set
                     // 关闭上一个侧滑
                     _closeSlidable();
 
@@ -422,7 +428,7 @@ class _ContactsPageState extends State<ContactsPage> {
       //     ),
       //   ],
       // ),
-      body: _buildContactsList(defaultMode: false),
+      body: _buildContactsList(defaultMode: !USE_CUSTOM_BAR),
     );
   }
 
@@ -434,7 +440,7 @@ class _ContactsPageState extends State<ContactsPage> {
     } else {
       // 自定义IndexBar
       // builderMode 是否启用 builder 这种模式来 构建 tag 和 hint
-      return _buildCustomIndexBarList(builderMode: true);
+      return _buildCustomIndexBarList(builderMode: USE_CUSTOM_BAR_BUILDER);
     }
   }
 
