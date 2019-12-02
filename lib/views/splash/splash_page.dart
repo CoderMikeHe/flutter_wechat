@@ -129,15 +129,10 @@ class _SplashPageState extends State<SplashPage> {
     }
     // 这里无需更新 页面 直接跳转即可
     _skipMode = skipMode;
-    // 延迟一丢丢
-    Future.delayed(
-      new Duration(milliseconds: 500),
-      () {
-        // 跳转对应的主页
-        NavigatorUtils.push(context, skipPath,
-            clearStack: true, transition: TransitionType.fadeIn);
-      },
-    );
+
+    // 跳转对应的主页
+    NavigatorUtils.push(context, skipPath,
+        clearStack: true, transition: TransitionType.fadeIn);
   }
 
   /// 配置倒计时

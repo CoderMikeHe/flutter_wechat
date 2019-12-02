@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -34,28 +34,22 @@ class _MainframePageState extends State<MainframePage> {
     super.initState();
 
     // 获取数据
-    Future.delayed(Duration(milliseconds: 200), _fetchRemoteData);
+    _fetchRemoteData();
   }
 
   /// ✨✨✨✨✨✨✨ Network ✨✨✨✨✨✨✨
   /// 数据请求
   void _fetchRemoteData() async {
-    _dataSource.clear();
-
-    // 获取用户信息列表
-    final jsonStr =
-        await rootBundle.loadString(Constant.mockData + 'mainframe.json');
-
-    // mainframeJson
-    final List mainframeJson = json.decode(jsonStr);
-
-    // 遍历
-    mainframeJson.forEach((json) {
-      final Message m = Message.fromJson(json);
-      _dataSource.add(m);
+    //加载城市列表
+    rootBundle.loadString('mock/mainframe.json').then((jsonStr) {
+      final List mainframeJson = json.decode(jsonStr);
+      // 遍历
+      mainframeJson.forEach((json) {
+        final Message m = Message.fromJson(json);
+        _dataSource.add(m);
+      });
+      setState(() {});
     });
-
-    setState(() {});
   }
 
   /// ✨✨✨✨✨✨✨ 事件 ✨✨✨✨✨✨✨
