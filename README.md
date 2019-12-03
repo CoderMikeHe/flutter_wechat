@@ -1,6 +1,6 @@
 # flutter_wechat
 
-<img src="snapshots/logo.png" width="256px" height="256px" />
+<img src="https://github.com/CoderMikeHe/WeChat_Resource/blob/master/snapshots/logo.png" width="256px" height="256px" />
 
 ### 一、概述
 
