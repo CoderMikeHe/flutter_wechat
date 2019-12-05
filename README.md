@@ -2,7 +2,7 @@
 
 <img src="https://github.com/CoderMikeHe/WeChat_Resource/blob/master/snapshots/logo.png" width="256px" height="256px" />
 
-### 一、概述
+### 概述
 
 - 利用`Flutter` 来构建和模仿`微信7.0.0+ App`，且都是按照`原生微信App`页面，来开发和模仿滴，从而达到与原生 app 相近的视觉效果。
 
@@ -12,7 +12,7 @@
 
 ---
 
-### 二、使用
+### 使用
 
 - 项目运行
 
@@ -35,7 +35,7 @@
 	``` 
 ---
 
-### 三、期待
+### 期待
 
 - 如果在使用过程中遇到 BUG，希望你能 Issues 我，谢谢（或者尝试下载最新的代码看看 BUG 修复没有）。
 - 如果在使用过程中有任何地方不理解，希望你能 Issues 我，我非常乐意促使项目的理解和使用，谢谢。
@@ -44,11 +44,20 @@
 
 ---
 
-### 四、文档
+### 商业互吹
+
+- [iOS开发技术要点汇总](https://github.com/CoderMikeHe/MHDevelopExample_Objective_C)
+- [Vue版WeChat](https://github.com/CoderMikeHe/vue-wechat)
+- [iOS版WeChat](https://github.com/CoderMikeHe/WeChat)
+- [WeChat资源汇总](https://github.com/CoderMikeHe/WeChat_Resource)
+
+### 文档
 
 - [Flutter 玩转微信——通讯录](https://www.jianshu.com/p/8d136f31b8a2)
 
-### 五、预览
+---
+
+### 预览
 
 ###### 闪屏模块
 
