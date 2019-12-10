@@ -169,10 +169,13 @@ class _SplashPageState extends State<SplashPage> {
     MediaQuery.of(context);
     Widget child;
     if (_skipMode == MHSplashSkipMode.newFeature) {
+      // 引导页
       child = _buildNewFeatureWidget();
     } else if (_skipMode == MHSplashSkipMode.ad) {
+      // 广告页
       child = _buildAdWidget();
     } else {
+      // 启动页
       child = _buildDefaultLaunchImage();
     }
     return Material(child: child);
