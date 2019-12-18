@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:flutter_wechat/utils/util.dart';
 import 'package:flutter_wechat/constant/constant.dart';
@@ -130,18 +131,16 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
   /// 返回 item
   Widget _buildItem(CommonItem item) {
     bool offstageIcon = Util.isEmptyString(item.icon);
+    // 简单判断图片类型
+    // 网络图片 http/https 开头
+    // 本地图片(.png/.jpg、.svg)
+
     Widget iconWidget = Offstage(
       offstage: offstageIcon,
       child: Padding(
         padding: EdgeInsets.only(right: 16.0),
         // Fixed Bug: 这里icon 没值就别去渲染了,直接为null,否则报错
-        child: offstageIcon
-            ? null
-            : Image.asset(
-                item.icon,
-                width: 30.0,
-                height: 30.0,
-              ),
+        child: _buildCommonIconWidget(item.icon),
       ),
     );
 
@@ -454,5 +453,60 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
     return Row(
       children: [titleWidget, iconWidget, arrowWidget],
     );
+  }
+
+  // ---------------------------------通用小部件-----------------------------------
+  Widget _buildCommonIconWidget(String url,
+      {double width = 30.0, double height = 30.0}) {
+    // 容错处理
+    final isEmpty = Util.isEmptyString(url);
+    if (isEmpty) return null;
+
+    // 简单判断图片类型
+    // 网络图片 http/https 开头
+    // 本地图片(.png/.jpg、.svg)
+
+    final isNetwork = url.startsWith(RegExp(r'^http'));
+
+    Widget iconWidget;
+
+    if (isNetwork) {
+      iconWidget = CachedNetworkImage(
+        imageUrl: url,
+        width: width,
+        height: height,
+        fit: BoxFit.cover,
+        // CMH TODO 搞个占位图
+        placeholder: (context, url) {
+          return Image.asset(
+            Constant.assetsImagesDefault + 'DefaultHead_48x48.png',
+            width: width,
+            height: height,
+          );
+        },
+        errorWidget: (context, url, error) {
+          return Image.asset(
+            Constant.assetsImagesDefault + 'DefaultHead_48x48.png',
+            width: width,
+            height: height,
+          );
+        },
+      );
+    } else {
+      // 是否是本地svg
+      final isSvg = url.endsWith('.svg');
+      // judge
+      if (isSvg) {
+        iconWidget = SvgPicture.asset(url, color: Color(0xFF181818));
+      } else {
+        iconWidget = Image.asset(
+          url,
+          width: width,
+          height: height,
+        );
+      }
+    }
+
+    return iconWidget;
   }
 }

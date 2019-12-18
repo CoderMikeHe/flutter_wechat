@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>Artboard</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Artboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-23">
+            <g id="&lt;null&gt;-+-&lt;null&gt;-+-&lt;null&gt;" transform="translate(4.000000, 3.000000)">
+                <polygon id="Path" fill="#F86161" points="8.476 9.79653333 8.476 18.0544 15.9426667 13.8989333 15.9426667 5.2544"></polygon>
+                <polygon id="Path" fill="#FFC000" points="-0.0573333333 13.7927112 7.676 18.0544 7.676 9.79636129 -0.0573333333 5.2544"></polygon>
+                <path d="M8.02120567,-0.0789333333 L0.476,4.11146667 C0.476,4.11146667 7.69535147,8.4016 8.076,8.72106667 C8.26976546,8.64933333 15.676,4.11146667 15.676,4.11146667 L8.02120567,-0.0789333333 L8.02120567,-0.0789333333 Z" id="Path" fill="#3CB2EF"></path>
+            </g>
+            <rect id="Rectangle-22" fill-opacity="0" fill="#FFFFFF" x="0" y="0" width="24" height="24"></rect>
+        </g>
+    </g>
+</svg>

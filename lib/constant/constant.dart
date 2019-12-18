@@ -37,6 +37,12 @@ class Constant {
   /// 背景相关模块相关的资源
   static const String assetsImagesBg = 'assets/images/bg/';
 
+  /// 发现模块资源
+  static const String assetsImagesDiscover = 'assets/images/discover/';
+
+  /// 我模块资源
+  static const String assetsImagesProfile = 'assets/images/profile/';
+
   /// 本地mock数据json
   static const String mockData = 'mock/';
 
