@@ -36,8 +36,9 @@ class _ProfilePageState extends State<ProfilePage> {
     // 支付
     final pay = CommonItem(
       title: '支付',
-      icon: Constant.assetsImages + "WeChatPay_25x25.png",
+      icon: Constant.assetsImagesProfile + "icons_outlined_wechatpay.svg",
     );
+
     final group0 = CommonGroup(
       items: [pay],
       headerHeight: 8.0,
@@ -46,18 +47,27 @@ class _ProfilePageState extends State<ProfilePage> {
     // group1
     // 收藏
     final collect = CommonItem(
-        title: "收藏", icon: Constant.assetsImages + "MoreMyFavorites_25x25.png");
+      title: "收藏",
+      icon: Constant.assetsImagesProfile +
+          "icons_outlined_colorful_favorites.svg",
+    );
     // 相册
     final album = CommonItem(
-        title: "相册", icon: Constant.assetsImages + "MoreMyAlbum_25x25.png");
+      title: "相册",
+      icon: Constant.assetsImagesProfile + "icons_outlined_album.svg",
+    );
+    album.iconColor = Color(0xFF3d83e6);
     // 卡包
     final card = CommonItem(
-        title: "卡包",
-        icon: Constant.assetsImages + "MyCardPackageIcon_25x25.png");
+      title: "卡包",
+      icon: Constant.assetsImagesProfile + "icons_outlined_colorful_cards.svg",
+    );
     // 表情
     final expression = CommonItem(
-        title: "表情",
-        icon: Constant.assetsImages + "MoreExpressionShops_25x25.png");
+      title: "表情",
+      icon: Constant.assetsImagesProfile + "icons_outlined_sticker.svg",
+    );
+    expression.iconColor = Color(0xFFEDA150);
 
     final group1 = CommonGroup(
       items: [collect, album, card, expression],
@@ -67,11 +77,13 @@ class _ProfilePageState extends State<ProfilePage> {
     // 设置
     final setting = CommonItem(
       title: "设置",
-      icon: Constant.assetsImages + "MoreSetting_25x25.png",
+      icon: Constant.assetsImagesProfile + "icons_outlined_setting.svg",
       onTap: (_) {
         NavigatorUtils.push(context, ProfileRouter.settingPage);
       },
     );
+    setting.iconColor = Color(0xFF3d83e6);
+
     final group2 = CommonGroup(
       items: [setting],
     );

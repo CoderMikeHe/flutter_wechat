@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:flutter_wechat/constant/constant.dart';
 
@@ -14,12 +15,15 @@ class CommonItem {
     this.titleColor,
     this.subtitle = "",
     this.tapHighlight = true,
-    this.padding = const EdgeInsets.all(Constant.pEdgeInset),
+    this.padding = const EdgeInsets.symmetric(horizontal: 16),
     this.onTap,
   });
 
   /// icon
   final String icon;
+
+  /// iconColor 主要针对svg default is null
+  Color iconColor;
 
   /// 主标题 default is ‘’
   final String title;
@@ -33,8 +37,8 @@ class CommonItem {
   /// 点击高亮 default is true
   final bool tapHighlight;
 
-  /// item 内容边距 default is
-  final EdgeInsetsGeometry padding;
+  /// item 内容边距 default is const EdgeInsets.symmetric(horizontal: 16)
+  EdgeInsetsGeometry padding;
 
   /// 点击方法
   final CommonGestureTapCallback onTap;

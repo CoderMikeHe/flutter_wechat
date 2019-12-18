@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:flutter_wechat/utils/util.dart';
@@ -61,10 +62,17 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
     } else if (item is CommonItem) {
       child = _buildItem(item);
     }
-
-    return Container(
-      padding: item.padding,
-      child: child,
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        // 宽度尽可能大
+        minWidth: double.infinity,
+        // 最小高度为56像素
+        minHeight: ScreenUtil().setHeight(168.0),
+      ),
+      child: Container(
+        padding: item.padding,
+        child: child,
+      ),
     );
   }
 
@@ -128,28 +136,26 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
     }
   }
 
+  /// ---------------------------构建Item部件-----------------------------
   /// 返回 item
   Widget _buildItem(CommonItem item) {
     bool offstageIcon = Util.isEmptyString(item.icon);
-    // 简单判断图片类型
-    // 网络图片 http/https 开头
-    // 本地图片(.png/.jpg、.svg)
-
     Widget iconWidget = Offstage(
       offstage: offstageIcon,
       child: Padding(
-        padding: EdgeInsets.only(right: 16.0),
+        padding: EdgeInsets.only(right: ScreenUtil().setWidth(48.0)),
         // Fixed Bug: 这里icon 没值就别去渲染了,直接为null,否则报错
-        child: _buildCommonIconWidget(item.icon),
+        child: _buildCommonIconWidget(item.icon, iconColor: item.iconColor),
       ),
     );
 
     Widget titleWidget = Expanded(
       child: Padding(
-        padding: EdgeInsets.only(right: Constant.pEdgeInset),
-        child: Text(
+        padding: EdgeInsets.only(right: ScreenUtil().setWidth(48.0)),
+        child: _buildCommonTextWidget(
           item.title,
-          style: TextStyle(fontSize: 17.0, color: widget.item.titleColor),
+          fontSize: ScreenUtil().setSp(51.0),
+          textColor: widget.item.titleColor,
         ),
       ),
     );
@@ -157,23 +163,19 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
     Widget subtitleWidget = Offstage(
       offstage: Util.isEmptyString(item.subtitle),
       child: Padding(
-        padding: EdgeInsets.only(right: 10.0),
-        child: Text(
+        padding: EdgeInsets.only(right: ScreenUtil().setWidth(30.0)),
+        child: _buildCommonTextWidget(
           item.subtitle,
-          style: TextStyle(fontSize: 17.0, color: Color(0xFF7F7F7F)),
+          fontSize: ScreenUtil().setSp(51.0),
+          textColor: Color(0xFF7F7F7F),
         ),
       ),
     );
 
-    Widget arrowWidget = Image.asset(
-      Constant.assetsImagesArrow + 'tableview_arrow_8x13.png',
-      width: 8.0,
-      height: 13.0,
-    );
+    Widget arrowWidget = _buildCommonRightArrowWidget();
 
     return Row(
-      children: [iconWidget, titleWidget, subtitleWidget, arrowWidget],
-    );
+        children: [iconWidget, titleWidget, subtitleWidget, arrowWidget]);
   }
 
   /// 返回 text item
@@ -182,24 +184,18 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
     Widget iconWidget = Offstage(
       offstage: offstageIcon,
       child: Padding(
-        padding: EdgeInsets.only(right: 16.0),
+        padding: EdgeInsets.only(right: ScreenUtil().setWidth(48.0)),
         // Fixed Bug: 这里icon 没值就别去渲染了,直接为null,否则报错
-        child: offstageIcon
-            ? null
-            : Image.asset(
-                item.icon,
-                width: 30.0,
-                height: 30.0,
-              ),
+        child: _buildCommonIconWidget(item.icon, iconColor: item.iconColor),
       ),
     );
 
     Widget titleWidget = Expanded(
       child: Padding(
-        padding: EdgeInsets.only(right: Constant.pEdgeInset),
-        child: Text(
+        padding: EdgeInsets.only(right: ScreenUtil().setWidth(48.0)),
+        child: _buildCommonTextWidget(
           item.title,
-          style: TextStyle(fontSize: 17.0),
+          fontSize: ScreenUtil().setSp(51.0),
         ),
       ),
     );
@@ -208,26 +204,25 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
       offstage: Util.isEmptyString(item.subtitle),
       child: Padding(
         padding: EdgeInsets.only(right: 0.0),
-        child: Text(
+        child: _buildCommonTextWidget(
           item.subtitle,
-          style: TextStyle(fontSize: 17.0, color: Color(0xFF7F7F7F)),
+          fontSize: ScreenUtil().setSp(51.0),
+          textColor: Color(0xFF7F7F7F),
         ),
       ),
     );
 
-    return Row(
-      children: [iconWidget, titleWidget, subtitleWidget],
-    );
+    return Row(children: [iconWidget, titleWidget, subtitleWidget]);
   }
 
   /// 返回 item
   Widget _buildSecurityPhonetem(CommonSecurityPhoneItem item) {
     Widget titleWidget = Expanded(
       child: Padding(
-        padding: EdgeInsets.only(right: Constant.pEdgeInset),
-        child: Text(
+        padding: EdgeInsets.only(right: ScreenUtil().setWidth(48.0)),
+        child: _buildCommonTextWidget(
           item.title,
-          style: TextStyle(fontSize: 17.0),
+          fontSize: ScreenUtil().setSp(51.0),
         ),
       ),
     );
@@ -235,10 +230,11 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
     Widget subtitleWidget = Offstage(
       offstage: Util.isEmptyString(item.subtitle),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10.0),
-        child: Text(
+        padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(30.0)),
+        child: _buildCommonTextWidget(
           item.subtitle,
-          style: TextStyle(fontSize: 17.0, color: Color(0xFF7F7F7F)),
+          fontSize: ScreenUtil().setSp(51.0),
+          textColor: Color(0xFF7F7F7F),
         ),
       ),
     );
@@ -248,44 +244,36 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
           (item.binded
               ? 'ProfileLockOn_17x17.png'
               : 'ProfileLockOff_17x17.png'),
-      width: 17.0,
-      height: 17.0,
+      width: ScreenUtil().setWidth(51.0),
+      height: ScreenUtil().setWidth(51.0),
     );
 
-    Widget rowWidget = Row(
-      children: <Widget>[lockWidget, subtitleWidget],
-    );
+    Widget rowWidget = Row(children: <Widget>[lockWidget, subtitleWidget]);
+    // 右箭头
+    Widget arrowWidget = _buildCommonRightArrowWidget();
 
-    Widget arrowWidget = Image.asset(
-      Constant.assetsImagesArrow + 'tableview_arrow_8x13.png',
-      width: 8.0,
-      height: 13.0,
-    );
-
-    return Row(
-      children: [titleWidget, rowWidget, arrowWidget],
-    );
+    return Row(children: [titleWidget, rowWidget, arrowWidget]);
   }
 
   /// 返回 plugin item
   Widget _buildPluginItem(CommonPluginItem item) {
     Widget titleWidget = Padding(
-      padding: EdgeInsets.only(right: Constant.pEdgeInset),
-      child: Text(
+      padding: EdgeInsets.only(right: ScreenUtil().setWidth(48.0)),
+      child: _buildCommonTextWidget(
         item.title,
-        style: TextStyle(fontSize: 17.0),
+        fontSize: ScreenUtil().setSp(51.0),
       ),
     );
 
     Widget iconWidget = Expanded(
       child: Container(
         alignment: Alignment.centerLeft,
-        padding: EdgeInsets.only(right: 16.0),
+        padding: EdgeInsets.only(right: ScreenUtil().setWidth(48.0)),
         // Fixed Bug: 这里icon 没值就别去渲染��,直接为null,否则报错
         child: Image.asset(
           'assets/images/WeChat_Lab_Logo_small_15x17.png',
-          width: 15.0,
-          height: 17.0,
+          width: ScreenUtil().setWidth(45.0),
+          height: ScreenUtil().setHeight(51.0),
         ),
       ),
     );
@@ -293,23 +281,19 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
     Widget subtitleWidget = Offstage(
       offstage: Util.isEmptyString(item.subtitle),
       child: Padding(
-        padding: EdgeInsets.only(right: 10.0),
-        child: Text(
+        padding: EdgeInsets.only(right: ScreenUtil().setWidth(30.0)),
+        child: _buildCommonTextWidget(
           item.subtitle,
-          style: TextStyle(fontSize: 17.0, color: Color(0xFF7F7F7F)),
+          fontSize: ScreenUtil().setSp(51.0),
+          textColor: Color(0xFF7F7F7F),
         ),
       ),
     );
 
-    Widget arrowWidget = Image.asset(
-      Constant.assetsImagesArrow + 'tableview_arrow_8x13.png',
-      width: 8.0,
-      height: 13.0,
-    );
+    Widget arrowWidget = _buildCommonRightArrowWidget();
 
     return Row(
-      children: [titleWidget, iconWidget, subtitleWidget, arrowWidget],
-    );
+        children: [titleWidget, iconWidget, subtitleWidget, arrowWidget]);
   }
 
   /// 返回 center item
@@ -317,9 +301,10 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
     return Row(
       children: <Widget>[
         Expanded(
-          child: Text(
+          child: _buildCommonTextWidget(
             item.title,
-            style: TextStyle(fontSize: 17.0, color: widget.item.titleColor),
+            fontSize: ScreenUtil().setSp(51.0),
+            textColor: item.titleColor,
             textAlign: TextAlign.center,
           ),
         )
@@ -333,24 +318,18 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
     Widget iconWidget = Offstage(
       offstage: offstageIcon,
       child: Padding(
-        padding: EdgeInsets.only(right: 16.0),
+        padding: EdgeInsets.only(right: ScreenUtil().setWidth(48.0)),
         // Fixed Bug: 这里icon 没值就别去渲染了,直接为null,否则报错
-        child: offstageIcon
-            ? null
-            : Image.asset(
-                item.icon,
-                width: 30.0,
-                height: 30.0,
-              ),
+        child: _buildCommonIconWidget(item.icon, iconColor: item.iconColor),
       ),
     );
 
     Widget titleWidget = Expanded(
       child: Padding(
-        padding: EdgeInsets.only(right: 16.0),
-        child: Text(
+        padding: EdgeInsets.only(right: ScreenUtil().setWidth(48.0)),
+        child: _buildCommonTextWidget(
           item.title,
-          style: TextStyle(fontSize: 17.0),
+          fontSize: ScreenUtil().setSp(51.0),
         ),
       ),
     );
@@ -367,9 +346,7 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
         });
       },
     );
-    return Row(
-      children: <Widget>[iconWidget, titleWidget, switchWidget],
-    );
+    return Row(children: <Widget>[iconWidget, titleWidget, switchWidget]);
   }
 
   /// 返回 单选 item
@@ -377,10 +354,10 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
     // title 小部件
     Widget titleWidget = Expanded(
       child: Padding(
-        padding: EdgeInsets.only(right: 16.0),
-        child: Text(
+        padding: EdgeInsets.only(right: ScreenUtil().setWidth(48.0)),
+        child: _buildCommonTextWidget(
           item.title,
-          style: TextStyle(fontSize: 17.0),
+          fontSize: ScreenUtil().setSp(51.0),
         ),
       ),
     );
@@ -391,85 +368,63 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
       offstage: offstageIcon,
       child: Padding(
         padding: EdgeInsets.only(right: 0.0),
-        child: offstageIcon
-            ? null
-            : Image.asset(
-                'assets/images/icon_selected_20x20.png',
-                width: 20.0,
-                height: 20.0,
-              ),
+        child: _buildCommonIconWidget('assets/images/icon_selected_20x20.png',
+            width: ScreenUtil().setWidth(60.0),
+            height: ScreenUtil().setWidth(60.0)),
       ),
     );
 
-    return Row(
-      children: <Widget>[
-        titleWidget,
-        iconWidget,
-      ],
-    );
+    return Row(children: <Widget>[titleWidget, iconWidget]);
   }
 
   /// 返回 图片 item
   Widget _buildImageItem(CommonImageItem item) {
     Widget titleWidget = Expanded(
       child: Padding(
-        padding: EdgeInsets.only(right: Constant.pEdgeInset),
-        child: Text(
+        padding: EdgeInsets.only(right: ScreenUtil().setWidth(48.0)),
+        child: _buildCommonTextWidget(
           item.title,
-          style: TextStyle(fontSize: 17.0),
+          fontSize: ScreenUtil().setSp(51.0),
         ),
       ),
     );
 
-    Widget arrowWidget = Image.asset(
-      Constant.assetsImagesArrow + 'tableview_arrow_8x13.png',
-      width: 8.0,
-      height: 13.0,
-    );
+    Widget arrowWidget = _buildCommonRightArrowWidget();
 
     // 图片
     bool offstageIcon = Util.isEmptyString(item.imageUrl);
     Widget iconWidget = Offstage(
       offstage: offstageIcon,
       child: Padding(
-        padding: EdgeInsets.only(right: 10.0),
+        padding: EdgeInsets.only(right: ScreenUtil().setWidth(30.0)),
         // Fixed Bug: 这里icon 没值就别去渲染了,直接为null,否则报错
-        child: offstageIcon
-            ? null
-            : item.isNetwork
-                ? CachedNetworkImage(
-                    imageUrl: item.imageUrl,
-                    width: item.width,
-                    height: item.height,
-                  )
-                : Image.asset(
-                    item.imageUrl,
-                    width: item.width,
-                    height: item.height,
-                  ),
+        child: _buildCommonIconWidget(
+          item.imageUrl,
+          width: item.width,
+          height: item.height,
+        ),
       ),
     );
 
-    return Row(
-      children: [titleWidget, iconWidget, arrowWidget],
-    );
+    return Row(children: [titleWidget, iconWidget, arrowWidget]);
   }
 
   // ---------------------------------通用小部件-----------------------------------
-  Widget _buildCommonIconWidget(String url,
-      {double width = 30.0, double height = 30.0}) {
+  /// 构建iconWidget
+  Widget _buildCommonIconWidget(
+    String url, {
+    Color iconColor,
+    double width = 24.0,
+    double height = 24.0,
+  }) {
     // 容错处理
     final isEmpty = Util.isEmptyString(url);
     if (isEmpty) return null;
-
     // 简单判断图片类型
     // 网络图片 http/https 开头
     // 本地图片(.png/.jpg、.svg)
-
     final isNetwork = url.startsWith(RegExp(r'^http'));
-
     Widget iconWidget;
-
     if (isNetwork) {
       iconWidget = CachedNetworkImage(
         imageUrl: url,
@@ -497,7 +452,12 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
       final isSvg = url.endsWith('.svg');
       // judge
       if (isSvg) {
-        iconWidget = SvgPicture.asset(url, color: Color(0xFF181818));
+        iconWidget = SvgPicture.asset(
+          url,
+          width: width,
+          height: height,
+          color: iconColor,
+        );
       } else {
         iconWidget = Image.asset(
           url,
@@ -506,7 +466,30 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
         );
       }
     }
-
     return iconWidget;
   }
+
+  /// 构建文本部件
+  Widget _buildCommonTextWidget(
+    String text, {
+    double fontSize = 17.0,
+    Color textColor = Style.pTextColor,
+    TextAlign textAlign = TextAlign.left,
+  }) {
+    return Text(
+      text,
+      style: TextStyle(fontSize: fontSize, color: textColor),
+      textAlign: textAlign,
+    );
+  }
+
+  /// 构建rightArrowWidget
+  Widget _buildCommonRightArrowWidget() {
+    return Image.asset(
+      Constant.assetsImagesArrow + 'tableview_arrow_8x13.png',
+      width: ScreenUtil().setWidth(24.0),
+      height: ScreenUtil().setHeight(39.0),
+    );
+  }
 }
+// 528
