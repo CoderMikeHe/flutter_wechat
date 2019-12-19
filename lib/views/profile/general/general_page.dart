@@ -21,12 +21,13 @@ class GeneralPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('通用'),
-        ),
-        body: Container(
-          child: _buildChildWidget(context),
-        ));
+      appBar: AppBar(
+        title: Text('通用'),
+      ),
+      body: Container(
+        child: _buildChildWidget(context),
+      ),
+    );
   }
 
   // 跳转设置语言

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_wechat/constant/cache_key.dart';
-import 'package:flutter_wechat/constant/constant.dart';
 
 import 'package:flutter_wechat/model/common/common_item.dart';
 import 'package:flutter_wechat/model/common/common_group.dart';
 import 'package:flutter_wechat/model/common/common_header.dart';
-import 'package:flutter_wechat/model/common/common_footer.dart';
 
 import 'package:flutter_wechat/widgets/common/common_group_widget.dart';
 
@@ -16,12 +14,13 @@ class MessageNotifyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('新消息通知'),
-        ),
-        body: Container(
-          child: _buildChildWidget(context),
-        ));
+      appBar: AppBar(
+        title: Text('新消息通知'),
+      ),
+      body: Container(
+        child: _buildChildWidget(context),
+      ),
+    );
   }
 
   /// 配置数据

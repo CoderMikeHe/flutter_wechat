@@ -1,17 +1,13 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:flutter_wechat/constant/cache_key.dart';
+import 'package:flutter_wechat/routers/fluro_navigator.dart';
 
 import 'package:flutter_wechat/model/common/common_item.dart';
 import 'package:flutter_wechat/model/common/common_group.dart';
 import 'package:flutter_wechat/model/common/common_footer.dart';
-import 'package:flutter_wechat/model/common/common_header.dart';
 
 import 'package:flutter_wechat/widgets/common/common_group_widget.dart';
 
-import 'package:flutter_wechat/views/profile/more_security_setting/more_security_setting_page.dart';
+import 'package:flutter_wechat/views/profile/profile_rourer.dart';
 
 /// 账号与安全
 class AccountSecurityPage extends StatefulWidget {
@@ -77,11 +73,7 @@ class _AccountSecurityPageState extends State<AccountSecurityPage> {
     final moreSecuritySetting = CommonItem(
       title: "更多安全设置",
       onTap: (_) {
-        Navigator.of(context).push(new MaterialPageRoute(
-          builder: (_) {
-            return MoreSecuritySettingPage();
-          },
-        ));
+        NavigatorUtils.push(context, ProfileRouter.moreSecuritySettingPage);
       },
     );
     final group2 = CommonGroup(

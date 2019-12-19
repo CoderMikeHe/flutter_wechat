@@ -1,7 +1,6 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 
-import 'package:flutter_wechat/constant/constant.dart';
 import 'package:flutter_wechat/model/common/common_item.dart';
 import 'package:flutter_wechat/model/common/common_group.dart';
 
@@ -12,11 +11,6 @@ import 'package:flutter_wechat/views/profile/profile_rourer.dart';
 import 'package:flutter_wechat/widgets/common/common_group_widget.dart';
 import 'package:flutter_wechat/components/action_sheet/action_sheet.dart';
 import 'package:flutter_wechat/widgets/loading_dialog/loading_dialog.dart';
-
-import 'package:flutter_wechat/views/profile/general/general_page.dart';
-import 'package:flutter_wechat/views/profile/message_notify/message_notify_page.dart';
-import 'package:flutter_wechat/views/profile/privates/privates_page.dart';
-import 'package:flutter_wechat/views/profile/account_security/account_security_page.dart';
 
 import 'package:flutter_wechat/utils/service/account_service.dart';
 
@@ -42,13 +36,7 @@ class SettingPage extends StatelessWidget {
     final accountSecurity = CommonItem(
       title: '账号与安全',
       onTap: (_) {
-        Navigator.of(context).push(
-          new MaterialPageRoute(
-            builder: (_) {
-              return AccountSecurityPage();
-            },
-          ),
-        );
+        NavigatorUtils.push(context, ProfileRouter.accountSecurityPage);
       },
     );
     final group0 = CommonGroup(
@@ -58,35 +46,23 @@ class SettingPage extends StatelessWidget {
     // group1
     // 新消息通知
     final messageNotify = CommonItem(
-        title: "新消息通知",
-        onTap: (_) {
-          Navigator.of(context).push(new MaterialPageRoute(
-            builder: (_) {
-              return MessageNotifyPage();
-            },
-          ));
-        });
+      title: "新消息通知",
+      onTap: (_) {
+        NavigatorUtils.push(context, ProfileRouter.messageNotifyPage);
+      },
+    );
     // 隐私
     final privates = CommonItem(
-        title: "隐私",
-        onTap: (_) {
-          Navigator.of(context).push(new MaterialPageRoute(
-            builder: (_) {
-              return PrivatesPage();
-            },
-          ));
-        });
+      title: "隐私",
+      onTap: (_) {
+        NavigatorUtils.push(context, ProfileRouter.privatesPage);
+      },
+    );
     // 通用
     final general = CommonItem(
       title: "通用",
       onTap: (_) {
-        Navigator.of(context).push(
-          new MaterialPageRoute(
-            builder: (_) {
-              return GeneralPage();
-            },
-          ),
-        );
+        NavigatorUtils.push(context, ProfileRouter.generalPage);
       },
     );
     final group1 = CommonGroup(

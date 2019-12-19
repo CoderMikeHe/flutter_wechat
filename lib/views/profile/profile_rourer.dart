@@ -7,6 +7,12 @@ import 'package:flutter_wechat/views/profile/account_security/account_security_p
 import 'package:flutter_wechat/views/profile/general/general_page.dart';
 import 'package:flutter_wechat/views/profile/message_notify/message_notify_page.dart';
 import 'package:flutter_wechat/views/profile/privates/privates_page.dart';
+import 'package:flutter_wechat/views/profile/more_security_setting/more_security_setting_page.dart';
+import 'package:flutter_wechat/views/profile/chat_background/chat_background_page.dart';
+import 'package:flutter_wechat/views/profile/discover_manager/discover_manager_page.dart';
+import 'package:flutter_wechat/views/profile/resource/resource_page.dart';
+import 'package:flutter_wechat/views/profile/chat_record_backup/chat_record_backup.dart';
+
 import 'profile_page.dart';
 
 class ProfileRouter implements IRouterProvider {
@@ -31,6 +37,20 @@ class ProfileRouter implements IRouterProvider {
   /// 通用
   static String generalPage = "/profile/general";
 
+  /// 更多安全设置
+  static String moreSecuritySettingPage = "/profile/more-security-setting";
+
+  /// 聊天背景
+  static String chatBackgroundPage = "/profile/chat-background";
+
+  /// 照片、视频和文件
+  static String resourcePage = "/profile/resource";
+
+  /// 发现页管理
+  static String discoverManagerPage = "/profile/discover-manager";
+
+  /// 聊天记录备份与迁移
+  static String chatRecordBackupPage = "/profile/chat-record-backup";
   @override
   void initRouter(Router router) {
     // 我root页
@@ -43,28 +63,40 @@ class ProfileRouter implements IRouterProvider {
       settingPage,
       handler: Handler(handlerFunc: (_, params) => SettingPage()),
     );
-    router.define(aboutUsPage,
-        handler: Handler(handlerFunc: (_, params) => AboutUsPage()));
-    router.define(accountSecurityPage,
-        handler: Handler(handlerFunc: (_, params) => AccountSecurityPage()));
-    router.define(messageNotifyPage,
-        handler: Handler(handlerFunc: (_, params) => MessageNotifyPage()));
-    router.define(privatesPage,
-        handler: Handler(handlerFunc: (_, params) => PrivatesPage()));
-    router.define(generalPage,
-        handler: Handler(handlerFunc: (_, params) => GeneralPage()));
-    // router.define(phoneLoginPage, handler: Handler(handlerFunc: (_, params) {
-    //   final String phone = params['phone']?.first;
-    //   final String zoneCode = params['zone_code']?.first;
-    //   return PhoneLoginPage(
-    //     phone: phone,
-    //     zoneCode: zoneCode,
-    //   );
-    // }));
-    // router.define(languagePickerPage,
-    //     handler: Handler(handlerFunc: (_, params) {
-    //   final String language = params['language']?.first;
-    //   return LanguagePickerPage(value: language);
-    // }));
+    // 关于微信
+    router.define(
+      aboutUsPage,
+      handler: Handler(handlerFunc: (_, params) => AboutUsPage()),
+    );
+    // 账号与安全
+    router.define(
+      accountSecurityPage,
+      handler: Handler(handlerFunc: (_, params) => AccountSecurityPage()),
+    );
+    // 新消息通知
+    router.define(
+      messageNotifyPage,
+      handler: Handler(handlerFunc: (_, params) => MessageNotifyPage()),
+    );
+    // 隐私
+    router.define(
+      privatesPage,
+      handler: Handler(handlerFunc: (_, params) => PrivatesPage()),
+    );
+    // 通用
+    router.define(
+      generalPage,
+      handler: Handler(handlerFunc: (_, params) => GeneralPage()),
+    );
+    // 更多安全设置
+    router.define(
+      moreSecuritySettingPage,
+      handler: Handler(handlerFunc: (_, params) => MoreSecuritySettingPage()),
+    );
+    // 聊天背景
+    router.define(
+      chatBackgroundPage,
+      handler: Handler(handlerFunc: (_, params) => ChatBackgroundPage()),
+    );
   }
 }
