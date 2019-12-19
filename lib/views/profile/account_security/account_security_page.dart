@@ -50,13 +50,7 @@ class _AccountSecurityPageState extends State<AccountSecurityPage> {
     final password = CommonItem(
       title: "微信密码",
       subtitle: '已设置',
-      onTap: (_) {
-        Navigator.of(context).push(new MaterialPageRoute(
-          builder: (_) {
-            return null;
-          },
-        ));
-      },
+      onTap: (_) {},
     );
     // 声音锁
     final voiceLock = CommonItem(
