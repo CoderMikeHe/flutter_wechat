@@ -52,7 +52,7 @@ class UserInfoPage extends StatelessWidget {
     // 我的二维码
     final qrCode = CommonImageItem(
       title: '我的二维码',
-      imageUrl: Constant.assetsImages + 'setting_myQR_36x36.png',
+      imageUrl: Constant.assetsImagesProfile + 'setting_myQR_36x36.png',
       width: 18.0,
       height: 18.0,
     );

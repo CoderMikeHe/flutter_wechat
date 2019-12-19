@@ -31,14 +31,16 @@ class ProfileHeader extends StatelessWidget {
                       'http://tva3.sinaimg.cn/crop.0.6.264.264.180/93276e1fjw8f5c6ob1pmpj207g07jaa5.jpg',
                   placeholder: (context, url) {
                     return Image.asset(
-                      'assets/images/DefaultProfileHead_66x66.png',
+                      Constant.assetsImagesDefault +
+                          'DefaultProfileHead_66x66.png',
                       width: 66.0,
                       height: 66.0,
                     );
                   },
                   errorWidget: (context, url, error) {
                     return Image.asset(
-                      'assets/images/DefaultProfileHead_66x66.png',
+                      Constant.assetsImagesDefault +
+                          'DefaultProfileHead_66x66.png',
                       width: 66.0,
                       height: 66.0,
                     );
@@ -88,7 +90,7 @@ class ProfileHeader extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.only(right: 13.0),
                                 child: Image.asset(
-                                  Constant.assetsImages +
+                                  Constant.assetsImagesProfile +
                                       'setting_myQR_36x36.png',
                                   width: 18.0,
                                   height: 18.0,

@@ -43,6 +43,15 @@ class Constant {
   /// 我模块资源
   static const String assetsImagesProfile = 'assets/images/profile/';
 
+  /// 单选、复选、选中 模块资源
+  static const String assetsImagesRadio = 'assets/images/radio/';
+
+  /// 输入框 模块资源
+  static const String assetsImagesInput = 'assets/images/input/';
+
+  /// loading 模块资源
+  static const String assetsImagesLoading = 'assets/images/loading/';
+
   /// 本地mock数据json
   static const String mockData = 'mock/';
 

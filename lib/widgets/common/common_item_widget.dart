@@ -240,7 +240,7 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
     );
 
     Widget lockWidget = Image.asset(
-      'assets/images/' +
+      Constant.assetsImagesProfile +
           (item.binded
               ? 'ProfileLockOn_17x17.png'
               : 'ProfileLockOff_17x17.png'),
@@ -271,7 +271,7 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
         padding: EdgeInsets.only(right: ScreenUtil().setWidth(48.0)),
         // Fixed Bug: 这里icon 没值就别去渲染��,直接为null,否则报错
         child: Image.asset(
-          'assets/images/WeChat_Lab_Logo_small_15x17.png',
+          Constant.assetsImagesProfile + 'WeChat_Lab_Logo_small_15x17.png',
           width: ScreenUtil().setWidth(45.0),
           height: ScreenUtil().setHeight(51.0),
         ),
@@ -368,7 +368,8 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
       offstage: offstageIcon,
       child: Padding(
         padding: EdgeInsets.only(right: 0.0),
-        child: _buildCommonIconWidget('assets/images/icon_selected_20x20.png',
+        child: _buildCommonIconWidget(
+            Constant.assetsImagesRadio + 'icon_selected_20x20.png',
             width: ScreenUtil().setWidth(60.0),
             height: ScreenUtil().setWidth(60.0)),
       ),

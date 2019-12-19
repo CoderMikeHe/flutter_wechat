@@ -6,6 +6,7 @@ import 'package:flustars/flustars.dart';
 import 'package:fluro/fluro.dart';
 
 import 'package:flutter_wechat/constant/style.dart';
+import 'package:flutter_wechat/constant/constant.dart';
 import 'package:flutter_wechat/utils/util.dart';
 
 import 'package:flutter_wechat/routers/fluro_navigator.dart';
@@ -330,7 +331,7 @@ class _CurrentLoginWidgetState extends State<CurrentLoginWidget> {
                 'http://tva3.sinaimg.cn/crop.0.6.264.264.180/93276e1fjw8f5c6ob1pmpj207g07jaa5.jpg',
             placeholder: (context, url) {
               return Image.asset(
-                'assets/images/DefaultProfileHead_66x66.png',
+                Constant.assetsImagesDefault + 'DefaultProfileHead_66x66.png',
                 width: 66.0,
                 height: 66.0,
               );
@@ -338,7 +339,7 @@ class _CurrentLoginWidgetState extends State<CurrentLoginWidget> {
             errorWidget: (context, url, error) {
               print('头像报错 $error');
               return Image.asset(
-                'assets/images/DefaultProfileHead_66x66.png',
+                Constant.assetsImagesDefault + 'DefaultProfileHead_66x66.png',
                 width: 66.0,
                 height: 66.0,
               );

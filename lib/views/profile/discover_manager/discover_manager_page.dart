@@ -30,54 +30,73 @@ class DiscoverManagerPage extends StatelessWidget {
     // 朋友圈
     final moments = CommonSwitchItem(
       title: '朋友圈',
-      icon: Constant.assetsImages + "ff_IconShowAlbum_25x25.png",
+      icon:
+          Constant.assetsImagesDiscover + "icons_outlined_colorful_moment.svg",
       cacheKey: CacheKey.momentsKey,
     );
     // 扫一扫
     final qrCode = CommonSwitchItem(
-        title: "扫一扫",
-        icon: Constant.assetsImages + "ff_IconQRCode_25x25.png",
-        cacheKey: CacheKey.qrCodeKey);
+      title: "扫一扫",
+      icon: Constant.assetsImagesDiscover + "icons_outlined_scan.svg",
+      cacheKey: CacheKey.qrCodeKey,
+    );
+    qrCode.iconColor = Color(0xFF3d83e6);
+
     // 摇一摇
     final shake = CommonSwitchItem(
-        title: "摇一摇",
-        icon: Constant.assetsImages + "ff_IconShake_25x25.png",
-        cacheKey: CacheKey.shakeKey);
+      title: "摇一摇",
+      icon: Constant.assetsImagesDiscover + "icons_outlined_shake.svg",
+      cacheKey: CacheKey.shakeKey,
+    );
+    shake.iconColor = Color(0xFF3d83e6);
+
     // 看一看
     final look = CommonSwitchItem(
-        title: "看一看",
-        icon: Constant.assetsImages + "ff_IconBrowse1_25x25.png",
-        cacheKey: CacheKey.lookKey);
+      title: "看一看",
+      icon: Constant.assetsImagesDiscover + "icons_outlined_news.svg",
+      cacheKey: CacheKey.lookKey,
+    );
+    look.iconColor = Color(0xFFF6C543);
     // 搜一搜
     final search = CommonSwitchItem(
-        title: "搜一搜",
-        icon: Constant.assetsImages + "ff_IconSearch1_25x25.png",
-        cacheKey: CacheKey.searchKey);
+      title: "搜一搜",
+      icon: Constant.assetsImagesDiscover + "ff_IconSearch1_25x25.png",
+      cacheKey: CacheKey.searchKey,
+    );
     // 附近的人
     final locationService = CommonSwitchItem(
-        title: "附近的人",
-        icon: Constant.assetsImages + "ff_IconLocationService_25x25.png",
-        cacheKey: CacheKey.locationServiceKey);
+      title: "附近的人",
+      icon: Constant.assetsImagesDiscover + "icons_outlined_nearby.svg",
+      cacheKey: CacheKey.locationServiceKey,
+    );
+    locationService.iconColor = Color(0xFF3d83e6);
     // 漂流瓶
     final bottle = CommonSwitchItem(
-        title: "漂流瓶",
-        icon: Constant.assetsImages + "ff_IconBottle_25x25.png",
-        cacheKey: CacheKey.bottleKey);
+      title: "漂流瓶",
+      icon: Constant.assetsImagesDiscover + "icons_outlined_bottle.svg",
+      cacheKey: CacheKey.bottleKey,
+    );
+    bottle.iconColor = Color(0xFF3d83e6);
     // 购物
     final shopping = CommonSwitchItem(
-        title: "购物",
-        icon: Constant.assetsImages + "CreditCard_ShoppingBag_25x25.png",
-        cacheKey: CacheKey.shoppingKey);
+      title: "购物",
+      icon: Constant.assetsImagesDiscover + "icons_outlined_shop.svg",
+      cacheKey: CacheKey.shoppingKey,
+    );
+    shopping.iconColor = Color(0xFFE75E58);
     // 游戏
     final game = CommonSwitchItem(
-        title: "游戏",
-        icon: Constant.assetsImages + "MoreGame_25x25.png",
-        cacheKey: CacheKey.gameKey);
+      title: "游戏",
+      icon: Constant.assetsImagesDiscover + "icons_outlined_colorful_game.svg",
+      cacheKey: CacheKey.gameKey,
+    );
     // 小程序
     final moreApps = CommonSwitchItem(
-        title: "小程序",
-        icon: Constant.assetsImages + "MoreWeApp_25x25.png",
-        cacheKey: CacheKey.moreAppsKey);
+      title: "小程序",
+      icon: Constant.assetsImagesDiscover + "icons_outlined_miniprogram.svg",
+      cacheKey: CacheKey.moreAppsKey,
+    );
+    moreApps.iconColor = Color(0xFF6467e8);
 
     // 组头
     final CommonHeader header = CommonHeader(header: '打开/关闭发现页的入口');
@@ -96,7 +115,7 @@ class DiscoverManagerPage extends StatelessWidget {
         bottle,
         shopping,
         game,
-        moreApps
+        moreApps,
       ],
       footer: footer,
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_wechat/constant/constant.dart';
 
 enum LoadingDialogStyle { horizontal, vertical }
 
@@ -360,7 +361,7 @@ class LoadingIconState extends State<LoadingIcon>
     return Transform.rotate(
         angle: _doubleAnimation.value ~/ 30 * 30.0 * 0.0174533,
         child: Image.asset(
-          "assets/images/loading.png",
+          Constant.assetsImagesLoading + "loading.png",
           width: widget.size,
           height: widget.size,
         ));
