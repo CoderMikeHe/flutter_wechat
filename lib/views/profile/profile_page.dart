@@ -9,8 +9,6 @@ import 'package:flutter_wechat/model/common/common_item.dart';
 import 'package:flutter_wechat/model/common/common_group.dart';
 import 'package:flutter_wechat/widgets/common/common_group_widget.dart';
 
-import 'package:flutter_wechat/views/profile/user_info/user_info_page.dart';
-
 import 'package:flutter_wechat/views/profile/widgets/profile_header.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -106,16 +104,9 @@ class _ProfilePageState extends State<ProfilePage> {
           slivers: <Widget>[
             // 头部
             ProfileHeader(
-              onTapTitle: () {
-                print('点击昵称');
-              },
+              onTapTitle: () {},
               onTapContent: () {
-                print('除了点击名称');
-                Navigator.of(context).push(new MaterialPageRoute(
-                  builder: (_) {
-                    return UserInfoPage();
-                  },
-                ));
+                NavigatorUtils.push(context, ProfileRouter.userInfoPage);
               },
             ),
             // 列表

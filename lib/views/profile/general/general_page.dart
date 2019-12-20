@@ -4,16 +4,12 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter_wechat/constant/cache_key.dart';
 import 'package:flutter_wechat/routers/fluro_navigator.dart';
 import 'package:flutter_wechat/views/login/login_router.dart';
+import 'package:flutter_wechat/views/profile/profile_rourer.dart';
 
 import 'package:flutter_wechat/model/common/common_item.dart';
 import 'package:flutter_wechat/model/common/common_group.dart';
 
 import 'package:flutter_wechat/widgets/common/common_group_widget.dart';
-
-import 'package:flutter_wechat/views/profile/chat_background/chat_background_page.dart';
-import 'package:flutter_wechat/views/profile/discover_manager/discover_manager_page.dart';
-import 'package:flutter_wechat/views/profile/resource/resource_page.dart';
-import 'package:flutter_wechat/views/profile/chat_record_backup/chat_record_backup.dart';
 
 class GeneralPage extends StatelessWidget {
   const GeneralPage({Key key}) : super(key: key);
@@ -72,11 +68,7 @@ class GeneralPage extends StatelessWidget {
     final chatBg = CommonItem(
       title: "聊天背景",
       onTap: (_) {
-        Navigator.of(context).push(new MaterialPageRoute(
-          builder: (_) {
-            return ChatBackgroundPage();
-          },
-        ));
+        NavigatorUtils.push(context, ProfileRouter.chatBackgroundPage);
       },
     );
 
@@ -88,11 +80,7 @@ class GeneralPage extends StatelessWidget {
     final resource = CommonItem(
       title: "照片、视频和文件",
       onTap: (_) {
-        Navigator.of(context).push(new MaterialPageRoute(
-          builder: (_) {
-            return ResourcePage();
-          },
-        ));
+        NavigatorUtils.push(context, ProfileRouter.resourcePage);
       },
     );
     final group1 = CommonGroup(
@@ -115,11 +103,7 @@ class GeneralPage extends StatelessWidget {
     final discoverManager = CommonItem(
       title: "发现页管理",
       onTap: (_) {
-        Navigator.of(context).push(new MaterialPageRoute(
-          builder: (_) {
-            return DiscoverManagerPage();
-          },
-        ));
+        NavigatorUtils.push(context, ProfileRouter.discoverManagerPage);
       },
     );
 
@@ -136,11 +120,7 @@ class GeneralPage extends StatelessWidget {
     final chatRecord = CommonItem(
       title: "聊天记录备份与迁移",
       onTap: (_) {
-        Navigator.of(context).push(new MaterialPageRoute(
-          builder: (_) {
-            return ChatRecordBackupPage();
-          },
-        ));
+        NavigatorUtils.push(context, ProfileRouter.chatRecordBackupPage);
       },
     );
     // 存储空间

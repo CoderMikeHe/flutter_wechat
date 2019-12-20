@@ -1,18 +1,12 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:flutter_wechat/constant/cache_key.dart';
+import 'package:flutter_wechat/routers/fluro_navigator.dart';
+import 'package:flutter_wechat/views/profile/profile_rourer.dart';
 
 import 'package:flutter_wechat/model/common/common_item.dart';
 import 'package:flutter_wechat/model/common/common_group.dart';
-import 'package:flutter_wechat/model/common/common_footer.dart';
-import 'package:flutter_wechat/model/common/common_header.dart';
 
 import 'package:flutter_wechat/widgets/common/common_group_widget.dart';
-
-import 'package:flutter_wechat/views/profile/setting_gender/setting_gender_page.dart';
-import 'package:flutter_wechat/views/profile/signature/signature_page.dart';
 
 /// 账号与安全
 class MoreInfoPage extends StatefulWidget {
@@ -40,68 +34,56 @@ class _MoreInfoPageState extends State<MoreInfoPage> {
     final gender = CommonItem(
       title: "性别",
       subtitle: '男',
-      onTap: (item) async {
-        final String result = await Navigator.of(context).push(
-          new MaterialPageRoute(
-            builder: (_) {
-              return SettingGenderPage(
-                value: item.subtitle.isEmpty ? '男' : item.subtitle,
-              );
-            },
-          ),
+      onTap: (item) {
+        final String value = item.subtitle.isEmpty ? '男' : item.subtitle;
+        // 跳转
+        NavigatorUtils.pushResult(
+          context,
+          '${ProfileRouter.settingGenderPage}?value=${Uri.encodeComponent(value)}',
+          (result) {
+            if (null != result && item.subtitle != result) {
+              setState(() {
+                item.subtitle = result;
+              });
+            }
+          },
         );
-        if (null != result && item.subtitle != result) {
-          setState(() {
-            item.subtitle = result;
-          });
-        }
       },
     );
     // 地址
     final address = CommonItem(
       title: "地址",
       subtitle: '广东 深圳',
-      onTap: (_) {
-        // Navigator.of(context).push(new MaterialPageRoute(
-        //   builder: (_) {
-        //     return BindingMailboxPage();
-        //   },
-        // ));
-      },
+      onTap: (_) {},
     );
     // 签名
     final sign = CommonItem(
       title: "个性签名",
       subtitle: '生死看淡，不服就干',
       onTap: (item) async {
-        final String result =
-            await Navigator.of(context).push(new MaterialPageRoute(
-          builder: (_) {
-            return SignaturePage(
-              text: (item.subtitle != null &&
-                      item.subtitle.isNotEmpty &&
-                      item.subtitle != '未填写')
-                  ? item.subtitle
-                  : '',
-            );
+        final String text = (item.subtitle != null &&
+                item.subtitle.isNotEmpty &&
+                item.subtitle != '未填写')
+            ? item.subtitle
+            : '';
+        // 跳转
+        NavigatorUtils.pushResult(
+          context,
+          '${ProfileRouter.signaturePage}?text=${Uri.encodeComponent(text)}',
+          (result) {
+            if (null != result && item.subtitle != result) {
+              setState(() {
+                item.subtitle =
+                    (result != null && (result as String).isNotEmpty)
+                        ? result
+                        : '未填写';
+              });
+            }
           },
-        ));
-        // 取消，不做处理
-        if (result != null && item.subtitle != result) {
-          setState(() {
-            item.subtitle =
-                (result != null && result.isNotEmpty) ? result : '未填写';
-          });
-        }
+        );
       },
     );
-    final group0 = CommonGroup(
-      items: [
-        gender,
-        address,
-        sign,
-      ],
-    );
+    final group0 = CommonGroup(items: [gender, address, sign]);
 
     // 添加数据源
     _dataSource = [group0];

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_wechat/routers/fluro_navigator.dart';
+import 'package:flutter_wechat/views/profile/profile_rourer.dart';
+
 import 'package:flutter_wechat/constant/constant.dart';
 import 'package:flutter_wechat/model/common/common_item.dart';
 import 'package:flutter_wechat/model/common/common_group.dart';
 
 import 'package:flutter_wechat/widgets/common/common_group_widget.dart';
-
-import 'package:flutter_wechat/views/profile/more_info/more_info_page.dart';
 
 class UserInfoPage extends StatelessWidget {
   const UserInfoPage({Key key}) : super(key: key);
@@ -60,11 +61,7 @@ class UserInfoPage extends StatelessWidget {
     final moreInfo = CommonItem(
       title: '更多',
       onTap: (_) {
-        Navigator.of(context).push(new MaterialPageRoute(
-          builder: (_) {
-            return MoreInfoPage();
-          },
-        ));
+        NavigatorUtils.push(context, ProfileRouter.moreInfoPage);
       },
     );
     final group0 = CommonGroup(

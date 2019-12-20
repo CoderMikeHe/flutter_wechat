@@ -1,6 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flustars/flustars.dart';
+
+import 'package:flutter_wechat/routers/fluro_navigator.dart';
+import 'package:flutter_wechat/views/profile/profile_rourer.dart';
 
 import 'package:flutter_wechat/constant/cache_key.dart';
 
@@ -10,9 +13,6 @@ import 'package:flutter_wechat/model/common/common_footer.dart';
 import 'package:flutter_wechat/model/common/common_header.dart';
 
 import 'package:flutter_wechat/widgets/common/common_group_widget.dart';
-
-import 'package:flutter_wechat/views/profile/add_way/add_way_page.dart';
-import 'package:flutter_wechat/views/profile/check_scope/check_scope_page.dart';
 
 /// 隐私
 class PrivatesPage extends StatefulWidget {
@@ -24,9 +24,6 @@ class PrivatesPage extends StatefulWidget {
 class _PrivatesPageState extends State<PrivatesPage> {
   /// 数据源
   List<CommonGroup> _dataSource = [];
-
-  /// 查看范围 item
-  CommonItem _checkScope;
 
   /// 点击事件
   final TapGestureRecognizer _tapGr0 = TapGestureRecognizer();
@@ -68,8 +65,6 @@ class _PrivatesPageState extends State<PrivatesPage> {
 
     // 配置数据源
     _configData();
-    // 赋值
-    _getCheckScopeCache();
   }
 
   /// 配置数据
@@ -89,11 +84,7 @@ class _PrivatesPageState extends State<PrivatesPage> {
     final addWay = CommonItem(
       title: "添加我的方式",
       onTap: (_) {
-        Navigator.of(context).push(new MaterialPageRoute(
-          builder: (_) {
-            return AddWayPage();
-          },
-        ));
+        NavigatorUtils.push(context, ProfileRouter.addWayPage);
       },
     );
     // 向我推荐通讯录朋友
@@ -130,30 +121,29 @@ class _PrivatesPageState extends State<PrivatesPage> {
       title: "不看他(她)的朋友圈",
     );
     // 允许朋友查看朋友圈的范围
+    // 获取缓存中范围
+    final String scope =
+        SpUtil.getString(CacheKey.momentsCheckScopeKey, defValue: '全部');
     final checkScope = CommonItem(
       title: "允许朋友查看朋友圈的范围",
-      subtitle: '',
-      onTap: (item) async {
-        final String result = await Navigator.of(context).push(
-          new MaterialPageRoute(
-            builder: (_) {
-              return CheckScopePage(
-                value: item.subtitle.isEmpty ? '全部' : item.subtitle,
-              );
-            },
-          ),
+      subtitle: scope,
+      onTap: (item) {
+        // 跳转
+        NavigatorUtils.pushResult(
+          context,
+          '${ProfileRouter.checkScopePage}?value=${Uri.encodeComponent(scope)}',
+          (result) {
+            if (null != result && item.subtitle != result) {
+              setState(() {
+                item.subtitle = result;
+              });
+              // 保存缓存
+              SpUtil.putString(CacheKey.momentsCheckScopeKey, result);
+            }
+          },
         );
-        if (null != result && item.subtitle != result) {
-          setState(() {
-            item.subtitle = result;
-          });
-          // 存储本地
-          SharedPreferences sp = await SharedPreferences.getInstance();
-          sp.setString(CacheKey.momentsCheckScopeKey, result);
-        }
       },
     );
-    _checkScope = checkScope;
 
     // 允许陌生人查看十条朋友圈
     final stranger = CommonSwitchItem(
@@ -190,15 +180,6 @@ class _PrivatesPageState extends State<PrivatesPage> {
 
     // 添加数据源
     _dataSource = [group0, group1, group2, group3, group4, group5];
-  }
-
-  /// 读取缓存
-  void _getCheckScopeCache() async {
-    SharedPreferences sp = await SharedPreferences.getInstance();
-    String value = sp.getString(CacheKey.momentsCheckScopeKey);
-    setState(() {
-      _checkScope.subtitle = null == value ? '全部' : value;
-    });
   }
 
   /// 点击状态事件 they occur: down, up, tap, cancel
