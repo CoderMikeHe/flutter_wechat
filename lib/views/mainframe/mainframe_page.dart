@@ -27,6 +27,10 @@ class MainframePage extends StatefulWidget {
 class _MainframePageState extends State<MainframePage> {
   /// 数据源
   List<Message> _dataSource = [];
+  // 侧滑controller
+  SlidableController _slidableController;
+  // 是否展开
+  bool _slideIsOpen = false;
 
   /// ✨✨✨✨✨✨✨ Override ✨✨✨✨✨✨✨
   @override
@@ -35,12 +39,18 @@ class _MainframePageState extends State<MainframePage> {
 
     // 获取数据
     _fetchRemoteData();
+
+    // 配制数字居
+    _slidableController = SlidableController(
+      onSlideAnimationChanged: _handleSlideAnimationChanged,
+      onSlideIsOpenChanged: _handleSlideIsOpenChanged,
+    );
   }
 
   /// ✨✨✨✨✨✨✨ Network ✨✨✨✨✨✨✨
   /// 数据请求
   void _fetchRemoteData() async {
-    //加载城市列表
+    //加载消息列表
     rootBundle.loadString('mock/mainframe.json').then((jsonStr) {
       final List mainframeJson = json.decode(jsonStr);
       // 遍历
@@ -53,6 +63,22 @@ class _MainframePageState extends State<MainframePage> {
   }
 
   /// ✨✨✨✨✨✨✨ 事件 ✨✨✨✨✨✨✨
+  /// // 监听事件
+  void _handleSlideAnimationChanged(Animation<double> slideAnimation) {}
+  void _handleSlideIsOpenChanged(bool isOpen) {
+    setState(() {
+      _slideIsOpen = isOpen;
+    });
+  }
+
+  /// 关闭slidable
+  void _closeSlidable() {
+    // 容错处理
+    if (!_slideIsOpen) return;
+
+    // 方案三：
+    _slidableController.activeState?.close();
+  }
 
   /// ✨✨✨✨✨✨✨ UI ✨✨✨✨✨✨✨
   /// 构建子部件
@@ -135,14 +161,114 @@ class _MainframePageState extends State<MainframePage> {
       ],
     );
 
-    return MHListTile(
-      leading: leading,
+    final Widget listTile = MHListTile(
+      // leading: leading,
       middle: middle,
+      allowTap: !_slideIsOpen,
       contentPadding: EdgeInsets.symmetric(
           horizontal: ScreenUtil.getInstance().setWidth(48.0),
           vertical: ScreenUtil.getInstance().setHeight(36.0)),
       dividerColor: Color(0xFFD8D8D8),
       dividerIndent: ScreenUtil().setWidth(228.0),
+      onTapValue: (cxt) {
+        // 没有侧滑展开项 就直接下钻
+        if (!_slideIsOpen) {
+          // NavigatorUtils.push(cxt,
+          //     '${ContactsRouter.contactInfoPage}?idstr=${user.idstr}');
+          return;
+        }
+
+        // 下钻联系人信息
+        if (Slidable.of(cxt)?.renderingMode == SlidableRenderingMode.none) {
+          // 关闭上一个侧滑
+          _closeSlidable();
+          // 下钻
+        } else {
+          Slidable.of(cxt)?.close();
+        }
+      },
+    );
+
+    final List<Widget> secondaryActions = [];
+
+    // 每个消息item 都有删除 按钮
+    Widget deleteBtn = GestureDetector(
+      child: Container(
+        color: Colors.red,
+        child: Text(
+          '删除',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: ScreenUtil.getInstance().setSp(51.0),
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        alignment: Alignment.center,
+      ),
+      onTap: () {},
+    );
+
+    if (m.type == '0') {
+      // 订阅号消息、微信运动、微信支付
+      secondaryActions.add(deleteBtn);
+    } else if (m.type == '1') {
+      // 单聊、群聊、QQ邮箱提醒
+      final Widget notRead = GestureDetector(
+        child: Container(
+          color: Color(0xFFC7C7CB),
+          width: 150,
+          child: Text(
+            '标为未读',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: ScreenUtil.getInstance().setSp(51.0),
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          alignment: Alignment.center,
+        ),
+        onTap: () {},
+      );
+      secondaryActions.addAll([notRead, deleteBtn]);
+    } else {
+      // 公众号
+      final Widget focusBtn = GestureDetector(
+        child: Container(
+          color: Color(0xFFC7C7CB),
+          width: 150,
+          child: Text(
+            '不再关注',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: ScreenUtil.getInstance().setSp(51.0),
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          alignment: Alignment.center,
+        ),
+        onTap: () {},
+      );
+      secondaryActions.addAll([focusBtn, deleteBtn]);
+    }
+    // 需要侧滑事件
+    return Slidable(
+      // 必须的有key
+      key: Key(m.idstr),
+      controller: _slidableController,
+      dismissal: SlidableDismissal(
+        closeOnCanceled: false,
+        dragDismissible: true,
+        child: SlidableDrawerDismissal(),
+        onWillDismiss: (actionType) {
+          return false;
+        },
+        onDismissed: (_) {},
+      ),
+      // 抽屉式
+      actionPane: SlidableDrawerActionPane(),
+      actionExtentRatio: 0.2,
+      child: listTile,
+      secondaryActions: secondaryActions,
     );
   }
 
@@ -158,7 +284,8 @@ class _MainframePageState extends State<MainframePage> {
               color: Color(0xFF181818),
             ),
             onPressed: () {
-              // 关掉侧滑
+              // 关闭上一个侧滑
+              _closeSlidable();
             },
           )
         ],

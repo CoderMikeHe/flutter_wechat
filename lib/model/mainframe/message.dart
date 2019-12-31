@@ -13,6 +13,9 @@ class Message {
   /// 消息免打扰
   bool messageFree;
 
+  /// 侧滑类型
+  String type;
+
   Message({
     this.idstr,
     this.users,
@@ -21,6 +24,7 @@ class Message {
     this.text,
     this.badge,
     this.messageFree,
+    this.type,
   });
 
   Message.fromJson(Map<String, dynamic> json) {
@@ -36,6 +40,7 @@ class Message {
     text = json['text'];
     badge = json['badge'] != null ? new Badge.fromJson(json['badge']) : null;
     messageFree = json['messageFree'];
+    type = json['type'];
   }
 
   Map<String, dynamic> toJson() {
@@ -48,6 +53,7 @@ class Message {
     data['created_at'] = this.createdAt;
     data['text'] = this.text;
     data['messageFree'] = this.messageFree;
+    data['type'] = this.type;
     if (this.badge != null) {
       data['badge'] = this.badge.toJson();
     }
