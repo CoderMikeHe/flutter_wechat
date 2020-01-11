@@ -27,10 +27,18 @@ class MainframePage extends StatefulWidget {
 class _MainframePageState extends State<MainframePage> {
   /// 数据源
   List<Message> _dataSource = [];
-  // 侧滑controller
+
+  /// 侧滑controller
   SlidableController _slidableController;
-  // 是否展开
+
+  /// 是否展开
   bool _slideIsOpen = false;
+
+  /// 滚动
+  ScrollController _controller = new ScrollController();
+
+  // 偏移量
+  double _offset = 0.0;
 
   /// ✨✨✨✨✨✨✨ Override ✨✨✨✨✨✨✨
   @override
@@ -45,6 +53,26 @@ class _MainframePageState extends State<MainframePage> {
       onSlideAnimationChanged: _handleSlideAnimationChanged,
       onSlideIsOpenChanged: _handleSlideIsOpenChanged,
     );
+
+    //监听滚动事件，打印滚动位置
+    _controller.addListener(() {
+      print(_controller.offset); //打印滚动位置
+      final offset = _controller.offset;
+      if (offset <= 0.0) {
+        // setState(() {
+        //   _offset = offset;
+        // });
+      } else {
+        _offset = 0.0;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    //为了避免内存泄露，需要调用_controller.dispose
+    _controller.dispose();
+    super.dispose();
   }
 
   /// ✨✨✨✨✨✨✨ Network ✨✨✨✨✨✨✨
@@ -83,20 +111,74 @@ class _MainframePageState extends State<MainframePage> {
   /// ✨✨✨✨✨✨✨ UI ✨✨✨✨✨✨✨
   /// 构建子部件
   Widget _buildChildWidget() {
-    return Container(
-      child: CustomScrollView(
-        slivers: <Widget>[
-          SliverToBoxAdapter(
-            child: SearchBar(),
+    return ConstrainedBox(
+      constraints: BoxConstraints.expand(),
+      child: Stack(
+        overflow: Overflow.visible,
+        children: <Widget>[
+          Positioned(
+            top: kToolbarHeight + ScreenUtil.statusBarHeight,
+            left: 0,
+            right: 0,
+            height: ScreenUtil.screenHeightDp -
+                kToolbarHeight -
+                ScreenUtil.statusBarHeight -
+                kBottomNavigationBarHeight,
+            child: Container(
+              child: Scrollbar(
+                child: CustomScrollView(
+                  controller: _controller,
+                  slivers: <Widget>[
+                    SliverToBoxAdapter(
+                      child: SearchBar(),
+                    ),
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(_buildListItemWidget,
+                          childCount: _dataSource.length),
+                    ),
+                  ],
+                ),
+              ),
+              height: ScreenUtil.screenHeightDp -
+                  kToolbarHeight -
+                  ScreenUtil.statusBarHeight -
+                  kBottomNavigationBarHeight,
+            ),
           ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(_buildListItemWidget,
-                childCount: _dataSource.length),
+          // 要放在其内容后面
+          Positioned(
+            top: _offset * -1,
+            left: 0,
+            right: 0,
+            height: kToolbarHeight + ScreenUtil.statusBarHeight,
+            child: Container(
+              height: kToolbarHeight + ScreenUtil.statusBarHeight,
+              alignment: Alignment.bottomCenter,
+              color: Colors.red,
+              child: Text('微信'),
+            ),
           ),
         ],
       ),
     );
   }
+
+  // Container(
+  //       child: Scrollbar(
+  //         child: CustomScrollView(
+  //           controller: _controller,
+  //           slivers: <Widget>[
+  //             SliverToBoxAdapter(
+  //               child: SearchBar(),
+  //             ),
+  //             SliverList(
+  //               delegate: SliverChildBuilderDelegate(_buildListItemWidget,
+  //                   childCount: _dataSource.length),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
 
   /// 构建列表项
   Widget _buildListItemWidget(BuildContext cxt, int idx) {
@@ -162,7 +244,7 @@ class _MainframePageState extends State<MainframePage> {
     );
 
     final Widget listTile = MHListTile(
-      leading: leading,
+      // leading: leading,
       middle: middle,
       allowTap: !_slideIsOpen,
       contentPadding: EdgeInsets.symmetric(
@@ -191,7 +273,7 @@ class _MainframePageState extends State<MainframePage> {
 
     final List<Widget> secondaryActions = [];
 
-    // 每个消息item 都有删除 按钮
+    // 每个消息item 都��删除 按钮
     Widget deleteBtn = GestureDetector(
       child: Container(
         color: Colors.red,
@@ -209,7 +291,7 @@ class _MainframePageState extends State<MainframePage> {
     );
 
     if (m.type == '0') {
-      // 订阅号消息、微信运动、微信支付
+      // 订��号消息、微信运动、微信支付
       secondaryActions.add(deleteBtn);
     } else if (m.type == '1') {
       // 单聊、群聊、QQ邮箱提醒
@@ -275,21 +357,21 @@ class _MainframePageState extends State<MainframePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('微信'),
-        actions: <Widget>[
-          IconButton(
-            icon: new SvgPicture.asset(
-              Constant.assetsImagesMainframe + 'icons_outlined_add2.svg',
-              color: Color(0xFF181818),
-            ),
-            onPressed: () {
-              // 关闭上一个侧滑
-              _closeSlidable();
-            },
-          )
-        ],
-      ),
+      // appBar: AppBar(
+      //   title: Text('微信'),
+      //   actions: <Widget>[
+      //     IconButton(
+      //       icon: new SvgPicture.asset(
+      //         Constant.assetsImagesMainframe + 'icons_outlined_add2.svg',
+      //         color: Color(0xFF181818),
+      //       ),
+      //       onPressed: () {
+      //         // 关闭上一个侧滑
+      //         _closeSlidable();
+      //       },
+      //     )
+      //   ],
+      // ),
       body: _buildChildWidget(),
     );
   }
