@@ -16,6 +16,7 @@ import 'package:flutter_wechat/model/mainframe/message.dart';
 import 'package:flutter_wechat/components/list_tile/mh_list_tile.dart';
 import 'package:flutter_wechat/components/search_bar/search_bar.dart';
 import 'package:flutter_wechat/widgets/mainframe/avatars.dart';
+import 'package:flutter_wechat/widgets/mainframe/bouncy_balls.dart';
 
 class MainframePage extends StatefulWidget {
   MainframePage({Key key}) : super(key: key);
@@ -56,15 +57,16 @@ class _MainframePageState extends State<MainframePage> {
 
     //监听滚动事件，打印滚动位置
     _controller.addListener(() {
-      print(_controller.offset); //打印滚动位置
       final offset = _controller.offset;
       if (offset <= 0.0) {
-        // setState(() {
-        //   _offset = offset;
-        // });
-      } else {
+        // 计算
+        _offset = offset;
+      } else if (_offset != 0.0) {
         _offset = 0.0;
       }
+
+      // 处理偏移量
+      _handlerOffset(_offset);
     });
   }
 
@@ -108,6 +110,13 @@ class _MainframePageState extends State<MainframePage> {
     _slidableController.activeState?.close();
   }
 
+  // 处理偏移逻辑
+  _handlerOffset(double offset) {
+    setState(() {
+      _offset = offset;
+    });
+  }
+
   /// ✨✨✨✨✨✨✨ UI ✨✨✨✨✨✨✨
   /// 构建子部件
   Widget _buildChildWidget() {
@@ -145,9 +154,19 @@ class _MainframePageState extends State<MainframePage> {
                   kBottomNavigationBarHeight,
             ),
           ),
+
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: BouncyBalls(
+              offset: _offset * -1.0,
+            ),
+          ),
+
           // 要放在其内容后面
           Positioned(
-            top: _offset * -1,
+            top: _offset * -1.0,
             left: 0,
             right: 0,
             height: kToolbarHeight + ScreenUtil.statusBarHeight,
