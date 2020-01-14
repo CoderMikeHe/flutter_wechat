@@ -5,10 +5,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_wechat/constant/constant.dart';
 
 class BouncyBalls extends StatelessWidget {
-  const BouncyBalls({Key key, this.offset}) : super(key: key);
+  const BouncyBalls({Key key, this.offset, this.dragging}) : super(key: key);
 
-  // 偏移量
+  // 偏移量 >= 0
   final double offset;
+
+  // 是否是用户拖拽状态
+  final bool dragging;
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +23,6 @@ class BouncyBalls extends StatelessWidget {
     final double stage3Distance = 130;
     // 阶段IV临界点
     final double stage4Distance = 180;
-
-    final screenW = ScreenUtil.screenWidthDp;
-    final screenH = ScreenUtil.screenHeightDp;
 
     final top = (offset + 44 + 10 - 6) * 0.5;
 
@@ -38,17 +38,25 @@ class BouncyBalls extends StatelessWidget {
     double translateL = 0.0;
     double opacityL = 0;
 
+    final cOffset = (offset <= stage4Distance) ? offset : stage4Distance;
+
     if (offset > stage3Distance) {
+      // 第四阶段 1 - 0.2
+      final step = 0.8 / (stage4Distance - stage3Distance);
+      double opacity = 1 - step * (cOffset - stage3Distance);
+      if (opacity < 0.2) {
+        opacity = 0.2;
+      }
       // 中间点阶段III: 保持scale 为1
-      opacityC = 1;
+      opacityC = opacity;
       scale = 1;
 
       // 右边点阶段III: 平移到最右侧
-      opacityR = 1;
+      opacityR = opacity;
       translateR = 16;
 
       // 左边点阶段III: 平移到最左侧
-      opacityL = 1;
+      opacityL = opacity;
       translateL = -16;
     } else if (offset > stage2Distance) {
       final delta = stage3Distance - stage2Distance;
@@ -78,10 +86,10 @@ class BouncyBalls extends StatelessWidget {
       scale = 0 + step * deltaOffset;
     }
 
-    print('object $scale');
+    // print('object $scale');
 
     return Container(
-      height: offset,
+      height: cOffset,
       width: double.infinity,
       child: Stack(
         // 指定未定位或部分定位widget的对齐方式
@@ -90,8 +98,8 @@ class BouncyBalls extends StatelessWidget {
           // 左边球
           Positioned(
             top: top,
-            child: Offstage(
-              offstage: opacityL == 0,
+            child: Opacity(
+              opacity: opacityL,
               child: Transform.translate(
                 offset: Offset(translateL, 0.0),
                 child: _buildBallWidget(),
@@ -101,8 +109,8 @@ class BouncyBalls extends StatelessWidget {
           // 右边球
           Positioned(
             top: top,
-            child: Offstage(
-              offstage: opacityR == 0,
+            child: Opacity(
+              opacity: opacityR,
               child: Transform.translate(
                 offset: Offset(translateR, 0.0),
                 child: _buildBallWidget(),
@@ -112,8 +120,8 @@ class BouncyBalls extends StatelessWidget {
           // 中间球
           Positioned(
             top: top,
-            child: Offstage(
-              offstage: opacityC == 0,
+            child: Opacity(
+              opacity: opacityC,
               child: Transform.scale(
                 scale: scale,
                 child: _buildBallWidget(),

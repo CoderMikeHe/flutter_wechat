@@ -17,6 +17,7 @@ import 'package:flutter_wechat/components/list_tile/mh_list_tile.dart';
 import 'package:flutter_wechat/components/search_bar/search_bar.dart';
 import 'package:flutter_wechat/widgets/mainframe/avatars.dart';
 import 'package:flutter_wechat/widgets/mainframe/bouncy_balls.dart';
+import 'package:flutter_wechat/widgets/mainframe/applet.dart';
 
 class MainframePage extends StatefulWidget {
   MainframePage({Key key}) : super(key: key);
@@ -41,6 +42,12 @@ class _MainframePageState extends State<MainframePage> {
   // 偏移量
   double _offset = 0.0;
 
+  // 焦点状态
+  bool _focusState = false;
+  set _focus(bool focus) {
+    _focusState = focus;
+  }
+
   /// ✨✨✨✨✨✨✨ Override ✨✨✨✨✨✨✨
   @override
   void initState() {
@@ -55,19 +62,22 @@ class _MainframePageState extends State<MainframePage> {
       onSlideIsOpenChanged: _handleSlideIsOpenChanged,
     );
 
-    //监听滚动事件，打印滚动位置
-    _controller.addListener(() {
-      final offset = _controller.offset;
-      if (offset <= 0.0) {
-        // 计算
-        _offset = offset;
-      } else if (_offset != 0.0) {
-        _offset = 0.0;
-      }
-
-      // 处理偏移量
-      _handlerOffset(_offset);
-    });
+    // 监听滚动事件，打印滚动位置
+    // 后面改成 NotificationListener 来监听滚动
+    // 通过NotificationListener监听滚动事件和通过ScrollController有两个主要的不同：
+    // - 通过NotificationListener可以在从可滚动组件到widget树根之间任意位置都能监听。而ScrollController只能和具体的可滚动组件关联后才可以。
+    // - 收到滚动事件后获得的信息不同；NotificationListener在收到滚动事件时，通知中会携带当前滚动位置和ViewPort的一些信息，而ScrollController只能获取当前滚动位置
+    // _controller.addListener(() {
+    //   final offset = _controller.offset;
+    //   if (offset <= 0.0) {
+    //     // 计算
+    //     _offset = offset * -1.0;
+    //   } else if (_offset != 0.0) {
+    //     _offset = 0.0;
+    //   }
+    //   // 处理偏移量
+    //   _handlerOffset(_offset);
+    // });
   }
 
   @override
@@ -112,9 +122,16 @@ class _MainframePageState extends State<MainframePage> {
 
   // 处理偏移逻辑
   _handlerOffset(double offset) {
-    setState(() {
-      _offset = offset;
-    });
+    // 计算
+    if (offset <= 0.0) {
+      _offset = offset * -1;
+    } else if (_offset != 0.0) {
+      _offset = 0.0;
+    }
+
+    // 这里需要
+
+    setState(() {});
   }
 
   /// ✨✨✨✨✨✨✨ UI ✨✨✨✨✨✨✨
@@ -134,20 +151,7 @@ class _MainframePageState extends State<MainframePage> {
                 ScreenUtil.statusBarHeight -
                 kBottomNavigationBarHeight,
             child: Container(
-              child: Scrollbar(
-                child: CustomScrollView(
-                  controller: _controller,
-                  slivers: <Widget>[
-                    SliverToBoxAdapter(
-                      child: SearchBar(),
-                    ),
-                    SliverList(
-                      delegate: SliverChildBuilderDelegate(_buildListItemWidget,
-                          childCount: _dataSource.length),
-                    ),
-                  ],
-                ),
-              ),
+              child: _buildContentWidget(),
               height: ScreenUtil.screenHeightDp -
                   kToolbarHeight -
                   ScreenUtil.statusBarHeight -
@@ -155,25 +159,38 @@ class _MainframePageState extends State<MainframePage> {
             ),
           ),
 
+          // 小程序
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Applet(
+              offset: _offset,
+              dragging: _focusState,
+            ),
+          ),
+
+          // 三个点部件
           Positioned(
             top: 0,
             left: 0,
             right: 0,
             child: BouncyBalls(
-              offset: _offset * -1.0,
+              offset: _offset,
+              dragging: _focusState,
             ),
           ),
 
           // 要放在其内容后面
           Positioned(
-            top: _offset * -1.0,
+            top: _offset,
             left: 0,
             right: 0,
             height: kToolbarHeight + ScreenUtil.statusBarHeight,
             child: Container(
               height: kToolbarHeight + ScreenUtil.statusBarHeight,
               alignment: Alignment.bottomCenter,
-              color: Colors.red,
+              color: Colors.transparent,
               child: Text('微信'),
             ),
           ),
@@ -182,22 +199,46 @@ class _MainframePageState extends State<MainframePage> {
     );
   }
 
-  // Container(
-  //       child: Scrollbar(
-  //         child: CustomScrollView(
-  //           controller: _controller,
-  //           slivers: <Widget>[
-  //             SliverToBoxAdapter(
-  //               child: SearchBar(),
-  //             ),
-  //             SliverList(
-  //               delegate: SliverChildBuilderDelegate(_buildListItemWidget,
-  //                   childCount: _dataSource.length),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
+  /// 构建内容部件
+  Widget _buildContentWidget() {
+    return Scrollbar(
+        child: NotificationListener(
+      onNotification: (ScrollNotification notification) {
+        if (notification is ScrollStartNotification) {
+          if (notification.dragDetails != null) {
+            _focus = true;
+          }
+
+          // print('start_focus 👉 $_focusState  ${notification.metrics.pixels}');
+        } else if (notification is ScrollUpdateNotification) {
+          if (_focusState && notification.dragDetails == null) _focus = false;
+
+          // print('Update_focus 👉 $_focusState  ${notification.metrics.pixels}');
+        } else if (notification is ScrollEndNotification) {
+          if (_focusState) _focus = false;
+
+          // print('End_focus 👉 $_focusState  ${notification.metrics.pixels}');
+        }
+
+        // 处理
+        _handlerOffset(notification.metrics.pixels);
+
+        return false;
+      },
+      child: CustomScrollView(
+        controller: _controller,
+        slivers: <Widget>[
+          SliverToBoxAdapter(
+            child: SearchBar(),
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(_buildListItemWidget,
+                childCount: _dataSource.length),
+          ),
+        ],
+      ),
+    ));
+  }
 
   /// 构建列表项
   Widget _buildListItemWidget(BuildContext cxt, int idx) {
