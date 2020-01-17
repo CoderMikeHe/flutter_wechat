@@ -42,6 +42,15 @@ class _MainframePageState extends State<MainframePage> {
   // 偏移量
   double _offset = 0.0;
 
+  /// 下拉临界点
+  final double _topDistance = 90.0;
+
+  // 动画时间 0 无动画
+  int _duration = 0;
+
+  /// 是否是 刷新状态
+  bool _isRefreshing = false;
+
   // 焦点状态
   bool _focusState = false;
   set _focus(bool focus) {
@@ -121,7 +130,7 @@ class _MainframePageState extends State<MainframePage> {
   }
 
   // 处理偏移逻辑
-  _handlerOffset(double offset) {
+  void _handlerOffset(double offset) {
     // 计算
     if (offset <= 0.0) {
       _offset = offset * -1;
@@ -130,6 +139,16 @@ class _MainframePageState extends State<MainframePage> {
     }
 
     // 这里需要
+    if (_isRefreshing) {
+      _duration = 300;
+      _offset = ScreenUtil.screenHeightDp -
+          kToolbarHeight -
+          ScreenUtil.statusBarHeight;
+      // setState(() {});
+      // return;
+    }
+
+    print('$_offset');
 
     setState(() {});
   }
@@ -142,8 +161,10 @@ class _MainframePageState extends State<MainframePage> {
       child: Stack(
         overflow: Overflow.visible,
         children: <Widget>[
-          Positioned(
-            top: kToolbarHeight + ScreenUtil.statusBarHeight,
+          AnimatedPositioned(
+            top: _isRefreshing
+                ? ScreenUtil.screenHeightDp
+                : (kToolbarHeight + ScreenUtil.statusBarHeight),
             left: 0,
             right: 0,
             height: ScreenUtil.screenHeightDp -
@@ -157,17 +178,23 @@ class _MainframePageState extends State<MainframePage> {
                   ScreenUtil.statusBarHeight -
                   kBottomNavigationBarHeight,
             ),
+            curve: Curves.easeInOut,
+            duration: Duration(milliseconds: _duration),
           ),
 
-          // 小程序
-          Positioned(
-            top: 0,
+          AnimatedPositioned(
+            top: _offset,
             left: 0,
             right: 0,
-            child: Applet(
-              offset: _offset,
-              dragging: _focusState,
+            height: kToolbarHeight + ScreenUtil.statusBarHeight,
+            child: Container(
+              height: kToolbarHeight + ScreenUtil.statusBarHeight,
+              alignment: Alignment.bottomCenter,
+              color: Colors.red,
+              child: Text('微信'),
             ),
+            curve: Curves.easeInOut,
+            duration: Duration(milliseconds: _duration),
           ),
 
           // 三个点部件
@@ -182,16 +209,27 @@ class _MainframePageState extends State<MainframePage> {
           ),
 
           // 要放在其内容后面
+          // Positioned(
+          //   top: _offset,
+          //   left: 0,
+          //   right: 0,
+          //   height: kToolbarHeight + ScreenUtil.statusBarHeight,
+          //   child: Container(
+          //     height: kToolbarHeight + ScreenUtil.statusBarHeight,
+          //     alignment: Alignment.bottomCenter,
+          //     color: Colors.transparent,
+          //     child: Text('微信'),
+          //   ),
+          // ),
+
+          // 小程序
           Positioned(
-            top: _offset,
+            top: 0,
             left: 0,
             right: 0,
-            height: kToolbarHeight + ScreenUtil.statusBarHeight,
-            child: Container(
-              height: kToolbarHeight + ScreenUtil.statusBarHeight,
-              alignment: Alignment.bottomCenter,
-              color: Colors.transparent,
-              child: Text('微信'),
+            child: Applet(
+              offset: _offset,
+              refreshing: _isRefreshing,
             ),
           ),
         ],
@@ -204,6 +242,9 @@ class _MainframePageState extends State<MainframePage> {
     return Scrollbar(
         child: NotificationListener(
       onNotification: (ScrollNotification notification) {
+        // offset
+        final offset = notification.metrics.pixels;
+
         if (notification is ScrollStartNotification) {
           if (notification.dragDetails != null) {
             _focus = true;
@@ -211,17 +252,40 @@ class _MainframePageState extends State<MainframePage> {
 
           // print('start_focus 👉 $_focusState  ${notification.metrics.pixels}');
         } else if (notification is ScrollUpdateNotification) {
-          if (_focusState && notification.dragDetails == null) _focus = false;
+          final canRefresh = offset <= 0.0
+              ? (-1 * offset >= _topDistance ? true : false)
+              : false;
+
+          if (_focusState && notification.dragDetails == null) {
+            _focus = false;
+            // 下拉
+
+            // 手指释放的瞬间
+            if (!_isRefreshing) {
+              _isRefreshing = canRefresh;
+            }
+          }
 
           // print('Update_focus 👉 $_focusState  ${notification.metrics.pixels}');
         } else if (notification is ScrollEndNotification) {
-          if (_focusState) _focus = false;
+          if (_focusState) {
+            _focus = false;
+          }
 
           // print('End_focus 👉 $_focusState  ${notification.metrics.pixels}');
+
+          // 下拉
+          // Future.delayed(
+          //   Duration(milliseconds: 200),
+          //   () async {
+          //     _controller.animateTo(-600,
+          //         duration: Duration(milliseconds: 200), curve: Curves.ease);
+          //   },
+          // );
         }
 
         // 处理
-        _handlerOffset(notification.metrics.pixels);
+        _handlerOffset(offset);
 
         return false;
       },
@@ -229,7 +293,12 @@ class _MainframePageState extends State<MainframePage> {
         controller: _controller,
         slivers: <Widget>[
           SliverToBoxAdapter(
-            child: SearchBar(),
+            child: SearchBar(
+              onTap: () {
+                _controller.animateTo(-600,
+                    duration: Duration(milliseconds: 200), curve: Curves.ease);
+              },
+            ),
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate(_buildListItemWidget,
@@ -243,7 +312,7 @@ class _MainframePageState extends State<MainframePage> {
   /// 构建列表项
   Widget _buildListItemWidget(BuildContext cxt, int idx) {
     final Message m = _dataSource[idx];
-    // 头部分
+    // 头部��
     Widget leading = Padding(
       padding: EdgeInsets.only(right: ScreenUtil.getInstance().setWidth(36.0)),
       child: Avatars(message: m),

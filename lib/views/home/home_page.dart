@@ -155,13 +155,13 @@ class _HomePageState extends State<HomePage> {
       //   unselectedItemColor: Color(0xFF191919),
       // ),
       // iOS
-      bottomNavigationBar: CupertinoTabBar(
-        items: myTabs,
-        onTap: _itemTapped,
-        currentIndex: _currentIndex,
-        activeColor: Style.pTintColor,
-        inactiveColor: Color(0xFF191919),
-      ),
+      // bottomNavigationBar: CupertinoTabBar(
+      //   items: myTabs,
+      //   onTap: _itemTapped,
+      //   currentIndex: _currentIndex,
+      //   activeColor: Style.pTintColor,
+      //   inactiveColor: Color(0xFF191919),
+      // ),
     );
   }
 }
