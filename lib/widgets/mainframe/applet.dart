@@ -1,5 +1,6 @@
 import 'dart:wasm';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,12 +10,19 @@ import 'package:flutter_wechat/constant/style.dart';
 import 'package:flutter_wechat/constant/constant.dart';
 
 class Applet extends StatefulWidget {
-  Applet({Key key, this.offset, this.refreshing = false}) : super(key: key);
-// 偏移量 >= 0
+  Applet({Key key, this.offset, this.refreshing = false, this.onScroll})
+      : super(key: key);
+
+  /// 偏移量 >= 0
   final double offset;
 
-  // 是否是刷新状态
+  /// 是否是刷新状态
   final bool refreshing;
+
+  /// 滚动回调
+  final void Function(double offset, bool dragging) onScroll;
+
+  // 构造
   _AppletState createState() => _AppletState();
 }
 
@@ -32,6 +40,12 @@ class _AppletState extends State<Applet> with SingleTickerProviderStateMixin {
   bool _focusState = false;
   set _focus(bool focus) {
     _focusState = focus;
+    print('🔥🔥🔥🔥🔥🔥🔥 $focus');
+  }
+
+  bool _focusState1 = false;
+  set _focus1(bool focus) {
+    _focusState1 = focus;
     print('🔥🔥🔥🔥🔥🔥🔥 $focus');
   }
 
@@ -97,38 +111,70 @@ class _AppletState extends State<Applet> with SingleTickerProviderStateMixin {
         opacity: opacity,
         child: Container(
           width: double.infinity,
-          height: 510,
+          height: H,
           color: Colors.transparent,
-          child: ListView(
-            // padding: EdgeInsets.only(top: 0.0),
-            children: <Widget>[
-              // 内容页
-              // 无动画 只能同时缩放 xy
-              // Transform.scale(
-              //   scale: 0.5,
-              //   origin: Offset(0, -280),
-              //   child: _buildContentWidget(),
-              // ),
-              // 无动画 能单独缩放 x 或 y
-              // Transform(
-              //   transform: Matrix4.diagonal3Values(scaleX, scaleY, 1.0),
-              //   origin: Offset(0, -280),
-              //   alignment: Alignment.center,
-              //   child: _buildContentWidget(),
-              // ),
+          child: Scrollbar(
+            child: NotificationListener(
+              onNotification: (ScrollNotification notification) {
+                print('object');
+                if (notification is ScrollStartNotification) {
+                  if (notification.dragDetails != null) {
+                    _focus = true;
+                  }
 
-              ScaleTransition(
-                scale: new Tween(begin: _scaleX, end: _scaleY)
-                    .animate(_controllerAnim),
-                alignment: Alignment.topCenter,
-                child: _buildContentWidget(),
+                  print(
+                      'start_focus 👉 $_focusState  ${notification.metrics.pixels}');
+                } else if (notification is ScrollUpdateNotification) {
+                  if (_focusState && notification.dragDetails == null)
+                    _focus = false;
+
+                  print(
+                      'Update_focus 👉 $_focusState  ${notification.metrics.pixels} ${notification.metrics.viewportDimension}');
+                } else if (notification is ScrollEndNotification) {
+                  if (_focusState) _focus = false;
+
+                  print(
+                      'End_focus 👉 $_focusState  ${notification.metrics.pixels} $_startOffsetY');
+                }
+
+                // 处理
+                _handlerOffset(notification.metrics.pixels);
+
+                // 阻止冒泡
+                return true;
+              },
+              child: ListView(
+                // padding: EdgeInsets.only(top: 0.0),
+                children: <Widget>[
+                  // 内容页
+                  // 无动画 只能同时缩放 xy
+                  // Transform.scale(
+                  //   scale: 0.5,
+                  //   origin: Offset(0, -280),
+                  //   child: _buildContentWidget(),
+                  // ),
+                  // 无动画 能单独缩放 x 或 y
+                  // Transform(
+                  //   transform: Matrix4.diagonal3Values(scaleX, scaleY, 1.0),
+                  //   origin: Offset(0, -280),
+                  //   alignment: Alignment.center,
+                  //   child: _buildContentWidget(),
+                  // ),
+
+                  ScaleTransition(
+                    scale: new Tween(begin: _scaleX, end: _scaleY)
+                        .animate(_controllerAnim),
+                    alignment: Alignment.topCenter,
+                    child: _buildContentWidget(),
+                  ),
+
+                  // SizedBox
+                  SizedBox(
+                    height: H - kToolbarHeight,
+                  )
+                ],
               ),
-
-              // SizedBox
-              SizedBox(
-                height: H - kToolbarHeight,
-              )
-            ],
+            ),
           ),
         ),
       ),
@@ -234,25 +280,25 @@ class _AppletState extends State<Applet> with SingleTickerProviderStateMixin {
             // 如果小于 50 再去判断是 下拉 还是 上拉
             if ((offset - _startOffsetY) < 0) {
               // 下拉
-              Future.delayed(
-                Duration(milliseconds: 200),
-                () async {
-                  _controller.animateTo(.0,
-                      duration: Duration(milliseconds: 200),
-                      curve: Curves.ease);
-                },
-              );
+              // Future.delayed(
+              //   Duration(milliseconds: 200),
+              //   () async {
+              //     _controller.animateTo(.0,
+              //         duration: Duration(milliseconds: 200),
+              //         curve: Curves.ease);
+              //   },
+              // );
             } else {
               // 上拉
               // Fixed Bug ： 记得延迟一丢丢，不然会报错 Why?
-              Future.delayed(
-                Duration(milliseconds: 200),
-                () async {
-                  _controller.animateTo(ScreenUtil().setHeight(50.0 * 3),
-                      duration: Duration(milliseconds: 200),
-                      curve: Curves.ease);
-                },
-              );
+              // Future.delayed(
+              //   Duration(milliseconds: 200),
+              //   () async {
+              //     _controller.animateTo(ScreenUtil().setHeight(50.0 * 3),
+              //         duration: Duration(milliseconds: 200),
+              //         curve: Curves.ease);
+              //   },
+              // );
             }
           }
         }
@@ -260,7 +306,7 @@ class _AppletState extends State<Applet> with SingleTickerProviderStateMixin {
         // 处理
         _handlerOffset(notification.metrics.pixels);
 
-        return true; // 阻止冒泡
+        return true; // 阻���冒泡
       },
       child: ListView(
         controller: _controller,
