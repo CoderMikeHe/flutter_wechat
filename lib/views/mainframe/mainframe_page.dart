@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:math';
 import 'dart:async';
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -18,6 +19,8 @@ import 'package:flutter_wechat/components/search_bar/search_bar.dart';
 import 'package:flutter_wechat/widgets/mainframe/avatars.dart';
 import 'package:flutter_wechat/widgets/mainframe/bouncy_balls.dart';
 import 'package:flutter_wechat/widgets/mainframe/applet.dart';
+import 'package:flutter_wechat/widgets/mainframe/menus.dart';
+import 'package:flutter_wechat/components/app_bar/mh_app_bar.dart';
 
 class MainframePage extends StatefulWidget {
   MainframePage({Key key}) : super(key: key);
@@ -39,7 +42,7 @@ class _MainframePageState extends State<MainframePage> {
   /// 滚动
   ScrollController _controller = new ScrollController();
 
-  // 偏移量
+  // 偏移量（导航栏、三个球、小程序）
   double _offset = 0.0;
 
   /// 下拉临界点
@@ -50,6 +53,18 @@ class _MainframePageState extends State<MainframePage> {
 
   /// 是否是 刷新状态
   bool _isRefreshing = false;
+
+  /// 是否是 小程序刷新状态
+  bool _isAppletRefreshing = false;
+
+  // 是否正在动画过程中
+  bool _isAnimating = false;
+
+  // 导航栏背景色
+  Color _appBarColor = Style.pBackgroundColor;
+
+  // 显示菜单
+  bool _showMenu = false;
 
   // 焦点状态
   bool _focusState = false;
@@ -91,7 +106,7 @@ class _MainframePageState extends State<MainframePage> {
 
   @override
   void dispose() {
-    //为了避免内存泄露，需要调用_controller.dispose
+    // 为了避免内存泄露，需要调用_controller.dispose
     _controller.dispose();
     super.dispose();
   }
@@ -99,14 +114,17 @@ class _MainframePageState extends State<MainframePage> {
   /// ✨✨✨✨✨✨✨ Network ✨✨✨✨✨✨✨
   /// 数据请求
   void _fetchRemoteData() async {
+    print('1234567890');
     //加载消息列表
     rootBundle.loadString('mock/mainframe.json').then((jsonStr) {
+      print('shuju si QQ $_dataSource');
       final List mainframeJson = json.decode(jsonStr);
       // 遍历
       mainframeJson.forEach((json) {
         final Message m = Message.fromJson(json);
         _dataSource.add(m);
       });
+      print('shuju si After $_dataSource');
       setState(() {});
     });
   }
@@ -132,66 +150,137 @@ class _MainframePageState extends State<MainframePage> {
   // 处理偏移逻辑
   void _handlerOffset(double offset) {
     // 计算
+
     if (offset <= 0.0) {
       _offset = offset * -1;
     } else if (_offset != 0.0) {
       _offset = 0.0;
     }
 
+    // print('6666666666666666666 👉');
+
     // 这里需要
-    if (_isRefreshing) {
+    if (_isRefreshing && !_isAnimating) {
+      print('🔥 哈哈哈哈哈 👉');
+      // 刷新且非动画状态
+      // 正在动画
+      _isAnimating = true;
+      // 动画时间
       _duration = 300;
+      // 最终停留的位置
       _offset = ScreenUtil.screenHeightDp -
           kToolbarHeight -
           ScreenUtil.statusBarHeight;
-      // setState(() {});
-      // return;
+      setState(() {});
+      return;
     }
 
-    print('$_offset');
+    _duration = 0;
+    // 非刷新且非动画状态
+    if (!_isAnimating) {
+      setState(() {});
+    }
+  }
 
-    setState(() {});
+  /// 处理小程序滚动事件
+  void _handleAppletOnScroll(double offset, bool dragging) {
+    if (dragging) {
+      _isAnimating = false;
+      // 去掉动画
+      _duration = 0;
+      // 计算高度
+      _offset = ScreenUtil.screenHeightDp -
+          kToolbarHeight -
+          ScreenUtil.statusBarHeight -
+          offset;
+      // Fixed Bug: 如果是dragging 状态下 已经为0.0 ；然后 非dragging 也为 0.0 ，这样会导致 即使 setState(() {}); 也没有卵用
+      // 最小值为 0.001
+      _offset = max(0.0001, _offset);
+      setState(() {});
+      return;
+    }
+    if (!_isAppletRefreshing && !_isAnimating) {
+      // 开始动画
+      _duration = 300;
+
+      // 计算高度
+      _offset = 0.0;
+
+      _isAppletRefreshing = true;
+      _isAnimating = true;
+
+      setState(() {});
+    }
   }
 
   /// ✨✨✨✨✨✨✨ UI ✨✨✨✨✨✨✨
   /// 构建子部件
   Widget _buildChildWidget() {
-    return ConstrainedBox(
+    return Container(
       constraints: BoxConstraints.expand(),
+      color: Style.pBackgroundColor,
       child: Stack(
         overflow: Overflow.visible,
         children: <Widget>[
+          // 内容页
           AnimatedPositioned(
-            top: _isRefreshing
-                ? ScreenUtil.screenHeightDp
-                : (kToolbarHeight + ScreenUtil.statusBarHeight),
+            key: Key('list'),
+            top: _isRefreshing ? _offset : 0,
             left: 0,
             right: 0,
-            height: ScreenUtil.screenHeightDp -
-                kToolbarHeight -
-                ScreenUtil.statusBarHeight -
-                kBottomNavigationBarHeight,
             child: Container(
+              padding: EdgeInsets.only(
+                  top: kToolbarHeight + ScreenUtil.statusBarHeight),
               child: _buildContentWidget(),
-              height: ScreenUtil.screenHeightDp -
-                  kToolbarHeight -
-                  ScreenUtil.statusBarHeight -
-                  kBottomNavigationBarHeight,
+              height: ScreenUtil.screenHeightDp - kBottomNavigationBarHeight,
             ),
             curve: Curves.easeInOut,
             duration: Duration(milliseconds: _duration),
+            onEnd: () {
+              // 300ms 的动画结束
+              _isAnimating = false;
+              if (_duration > 0.0) {
+                if (_isAppletRefreshing) {
+                  // 上拉
+                  _isAppletRefreshing = false;
+                  _isRefreshing = false;
+
+                  _appBarColor = Style.pBackgroundColor;
+                } else {
+                  // 下拉
+                  _appBarColor = Colors.white;
+                  _isAppletRefreshing = false;
+                }
+                setState(() {});
+              }
+            },
           ),
 
+          // 导航栏
           AnimatedPositioned(
+            key: Key('bar'),
             top: _offset,
             left: 0,
             right: 0,
-            height: kToolbarHeight + ScreenUtil.statusBarHeight,
-            child: Container(
-              height: kToolbarHeight + ScreenUtil.statusBarHeight,
-              alignment: Alignment.bottomCenter,
-              color: Colors.red,
-              child: Text('微信'),
+            child: MHAppBar(
+              title: Text('微信'),
+              backgroundColor: _appBarColor,
+              actions: <Widget>[
+                IconButton(
+                  icon: new SvgPicture.asset(
+                    Constant.assetsImagesMainframe + 'icons_outlined_add2.svg',
+                    color: Color(0xFF181818),
+                  ),
+                  onPressed: () {
+                    // 关闭上一个侧滑
+                    _closeSlidable();
+
+                    _showMenu = !_showMenu;
+
+                    setState(() {});
+                  },
+                )
+              ],
             ),
             curve: Curves.easeInOut,
             duration: Duration(milliseconds: _duration),
@@ -209,29 +298,28 @@ class _MainframePageState extends State<MainframePage> {
           ),
 
           // 要放在其内容后面
-          // Positioned(
-          //   top: _offset,
-          //   left: 0,
-          //   right: 0,
-          //   height: kToolbarHeight + ScreenUtil.statusBarHeight,
-          //   child: Container(
-          //     height: kToolbarHeight + ScreenUtil.statusBarHeight,
-          //     alignment: Alignment.bottomCenter,
-          //     color: Colors.transparent,
-          //     child: Text('微信'),
-          //   ),
-          // ),
-
           // 小程序
           Positioned(
-            top: 0,
             left: 0,
             right: 0,
             child: Applet(
               offset: _offset,
               refreshing: _isRefreshing,
+              onScroll: _handleAppletOnScroll,
             ),
           ),
+
+          // 菜单
+          Positioned(
+            left: 0,
+            right: 0,
+            height: ScreenUtil.screenHeightDp -
+                ScreenUtil.statusBarHeight -
+                kToolbarHeight -
+                kBottomNavigationBarHeight,
+            top: ScreenUtil.statusBarHeight + kToolbarHeight,
+            child: Menus(show: _showMenu),
+          )
         ],
       ),
     );
@@ -242,6 +330,10 @@ class _MainframePageState extends State<MainframePage> {
     return Scrollbar(
         child: NotificationListener(
       onNotification: (ScrollNotification notification) {
+        // 正在刷新 do nothing...
+        if (_isRefreshing || _isAnimating) {
+          return true;
+        }
         // offset
         final offset = notification.metrics.pixels;
 
@@ -252,7 +344,8 @@ class _MainframePageState extends State<MainframePage> {
 
           // print('start_focus 👉 $_focusState  ${notification.metrics.pixels}');
         } else if (notification is ScrollUpdateNotification) {
-          final canRefresh = offset <= 0.0
+          // 能否进入刷新状态
+          final bool canRefresh = offset <= 0.0
               ? (-1 * offset >= _topDistance ? true : false)
               : false;
 
@@ -261,9 +354,7 @@ class _MainframePageState extends State<MainframePage> {
             // 下拉
 
             // 手指释放的瞬间
-            if (!_isRefreshing) {
-              _isRefreshing = canRefresh;
-            }
+            _isRefreshing = canRefresh;
           }
 
           // print('Update_focus 👉 $_focusState  ${notification.metrics.pixels}');
@@ -273,21 +364,13 @@ class _MainframePageState extends State<MainframePage> {
           }
 
           // print('End_focus 👉 $_focusState  ${notification.metrics.pixels}');
-
-          // 下拉
-          // Future.delayed(
-          //   Duration(milliseconds: 200),
-          //   () async {
-          //     _controller.animateTo(-600,
-          //         duration: Duration(milliseconds: 200), curve: Curves.ease);
-          //   },
-          // );
         }
 
         // 处理
         _handlerOffset(offset);
 
-        return false;
+        // 阻止冒泡
+        return true;
       },
       child: CustomScrollView(
         controller: _controller,
@@ -461,7 +544,7 @@ class _MainframePageState extends State<MainframePage> {
       );
       secondaryActions.addAll([focusBtn, deleteBtn]);
     }
-    // 需要侧滑事件
+    // 需���侧滑事件
     return Slidable(
       // 必须的有key
       key: Key(m.idstr),
@@ -486,7 +569,7 @@ class _MainframePageState extends State<MainframePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
+      // appBar: MHAppBar(
       //   title: Text('微信'),
       //   actions: <Widget>[
       //     IconButton(
