@@ -9,6 +9,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_wechat/constant/style.dart';
 import 'package:flutter_wechat/constant/constant.dart';
 
+// Standard iOS 10 tab bar height.
+const double _kTabBarHeight = 50.0;
+
 class Applet extends StatefulWidget {
   Applet({Key key, this.offset, this.refreshing = false, this.onScroll})
       : super(key: key);

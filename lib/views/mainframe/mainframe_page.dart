@@ -3,16 +3,19 @@ import 'package:flutter/services.dart';
 import 'dart:math';
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 import 'package:flutter_wechat/constant/constant.dart';
 import 'package:flutter_wechat/constant/style.dart';
 
 import 'package:flutter_wechat/model/user/user.dart';
 import 'package:flutter_wechat/model/mainframe/message.dart';
+import 'package:flutter_wechat/providers/tab_bar_provider.dart';
 
 import 'package:flutter_wechat/components/list_tile/mh_list_tile.dart';
 import 'package:flutter_wechat/components/search_bar/search_bar.dart';
@@ -21,6 +24,9 @@ import 'package:flutter_wechat/widgets/mainframe/bouncy_balls.dart';
 import 'package:flutter_wechat/widgets/mainframe/applet.dart';
 import 'package:flutter_wechat/widgets/mainframe/menus.dart';
 import 'package:flutter_wechat/components/app_bar/mh_app_bar.dart';
+
+// Standard iOS 10 tab bar height.
+const double _kTabBarHeight = 50.0;
 
 class MainframePage extends StatefulWidget {
   MainframePage({Key key}) : super(key: key);
@@ -91,17 +97,17 @@ class _MainframePageState extends State<MainframePage> {
     // 通过NotificationListener监听滚动事件和通过ScrollController有两个主要的不同：
     // - 通过NotificationListener可以在从可滚动组件到widget树根之间任意位置都能监听。而ScrollController只能和具体的可滚动组件关联后才可以。
     // - 收到滚动事件后获得的信息不同；NotificationListener在收到滚动事件时，通知中会携带当前滚动位置和ViewPort的一些信息，而ScrollController只能获取当前滚动位置
-    // _controller.addListener(() {
-    //   final offset = _controller.offset;
-    //   if (offset <= 0.0) {
-    //     // 计算
-    //     _offset = offset * -1.0;
-    //   } else if (_offset != 0.0) {
-    //     _offset = 0.0;
-    //   }
-    //   // 处理偏移量
-    //   _handlerOffset(_offset);
-    // });
+    _controller.addListener(() {
+      final offset = _controller.offset;
+      if (offset <= 0.0) {
+        // 计算
+        _offset = offset * -1.0;
+      } else if (_offset != 0.0) {
+        _offset = 0.0;
+      }
+      // 处理偏移量
+      _handlerOffset(_offset);
+    });
   }
 
   @override
@@ -171,6 +177,9 @@ class _MainframePageState extends State<MainframePage> {
       _offset = ScreenUtil.screenHeightDp -
           kToolbarHeight -
           ScreenUtil.statusBarHeight;
+
+      // 隐藏掉底部的TabBar
+      Provider.of<TabBarProvider>(context, listen: false).setHidden(true);
       setState(() {});
       return;
     }
@@ -232,7 +241,7 @@ class _MainframePageState extends State<MainframePage> {
               padding: EdgeInsets.only(
                   top: kToolbarHeight + ScreenUtil.statusBarHeight),
               child: _buildContentWidget(),
-              height: ScreenUtil.screenHeightDp - kBottomNavigationBarHeight,
+              height: ScreenUtil.screenHeightDp - _kTabBarHeight,
             ),
             curve: Curves.easeInOut,
             duration: Duration(milliseconds: _duration),
@@ -246,6 +255,10 @@ class _MainframePageState extends State<MainframePage> {
                   _isRefreshing = false;
 
                   _appBarColor = Style.pBackgroundColor;
+
+                  // 显示底部的TabBar
+                  Provider.of<TabBarProvider>(context, listen: false)
+                      .setHidden(false);
                 } else {
                   // 下拉
                   _appBarColor = Colors.white;
@@ -316,9 +329,16 @@ class _MainframePageState extends State<MainframePage> {
             height: ScreenUtil.screenHeightDp -
                 ScreenUtil.statusBarHeight -
                 kToolbarHeight -
-                kBottomNavigationBarHeight,
+                _kTabBarHeight,
             top: ScreenUtil.statusBarHeight + kToolbarHeight,
-            child: Menus(show: _showMenu),
+            child: Menus(
+              show: _showMenu,
+              onCallback: (index) {
+                print('index is 👉 $index');
+                _showMenu = false;
+                setState(() {});
+              },
+            ),
           )
         ],
       ),
@@ -332,7 +352,7 @@ class _MainframePageState extends State<MainframePage> {
       onNotification: (ScrollNotification notification) {
         // 正在刷新 do nothing...
         if (_isRefreshing || _isAnimating) {
-          return true;
+          return false;
         }
         // offset
         final offset = notification.metrics.pixels;
@@ -341,8 +361,6 @@ class _MainframePageState extends State<MainframePage> {
           if (notification.dragDetails != null) {
             _focus = true;
           }
-
-          // print('start_focus 👉 $_focusState  ${notification.metrics.pixels}');
         } else if (notification is ScrollUpdateNotification) {
           // 能否进入刷新状态
           final bool canRefresh = offset <= 0.0
@@ -356,31 +374,22 @@ class _MainframePageState extends State<MainframePage> {
             // 手指释放的瞬间
             _isRefreshing = canRefresh;
           }
-
-          // print('Update_focus 👉 $_focusState  ${notification.metrics.pixels}');
         } else if (notification is ScrollEndNotification) {
           if (_focusState) {
             _focus = false;
           }
-
-          // print('End_focus 👉 $_focusState  ${notification.metrics.pixels}');
         }
 
         // 处理
         _handlerOffset(offset);
-
-        // 阻止冒泡
-        return true;
+        return false;
       },
       child: CustomScrollView(
         controller: _controller,
         slivers: <Widget>[
           SliverToBoxAdapter(
             child: SearchBar(
-              onTap: () {
-                _controller.animateTo(-600,
-                    duration: Duration(milliseconds: 200), curve: Curves.ease);
-              },
+              onTap: () {},
             ),
           ),
           SliverList(
