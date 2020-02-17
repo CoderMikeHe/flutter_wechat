@@ -4,11 +4,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:flutter_wechat/constant/constant.dart';
 import 'package:flutter_wechat/constant/style.dart';
+import 'package:flutter_wechat/providers/tab_bar_provider.dart';
 
 import 'package:flutter_wechat/views/mainframe/mainframe_page.dart';
 import 'package:flutter_wechat/views/contacts/contacts_page.dart';
 import 'package:flutter_wechat/views/discover/discover_page.dart';
 import 'package:flutter_wechat/views/profile/profile_page.dart';
+import 'package:provider/provider.dart';
 
 class _TabBarItem {
   String title, image, selectedImage;
@@ -65,7 +67,6 @@ class _HomePageState extends State<HomePage> {
   ];
 
   String appBarTitle = "微信";
-  // tabData[0].title;
   List<Widget> list = List();
   int _currentIndex = 0;
   List<BottomNavigationBarItem> myTabs = [];
@@ -75,35 +76,38 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     for (int i = 0; i < tabData.length; i++) {
       final item = tabData[i];
-      myTabs.add(BottomNavigationBarItem(
-        // 7.0.0 之前版本
-        // icon: Image.asset(
-        //   item.image,
-        //   width: 25.0,
-        //   height: 23.0,
-        // ),
-        // activeIcon: Image.asset(
-        //   item.selectedImage,
-        //   width: 25.0,
-        //   height: 23.0,
-        // ),
-        // 7.0.0 之后版本
-        icon: new SvgPicture.asset(
-          item.image,
-        ),
-        activeIcon: new SvgPicture.asset(
-          item.selectedImage,
-          color: Style.pTintColor,
-        ),
-        title: Text(
-          item.title,
-          textScaleFactor: 1.0,
-          // Fixed Bug: 这个只需要设置字体大小即可，颜色不要设置
-          style: TextStyle(
-            fontSize: 10.0,
+      myTabs.add(
+        BottomNavigationBarItem(
+          // 7.0.0 之前版本
+          // icon: Image.asset(
+          //   item.image,
+          //   width: 25.0,
+          //   height: 23.0,
+          // ),
+          // activeIcon: Image.asset(
+          //   item.selectedImage,
+          //   width: 25.0,
+          //   height: 23.0,
+          // ),
+
+          // 7.0.0 之后版本
+          icon: new SvgPicture.asset(
+            item.image,
+          ),
+          activeIcon: new SvgPicture.asset(
+            item.selectedImage,
+            color: Style.pTintColor,
+          ),
+          title: Text(
+            item.title,
+            textScaleFactor: 1.0,
+            // Fixed Bug: 这个只需要设置字体大小即可，颜色不要设置
+            style: TextStyle(
+              fontSize: 10.0,
+            ),
           ),
         ),
-      ));
+      );
     }
     list
       ..add(MainframePage())
@@ -137,31 +141,37 @@ class _HomePageState extends State<HomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: null,
-      body: list[_currentIndex],
-      // Android
-      // bottomNavigationBar: BottomNavigationBar(
-      //   items: myTabs,
-      //   //高亮  被点击高亮
-      //   currentIndex: _currentIndex,
-      //   //修改 页面
-      //   onTap: _itemTapped,
-      //   //fixed：固定
-      //   type: BottomNavigationBarType.fixed,
-      //   // item选中颜色
-      //   selectedItemColor: Style.pTintColor,
-      //   // item非选中
-      //   unselectedItemColor: Color(0xFF191919),
-      // ),
-      // iOS
-      bottomNavigationBar: CupertinoTabBar(
-        items: myTabs,
-        onTap: _itemTapped,
-        currentIndex: _currentIndex,
-        activeColor: Style.pTintColor,
-        inactiveColor: Color(0xFF191919),
-      ),
+    return Consumer<TabBarProvider>(
+      builder: (context, tabBarProvider, _) {
+        return Scaffold(
+          appBar: null,
+          body: list[_currentIndex],
+          // Android
+          // bottomNavigationBar: BottomNavigationBar(
+          //   items: myTabs,
+          //   //高亮  被点击高亮
+          //   currentIndex: _currentIndex,
+          //   //修改 页面
+          //   onTap: _itemTapped,
+          //   //fixed：固定
+          //   type: BottomNavigationBarType.fixed,
+          //   // item选中颜色
+          //   selectedItemColor: Style.pTintColor,
+          //   // item非选中
+          //   unselectedItemColor: Color(0xFF191919),
+          // ),
+          // iOS
+          bottomNavigationBar: tabBarProvider.hidden
+              ? null
+              : CupertinoTabBar(
+                  items: myTabs,
+                  onTap: _itemTapped,
+                  currentIndex: _currentIndex,
+                  activeColor: Style.pTintColor,
+                  inactiveColor: Color(0xFF191919),
+                ),
+        );
+      },
     );
   }
 }
