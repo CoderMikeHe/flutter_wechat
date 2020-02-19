@@ -97,17 +97,17 @@ class _MainframePageState extends State<MainframePage> {
     // 通过NotificationListener监听滚动事件和通过ScrollController有两个主要的不同：
     // - 通过NotificationListener可以在从可滚动组件到widget树根之间任意位置都能监听。而ScrollController只能和具体的可滚动组件关联后才可以。
     // - 收到滚动事件后获得的信息不同；NotificationListener在收到滚动事件时，通知中会携带当前滚动位置和ViewPort的一些信息，而ScrollController只能获取当前滚动位置
-    _controller.addListener(() {
-      final offset = _controller.offset;
-      if (offset <= 0.0) {
-        // 计算
-        _offset = offset * -1.0;
-      } else if (_offset != 0.0) {
-        _offset = 0.0;
-      }
-      // 处理偏移量
-      _handlerOffset(_offset);
-    });
+    // _controller.addListener(() {
+    //   final offset = _controller.offset;
+    //   if (offset <= 0.0) {
+    //     // 计算
+    //     _offset = offset * -1.0;
+    //   } else if (_offset != 0.0) {
+    //     _offset = 0.0;
+    //   }
+    //   // 处理偏移量
+    //   _handlerOffset(_offset);
+    // });
   }
 
   @override
@@ -208,7 +208,11 @@ class _MainframePageState extends State<MainframePage> {
       setState(() {});
       return;
     }
+
+    print(
+        '+++++++++++++_________+++++++++++ $_isAppletRefreshing  $_isAnimating');
     if (!_isAppletRefreshing && !_isAnimating) {
+      print('逆战逆战来也。。。。。。。。。。');
       // 开始动画
       _duration = 300;
 
@@ -277,6 +281,7 @@ class _MainframePageState extends State<MainframePage> {
             onEnd: () {
               // 300ms 的动画结束
               _isAnimating = false;
+              print('🔥动画结束 < 0--------- $_isAnimating  $_duration');
               if (_duration > 0.0) {
                 if (_isAppletRefreshing) {
                   // 上拉
@@ -293,6 +298,7 @@ class _MainframePageState extends State<MainframePage> {
                   _appBarColor = Colors.white;
                   _isAppletRefreshing = false;
                 }
+                print('🔥动画结束> 0--------- $_isAnimating');
                 setState(() {});
               }
             },
