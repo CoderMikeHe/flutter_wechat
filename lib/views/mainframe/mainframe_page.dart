@@ -231,6 +231,35 @@ class _MainframePageState extends State<MainframePage> {
       child: Stack(
         overflow: Overflow.visible,
         children: <Widget>[
+          // 导航栏
+          AnimatedPositioned(
+            key: Key('bar'),
+            top: _offset,
+            left: 0,
+            right: 0,
+            child: MHAppBar(
+              title: Text('微信'),
+              backgroundColor: _appBarColor,
+              actions: <Widget>[
+                IconButton(
+                  icon: new SvgPicture.asset(
+                    Constant.assetsImagesMainframe + 'icons_outlined_add2.svg',
+                    color: Color(0xFF181818),
+                  ),
+                  onPressed: () {
+                    // 关闭上一个侧滑
+                    _closeSlidable();
+
+                    _showMenu = !_showMenu;
+
+                    setState(() {});
+                  },
+                )
+              ],
+            ),
+            curve: Curves.easeInOut,
+            duration: Duration(milliseconds: _duration),
+          ),
           // 内容页
           AnimatedPositioned(
             key: Key('list'),
@@ -267,36 +296,6 @@ class _MainframePageState extends State<MainframePage> {
                 setState(() {});
               }
             },
-          ),
-
-          // 导航栏
-          AnimatedPositioned(
-            key: Key('bar'),
-            top: _offset,
-            left: 0,
-            right: 0,
-            child: MHAppBar(
-              title: Text('微信'),
-              backgroundColor: _appBarColor,
-              actions: <Widget>[
-                IconButton(
-                  icon: new SvgPicture.asset(
-                    Constant.assetsImagesMainframe + 'icons_outlined_add2.svg',
-                    color: Color(0xFF181818),
-                  ),
-                  onPressed: () {
-                    // 关闭上一个侧滑
-                    _closeSlidable();
-
-                    _showMenu = !_showMenu;
-
-                    setState(() {});
-                  },
-                )
-              ],
-            ),
-            curve: Curves.easeInOut,
-            duration: Duration(milliseconds: _duration),
           ),
 
           // 三个点部件
