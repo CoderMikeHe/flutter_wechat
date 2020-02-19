@@ -1096,5 +1096,33 @@
       "https://game.gtimg.cn/images/yxzj/img201606/heroimg/152/152-smallskin-1.jpg"
     ],
     "remarks": "冰雪之华"
+  },
+  {
+    "screen_name": "鲁班大师",
+    "idstr": "10000097",
+    "profile_image_url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/525/525.jpg",
+    "wechatId": "lubandashi",
+    "featureSign": "你的无知，无边无际",
+    "gender": 0,
+    "phones": [],
+    "pictures": [
+      "https://game.gtimg.cn/images/yxzj/img201606/heroimg/525/525-smallskin-2.jpg",
+      "https://game.gtimg.cn/images/yxzj/img201606/heroimg/525/525-smallskin-1.jpg"
+    ],
+    "remarks": "神匠"
+  },
+  {
+    "screen_name": "蒙犽",
+    "idstr": "10000098",
+    "profile_image_url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/524/524.jpg",
+    "wechatId": "mengya",
+    "featureSign": "情绪调配，火力翻倍",
+    "gender": 0,
+    "phones": [],
+    "pictures": [
+      "https://game.gtimg.cn/images/yxzj/img201606/heroimg/524/524-smallskin-2.jpg",
+      "https://game.gtimg.cn/images/yxzj/img201606/heroimg/524/524-smallskin-1.jpg"
+    ],
+    "remarks": "烈炮小子"
   }
 ]
