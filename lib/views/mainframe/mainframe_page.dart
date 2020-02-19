@@ -202,7 +202,11 @@ class _MainframePageState extends State<MainframePage> {
       setState(() {});
       return;
     }
+
+    print(
+        '+++++++++++++_________+++++++++++ $_isAppletRefreshing  $_isAnimating');
     if (!_isAppletRefreshing && !_isAnimating) {
+      print('逆战逆战来也。。。。。。。。。。');
       // 开始动画
       _duration = 300;
 
@@ -225,44 +229,6 @@ class _MainframePageState extends State<MainframePage> {
       child: Stack(
         overflow: Overflow.visible,
         children: <Widget>[
-          // 内容页
-          AnimatedPositioned(
-            key: Key('list'),
-            top: _isRefreshing ? _offset : 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              padding: EdgeInsets.only(
-                  top: kToolbarHeight + ScreenUtil.statusBarHeight),
-              child: _buildContentWidget(),
-              height: ScreenUtil.screenHeightDp - _kTabBarHeight,
-            ),
-            curve: Curves.easeInOut,
-            duration: Duration(milliseconds: _duration),
-            onEnd: () {
-              // 300ms 的动画结束
-              _isAnimating = false;
-              if (_duration > 0.0) {
-                if (_isAppletRefreshing) {
-                  // 上拉
-                  _isAppletRefreshing = false;
-                  _isRefreshing = false;
-
-                  _appBarColor = Style.pBackgroundColor;
-
-                  // 显示底部的TabBar
-                  Provider.of<TabBarProvider>(context, listen: false)
-                      .setHidden(false);
-                } else {
-                  // 下拉
-                  _appBarColor = Colors.white;
-                  _isAppletRefreshing = false;
-                }
-                setState(() {});
-              }
-            },
-          ),
-
           // 导航栏
           AnimatedPositioned(
             key: Key('bar'),
@@ -291,6 +257,45 @@ class _MainframePageState extends State<MainframePage> {
             ),
             curve: Curves.easeInOut,
             duration: Duration(milliseconds: _duration),
+          ),
+          // 内容页
+          AnimatedPositioned(
+            key: Key('list'),
+            top: _isRefreshing ? _offset : 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              padding: EdgeInsets.only(
+                  top: kToolbarHeight + ScreenUtil.statusBarHeight),
+              child: _buildContentWidget(),
+              height: ScreenUtil.screenHeightDp - _kTabBarHeight,
+            ),
+            curve: Curves.easeInOut,
+            duration: Duration(milliseconds: _duration),
+            onEnd: () {
+              // 300ms 的动画结束
+              _isAnimating = false;
+              print('🔥动画结束 < 0--------- $_isAnimating  $_duration');
+              if (_duration > 0.0) {
+                if (_isAppletRefreshing) {
+                  // 上拉
+                  _isAppletRefreshing = false;
+                  _isRefreshing = false;
+
+                  _appBarColor = Style.pBackgroundColor;
+
+                  // 显示底部的TabBar
+                  Provider.of<TabBarProvider>(context, listen: false)
+                      .setHidden(false);
+                } else {
+                  // 下拉
+                  _appBarColor = Colors.white;
+                  _isAppletRefreshing = false;
+                }
+                print('🔥动画结束> 0--------- $_isAnimating');
+                setState(() {});
+              }
+            },
           ),
 
           // 三个点部件

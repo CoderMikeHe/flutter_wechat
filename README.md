@@ -55,6 +55,7 @@
 
 - [Flutter 玩转微信——通讯录](https://www.jianshu.com/p/8d136f31b8a2)
 - [Flutter 玩转微信——闪屏页妙用](https://www.jianshu.com/p/e2dcd0e8e04d)
+- [Flutter 玩转微信——微信首页](https://www.jianshu.com/p/50eb989a8c49)
 
 ---
 
@@ -74,9 +75,9 @@
 
 ###### 微信模块
 
-| ![](https://github.com/CoderMikeHe/WeChat_Resource/blob/master/snapshots/mainframe/mainframe_page_0.png) | 虚位以待 | 虚位以待 |
+| ![](https://github.com/CoderMikeHe/WeChat_Resource/blob/master/snapshots/mainframe/mainframe_page_0.png) | ![](https://github.com/CoderMikeHe/WeChat_Resource/blob/master/snapshots/mainframe/mainframe_page_1.png) | ![](https://github.com/CoderMikeHe/WeChat_Resource/blob/master/snapshots/mainframe/mainframe_page_2.png) |
 | :------------------------------------------------------------------------------------------------------: | :------: | :------: |
-
+| ![](https://github.com/CoderMikeHe/WeChat_Resource/blob/master/snapshots/mainframe/mainframe_page_3.png) | ![](https://github.com/CoderMikeHe/WeChat_Resource/blob/master/gif/mainframe/mainframe_page.gif)                     |                    虚位以待    
 
 ###### 通讯录模块
 

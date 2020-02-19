@@ -53,8 +53,11 @@ class _AppletState extends State<Applet> with SingleTickerProviderStateMixin {
   bool _focusState = false;
   set _focus(bool focus) {
     _focusState = focus;
-    print('🔥🔥🔥🔥🔥🔥🔥 $focus');
+    print('🔥🔥🔥🔥🔥🔥🔥88888 $focus');
   }
+
+  // 小程序焦点状态
+  bool _focusState1 = false;
 
   double _scaleBegin = 0.5;
   double _scaleEnd = 0.5;
@@ -351,13 +354,42 @@ class _AppletState extends State<Applet> with SingleTickerProviderStateMixin {
   Widget _buildAppletsWidget() {
     return NotificationListener(
       onNotification: (ScrollNotification notification) {
+        final offset = notification.metrics.pixels;
+        // print('biu biu biu 11111 ---- $offset');
+
         if (notification is ScrollStartNotification) {
           if (notification.dragDetails != null) {
+            _focusState1 = true;
             // 记录起始拖拽
-            _startOffsetY = notification.metrics.pixels;
+            _startOffsetY = offset;
+          }
+        } else if (notification is ScrollUpdateNotification) {
+          // 增加上拉 offset > 145 后，隐藏小程序模块
+          if (_focusState1 && notification.dragDetails == null) {
+            _focusState1 = false;
+            if (offset > ScreenUtil().setHeight(145 * 3.0)) {
+              if (widget.onScroll != null && widget.onScroll is Function) {
+                // 将数据回调出��
+                widget.onScroll(0, false);
+                // 正在滚动中
+                _isScrolling = true;
+                // 开始滚动
+                _controllerWrapper
+                    .animateTo(_controllerWrapper.position.maxScrollExtent,
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.ease)
+                    .whenComplete(() {
+                  _isScrolling = false;
+                });
+              }
+            }
           }
         } else if (notification is ScrollEndNotification) {
-          final offset = notification.metrics.pixels;
+          if (_focusState1) {
+            _focusState1 = false;
+            print('biu biu biu 444444 ---- $offset');
+          }
+
           if (_startOffsetY != null &&
               offset != 0.0 &&
               offset < ScreenUtil().setHeight(60.0 * 3)) {
