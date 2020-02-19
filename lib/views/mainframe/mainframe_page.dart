@@ -97,17 +97,17 @@ class _MainframePageState extends State<MainframePage> {
     // 通过NotificationListener监听滚动事件和通过ScrollController有两个主要的不同：
     // - 通过NotificationListener可以在从可滚动组件到widget树根之间任意位置都能监听。而ScrollController只能和具体的可滚动组件关联后才可以。
     // - 收到滚动事件后获得的信息不同；NotificationListener在收到滚动事件时，通知中会携带当前滚动位置和ViewPort的一些信息，而ScrollController只能获取当前滚动位置
-    _controller.addListener(() {
-      final offset = _controller.offset;
-      if (offset <= 0.0) {
-        // 计算
-        _offset = offset * -1.0;
-      } else if (_offset != 0.0) {
-        _offset = 0.0;
-      }
-      // 处理偏移量
-      _handlerOffset(_offset);
-    });
+    // _controller.addListener(() {
+    //   final offset = _controller.offset;
+    //   if (offset <= 0.0) {
+    //     // 计算
+    //     _offset = offset * -1.0;
+    //   } else if (_offset != 0.0) {
+    //     _offset = 0.0;
+    //   }
+    //   // 处理偏移量
+    //   _handlerOffset(_offset);
+    // });
   }
 
   @override
@@ -153,21 +153,16 @@ class _MainframePageState extends State<MainframePage> {
     _slidableController.activeState?.close();
   }
 
-  // 处理偏移逻辑
+// 处理偏移逻辑
   void _handlerOffset(double offset) {
     // 计算
-
     if (offset <= 0.0) {
       _offset = offset * -1;
     } else if (_offset != 0.0) {
       _offset = 0.0;
     }
-
-    // print('6666666666666666666 👉');
-
     // 这里需要
     if (_isRefreshing && !_isAnimating) {
-      print('🔥 哈哈哈哈哈 👉');
       // 刷新且非动画状态
       // 正在动画
       _isAnimating = true;
@@ -177,7 +172,6 @@ class _MainframePageState extends State<MainframePage> {
       _offset = ScreenUtil.screenHeightDp -
           kToolbarHeight -
           ScreenUtil.statusBarHeight;
-
       // 隐藏掉底部的TabBar
       Provider.of<TabBarProvider>(context, listen: false).setHidden(true);
       setState(() {});
@@ -465,7 +459,7 @@ class _MainframePageState extends State<MainframePage> {
     );
 
     final Widget listTile = MHListTile(
-      // leading: leading,
+      leading: leading,
       middle: middle,
       allowTap: !_slideIsOpen,
       contentPadding: EdgeInsets.symmetric(

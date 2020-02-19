@@ -84,8 +84,6 @@ class _AppletState extends State<Applet> with SingleTickerProviderStateMixin {
 
     final offstage = widget.refreshing ? false : widget.offset < stage3Distance;
 
-    double scaleX = 0.4;
-    double scaleY = 0.4;
     double opacity = 0;
     // 处于第三阶段
     if (widget.refreshing) {
@@ -93,7 +91,6 @@ class _AppletState extends State<Applet> with SingleTickerProviderStateMixin {
         // 拖拽状态下 控制透明度
         final step = 2.0 / H;
         opacity = 1.0 - step * _offset;
-        print('额么么么吗--------------------> $opacity');
         if (opacity > 1.0) {
           opacity = 1.0;
         } else if (opacity < 0) {
@@ -104,14 +101,11 @@ class _AppletState extends State<Applet> with SingleTickerProviderStateMixin {
           opacity = .0;
         } else {
           opacity = 1.0;
-          scaleX = 0.4;
           _scaleEnd = 1.0;
           if (!_controllerAnim.isAnimating) {
             _controllerAnim.forward();
           }
         }
-
-        print('啪啪啪--------------------> $opacity');
       }
     } else {
       // 非刷新状态下
@@ -186,24 +180,17 @@ class _AppletState extends State<Applet> with SingleTickerProviderStateMixin {
                   // print(
                   //     '麻辣隔壁 👉 ${notification.dragDetails == null} $_focusState');
                   if (_focusState && notification.dragDetails == null) {
-                    // _focus = false;
-                    print('lll 马甸哒哒哒哒哒哒多多');
-
                     _isScrolling = true;
                     _focus = false;
                     _handlerOffset(notification.metrics.pixels);
-
                     // 更新UI
                     setState(() {});
-
                     _controllerWrapper
                         .animateTo(notification.metrics.maxScrollExtent,
                             duration: Duration(milliseconds: 300),
                             curve: Curves.ease)
                         .whenComplete(() {
                       _isScrolling = false;
-                      print(
-                          " 🔥🔥🔥🔥🔥🔥🔥 ---------------------------------------------");
                     });
                   } else {
                     // 处理
@@ -212,8 +199,7 @@ class _AppletState extends State<Applet> with SingleTickerProviderStateMixin {
                 } else if (notification is ScrollEndNotification) {
                   if (_focusState) {
                     _focus = false;
-                    print(
-                        '😿 End_focus 👉 $_focusState  ${notification.metrics.pixels} $_startOffsetY');
+
                     _isScrolling = true;
 
                     Future.delayed(
@@ -228,8 +214,6 @@ class _AppletState extends State<Applet> with SingleTickerProviderStateMixin {
                                 curve: Curves.ease)
                             .whenComplete(() {
                           _isScrolling = false;
-                          print(
-                              " 😴😴😴😴😴😴 ---------------------------------------------");
                         });
                       },
                     );
@@ -405,7 +389,7 @@ class _AppletState extends State<Applet> with SingleTickerProviderStateMixin {
           // 这里设置为null
           _startOffsetY = null;
         }
-        return true; // 阻���冒泡
+        return true; // 阻止冒泡
       },
       child: ListView(
         controller: _controllerContent,
