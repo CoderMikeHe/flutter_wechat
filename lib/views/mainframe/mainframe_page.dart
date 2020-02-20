@@ -120,23 +120,20 @@ class _MainframePageState extends State<MainframePage> {
   /// ✨✨✨✨✨✨✨ Network ✨✨✨✨✨✨✨
   /// 数据请求
   void _fetchRemoteData() async {
-    print('1234567890');
     //加载消息列表
     rootBundle.loadString('mock/mainframe.json').then((jsonStr) {
-      print('shuju si QQ $_dataSource');
       final List mainframeJson = json.decode(jsonStr);
       // 遍历
       mainframeJson.forEach((json) {
         final Message m = Message.fromJson(json);
         _dataSource.add(m);
       });
-      print('shuju si After $_dataSource');
       setState(() {});
     });
   }
 
   /// ✨✨✨✨✨✨✨ 事件 ✨✨✨✨✨✨✨
-  /// // 监听事件
+  /// 监听事件
   void _handleSlideAnimationChanged(Animation<double> slideAnimation) {}
   void _handleSlideIsOpenChanged(bool isOpen) {
     setState(() {
@@ -464,7 +461,7 @@ class _MainframePageState extends State<MainframePage> {
     );
 
     final Widget listTile = MHListTile(
-      leading: leading,
+      // leading: leading,
       middle: middle,
       allowTap: !_slideIsOpen,
       contentPadding: EdgeInsets.symmetric(

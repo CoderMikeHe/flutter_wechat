@@ -143,15 +143,37 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        child: _buildChildWidget(),
-        width: double.maxFinite,
-        height: double.maxFinite,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(Constant.assetsImages + 'LaunchImage.png'),
-            fit: BoxFit.cover,
+        // child: _buildChildWidget(),
+        child: Container(
+          height: 60.0,
+          width: 400,
+          decoration: BoxDecoration(
+            color: Colors.red,
+            borderRadius: BorderRadius.all(Radius.circular(4.0)),
           ),
+          // child: Row(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   crossAxisAlignment: CrossAxisAlignment.center,
+          //   children: <Widget>[
+          //     SizedBox(
+          //       width: 36.0,
+          //       height: 20,
+          //     ),
+          //     Expanded(
+          //       child: TextField(),
+          //     ),
+          //   ],
+          // ),
+          child: TextField(),
         ),
+        // width: double.maxFinite,
+        // height: double.maxFinite,
+        // decoration: BoxDecoration(
+        //   image: DecorationImage(
+        //     image: AssetImage(Constant.assetsImages + 'LaunchImage.png'),
+        //     fit: BoxFit.cover,
+        //   ),
+        // ),
       ),
     );
   }
