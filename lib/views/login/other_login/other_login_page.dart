@@ -61,7 +61,7 @@ class _OtherLoginPageState extends State<OtherLoginPage> {
       width: double.maxFinite,
       child: InkWell(
         child: Image.asset(
-          Constant.assetsImages +
+          Constant.assetsImagesLogin +
               (_closeBtnHighlight
                   ? 'wsactionsheet_close_normal_16x16.png'
                   : 'wsactionsheet_close_press_16x16.png'),

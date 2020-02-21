@@ -120,23 +120,20 @@ class _MainframePageState extends State<MainframePage> {
   /// ✨✨✨✨✨✨✨ Network ✨✨✨✨✨✨✨
   /// 数据请求
   void _fetchRemoteData() async {
-    print('1234567890');
     //加载消息列表
     rootBundle.loadString('mock/mainframe.json').then((jsonStr) {
-      print('shuju si QQ $_dataSource');
       final List mainframeJson = json.decode(jsonStr);
       // 遍历
       mainframeJson.forEach((json) {
         final Message m = Message.fromJson(json);
         _dataSource.add(m);
       });
-      print('shuju si After $_dataSource');
       setState(() {});
     });
   }
 
   /// ✨✨✨✨✨✨✨ 事件 ✨✨✨✨✨✨✨
-  /// // 监听事件
+  /// 监听事件
   void _handleSlideAnimationChanged(Animation<double> slideAnimation) {}
   void _handleSlideIsOpenChanged(bool isOpen) {
     setState(() {
@@ -153,21 +150,16 @@ class _MainframePageState extends State<MainframePage> {
     _slidableController.activeState?.close();
   }
 
-  // 处理偏移逻辑
+// 处理偏移逻辑
   void _handlerOffset(double offset) {
     // 计算
-
     if (offset <= 0.0) {
       _offset = offset * -1;
     } else if (_offset != 0.0) {
       _offset = 0.0;
     }
-
-    // print('6666666666666666666 👉');
-
     // 这里需要
     if (_isRefreshing && !_isAnimating) {
-      print('🔥 哈哈哈哈哈 👉');
       // 刷新且非动画状态
       // 正在动画
       _isAnimating = true;
@@ -177,7 +169,6 @@ class _MainframePageState extends State<MainframePage> {
       _offset = ScreenUtil.screenHeightDp -
           kToolbarHeight -
           ScreenUtil.statusBarHeight;
-
       // 隐藏掉底部的TabBar
       Provider.of<TabBarProvider>(context, listen: false).setHidden(true);
       setState(() {});

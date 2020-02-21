@@ -53,7 +53,6 @@ class _MenusState extends State<Menus> with SingleTickerProviderStateMixin {
 
     // 监听动画
     _controller.addStatusListener((AnimationStatus status) {
-      print('addStatusListener $status');
       // 到达结束状态时  要回滚到开始状态
       if (status == AnimationStatus.completed) {
         // 正向结束, 重置到当前
@@ -71,9 +70,6 @@ class _MenusState extends State<Menus> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    print(
-        'object ------- ${widget.show} hhh--- ${_controller.isAnimating}  ${_controller.isCompleted}  ${_controller.isDismissed}');
-
     if (widget.show) {
       // 只有显示后 才需要缩放动画
       _shouldAnimate = true;
