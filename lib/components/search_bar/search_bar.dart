@@ -64,7 +64,7 @@ class _SearchBarState extends State<SearchBar> {
           EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
       width: FlutterScreenUtil.ScreenUtil.screenWidthDp,
       height: 56.0,
-      color: Colors.red,
+      // color: Colors.red,
       child: Container(
         height: 40.0,
         // width: 300,
@@ -72,70 +72,32 @@ class _SearchBarState extends State<SearchBar> {
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(4.0)),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+        child: Stack(
+          alignment: AlignmentDirectional.center,
           children: <Widget>[
-            SizedBox(
-              width: 36.0,
-            ),
-            Expanded(
-              child: MHTextField(
-                controller: _passwordController,
-                hintText: '请填写密码',
-                maxLength: 16,
-                obscureText: true,
-                // onChanged: (value) {
-                //   setState(() {});
-                // },
+            Positioned(
+              top: 0,
+              left: 0,
+              bottom: 0,
+              // right: 0,
+              child: InkWell(
+                child: Container(
+                  height: 40.0,
+                  width: 300,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                  ),
+                  child: _SearchCube(),
+                ),
+                onTap: widget.onTap,
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
               ),
-            ),
+            )
           ],
         ),
       ),
-      // child: Stack(
-      //   alignment: AlignmentDirectional.center,
-      //   children: <Widget>[
-      //     Positioned(
-      //       top: 0,
-      //       left: 0,
-      //       bottom: 0,
-      //       // right: 0,
-      //       child: Container(
-      //         height: 40.0,
-      //         width: 300,
-      //         decoration: BoxDecoration(
-      //           color: Colors.white,
-      //           borderRadius: BorderRadius.all(Radius.circular(4.0)),
-      //         ),
-      //         child: Row(
-      //           mainAxisAlignment: MainAxisAlignment.center,
-      //           crossAxisAlignment: CrossAxisAlignment.center,
-      //           children: <Widget>[
-      //             SizedBox(
-      //               width: 36.0,
-      //             ),
-      //             Expanded(
-      //               child: MHTextField(
-      //                 controller: _passwordController,
-      //                 hintText: '请填写密码',
-      //                 maxLength: 16,
-      //                 obscureText: true,
-      //                 // onChanged: (value) {
-      //                 //   setState(() {});
-      //                 // },
-      //               ),
-      //             ),
-      //           ],
-      //         ),
-      //       ),
-      //       //   onTap: widget.onTap,
-      //       //   highlightColor: Colors.transparent,
-      //       //   splashColor: Colors.transparent,
-      //       // ),
-      //     )
-      //   ],
-      // ),
     );
   }
 }
