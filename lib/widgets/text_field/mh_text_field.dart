@@ -176,7 +176,7 @@ class _MHTextFieldState extends State<MHTextField> {
           contentPadding: EdgeInsets.all(0),
           border: InputBorder.none,
           hintText: widget.hintText,
-          hintStyle: TextStyle(color: Color(0xFF999999)),
+          hintStyle: TextStyle(color: Color(0xFFb3b3b3), fontSize: 17.0),
           fillColor: Colors.transparent,
           filled: true,
         ),

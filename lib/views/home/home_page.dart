@@ -35,7 +35,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   static List tabData = [
     // 7.0.0-
     // _TabBarItem(
@@ -74,6 +74,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     for (int i = 0; i < tabData.length; i++) {
       final item = tabData[i];
       myTabs.add(
@@ -118,7 +119,16 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      print('🔥🔥 👉 ${MediaQuery.of(context).viewInsets.bottom}');
+    });
   }
 
   void _itemTapped(int index) {
