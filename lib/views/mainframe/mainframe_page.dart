@@ -23,6 +23,8 @@ import 'package:flutter_wechat/widgets/mainframe/avatars.dart';
 import 'package:flutter_wechat/widgets/mainframe/bouncy_balls.dart';
 import 'package:flutter_wechat/widgets/mainframe/applet.dart';
 import 'package:flutter_wechat/widgets/mainframe/menus.dart';
+import 'package:flutter_wechat/widgets/mainframe/search_content.dart';
+
 import 'package:flutter_wechat/components/app_bar/mh_app_bar.dart';
 
 // Standard iOS 10 tab bar height.
@@ -35,7 +37,8 @@ class MainframePage extends StatefulWidget {
   _MainframePageState createState() => _MainframePageState();
 }
 
-class _MainframePageState extends State<MainframePage> {
+class _MainframePageState extends State<MainframePage>
+    with WidgetsBindingObserver {
   /// 数据源
   List<Message> _dataSource = [];
 
@@ -78,10 +81,15 @@ class _MainframePageState extends State<MainframePage> {
     _focusState = focus;
   }
 
+  // 是否展示搜索页
+  bool _showSearch = false;
+
   /// ✨✨✨✨✨✨✨ Override ✨✨✨✨✨✨✨
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addObserver(this);
 
     // 获取数据
     _fetchRemoteData();
@@ -114,7 +122,16 @@ class _MainframePageState extends State<MainframePage> {
   void dispose() {
     // 为了避免内存泄露，需要调用_controller.dispose
     _controller.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      print('键盘高度abcd 👉 ${MediaQuery.of(context).viewInsets.bottom}');
+    });
   }
 
   /// ✨✨✨✨✨✨✨ Network ✨✨✨✨✨✨✨
@@ -229,7 +246,9 @@ class _MainframePageState extends State<MainframePage> {
           // 导航栏
           AnimatedPositioned(
             key: Key('bar'),
-            top: _offset,
+            top: _showSearch
+                ? (-kToolbarHeight - ScreenUtil.statusBarHeight)
+                : _offset,
             left: 0,
             right: 0,
             child: MHAppBar(
@@ -258,7 +277,7 @@ class _MainframePageState extends State<MainframePage> {
           // 内容页
           AnimatedPositioned(
             key: Key('list'),
-            top: _isRefreshing ? _offset : 0,
+            top: _isRefreshing ? _offset : (_showSearch ? -kToolbarHeight : 0),
             left: 0,
             right: 0,
             child: Container(
@@ -335,7 +354,24 @@ class _MainframePageState extends State<MainframePage> {
                 setState(() {});
               },
             ),
-          )
+          ),
+
+          // 搜索内容页
+          Positioned(
+            top: ScreenUtil.statusBarHeight + 56,
+            left: 0,
+            right: 0,
+            height: ScreenUtil.screenHeightDp - ScreenUtil.statusBarHeight - 56,
+            child: Offstage(
+              offstage: !_showSearch,
+              child: AnimatedOpacity(
+                duration: Duration(milliseconds: _duration),
+                child: SearchContent(),
+                curve: Curves.easeInOut,
+                opacity: _showSearch ? 1.0 : .0,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -385,7 +421,27 @@ class _MainframePageState extends State<MainframePage> {
         slivers: <Widget>[
           SliverToBoxAdapter(
             child: SearchBar(
-              onTap: () {},
+              onEdit: () {
+                //
+                print('edit action ....');
+                // 隐藏底部的TabBar
+                Provider.of<TabBarProvider>(context, listen: false)
+                    .setHidden(true);
+                setState(() {
+                  _showSearch = true;
+                  _duration = 300;
+                });
+              },
+              onCancel: () {
+                print('cancel action ....');
+                // 显示底部的TabBar
+                Provider.of<TabBarProvider>(context, listen: false)
+                    .setHidden(false);
+                setState(() {
+                  _showSearch = false;
+                  _duration = 300;
+                });
+              },
             ),
           ),
           SliverList(
@@ -517,7 +573,7 @@ class _MainframePageState extends State<MainframePage> {
           color: Color(0xFFC7C7CB),
           width: 150,
           child: Text(
-            '标为未读',
+            '���为未读',
             style: TextStyle(
               color: Colors.white,
               fontSize: ScreenUtil.getInstance().setSp(51.0),
@@ -589,6 +645,7 @@ class _MainframePageState extends State<MainframePage> {
       //     )
       //   ],
       // ),
+      // resizeToAvoidBottomPadding: false,
       body: _buildChildWidget(),
     );
   }

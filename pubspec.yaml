@@ -46,7 +46,7 @@ dependencies:
   # Dart 汉字转拼音 https://github.com/flutterchina/lpinyin
   lpinyin: ^1.0.7
   # 展示svg图片 https://github.com/dnfield/flutter_svg
-  flutter_svg: ^0.14.3
+  flutter_svg: ^0.17.2
   # 图片浏览器 https://github.com/renancaraujo/photo_view
   photo_view: ^0.7.0
   # 侧滑删除 https://github.com/letsar/flutter_slidable

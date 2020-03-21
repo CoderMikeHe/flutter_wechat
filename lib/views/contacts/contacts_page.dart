@@ -37,7 +37,8 @@ class ContactsPage extends StatefulWidget {
   _ContactsPageState createState() => _ContactsPageState();
 }
 
-class _ContactsPageState extends State<ContactsPage> {
+class _ContactsPageState extends State<ContactsPage>
+    with WidgetsBindingObserver {
   /// 联系人列表
   List<User> _contactsList = [];
 
@@ -72,6 +73,7 @@ class _ContactsPageState extends State<ContactsPage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     // 请求联系人
     _fetchContacts();
     // 配制数字居
@@ -86,7 +88,16 @@ class _ContactsPageState extends State<ContactsPage> {
   @override
   void dispose() {
     _scrollController?.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      print('🔥🔥 👉MLGB---> ${MediaQuery.of(context).viewInsets.bottom}');
+    });
   }
 
   // 监听事件
