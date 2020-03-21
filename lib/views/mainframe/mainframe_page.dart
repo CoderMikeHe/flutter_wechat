@@ -517,7 +517,7 @@ class _MainframePageState extends State<MainframePage>
     );
 
     final Widget listTile = MHListTile(
-      // leading: leading,
+      leading: leading,
       middle: middle,
       allowTap: !_slideIsOpen,
       contentPadding: EdgeInsets.symmetric(
@@ -647,10 +647,6 @@ class _MainframePageState extends State<MainframePage>
       // ),
       // resizeToAvoidBottomPadding: false,
       body: _buildChildWidget(),
-      // body: Container(
-      //   color: Colors.red,
-      //   child: SearchBar(),
-      // ),
     );
   }
 }

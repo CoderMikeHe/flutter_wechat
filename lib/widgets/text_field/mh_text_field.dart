@@ -29,6 +29,8 @@ class MHTextField extends StatefulWidget {
     this.maxLength,
     this.hintText,
     TextInputType keyboardType,
+    this.textInputAction,
+    this.contentPadding = const EdgeInsets.all(0),
   })  : assert(obscureText != null),
         assert(maxLength == null ||
             maxLength == TextField.noMaxLength ||
@@ -92,6 +94,15 @@ class MHTextField extends StatefulWidget {
 
   /// {@macro flutter.widgets.editableText.keyboardType}
   final TextInputType keyboardType;
+
+  /// [EdgeInsets.zero].
+  final EdgeInsetsGeometry contentPadding;
+
+  /// The type of action button to use for the keyboard.
+  ///
+  /// Defaults to [TextInputAction.newline] if [keyboardType] is
+  /// [TextInputType.multiline] and [TextInputAction.done] otherwise.
+  final TextInputAction textInputAction;
 
   /// 构建
   _MHTextFieldState createState() => _MHTextFieldState();
@@ -173,7 +184,8 @@ class _MHTextFieldState extends State<MHTextField> {
         controller: _effectiveController,
         focusNode: _effectiveFocusNode,
         decoration: InputDecoration(
-          contentPadding: EdgeInsets.all(0),
+          // contentPadding: EdgeInsets.all(0),
+          contentPadding: widget.contentPadding,
           border: InputBorder.none,
           hintText: widget.hintText,
           hintStyle: TextStyle(color: Color(0xFFb3b3b3), fontSize: 17.0),
@@ -183,6 +195,7 @@ class _MHTextFieldState extends State<MHTextField> {
         // Fixed Bug：如果限制4个字符，会导致底部出现 0/4 这个鬼东西，影响布局
         // maxLength: 4,
         keyboardType: widget.keyboardType,
+        textInputAction: widget.textInputAction,
         inputFormatters: formatters,
         cursorColor: Style.pTintColor,
         obscureText: widget.obscureText,

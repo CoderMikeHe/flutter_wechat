@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:fluro/fluro.dart';
 import 'package:provider/provider.dart';
 
+import 'package:flutter_wechat/constant/style.dart';
+
 import 'package:flutter_wechat/routers/application.dart';
 import 'package:flutter_wechat/routers/routers.dart';
 
@@ -49,6 +51,8 @@ class MyApp extends StatelessWidget {
           buttonTheme: ButtonThemeData(minWidth: 44.0),
           //
           appBarTheme: AppBarTheme(elevation: 1),
+          // 脚手架背景色
+          scaffoldBackgroundColor: Style.pBackgroundColor,
         ),
         // home: login ? LoginPage() : HomePage(title: 'Flutter WeChat'),
       ),

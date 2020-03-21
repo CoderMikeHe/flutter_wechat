@@ -44,8 +44,7 @@ class _SearchBarState extends State<SearchBar> {
   GlobalKey _textKey = new GlobalKey();
 
   /// password控制输入
-  final TextEditingController _passwordController =
-      TextEditingController(text: '');
+  final TextEditingController _textController = TextEditingController(text: '');
 
   /// 是否是编辑模式
   bool _isEdit = false;
@@ -58,6 +57,9 @@ class _SearchBarState extends State<SearchBar> {
 
   /// 搜索图标距离左侧的距离
   double _searchIconLeft = 0;
+
+  /// 是否已经渲染好
+  bool _isPrepared = false;
 
   /// 控制键盘聚焦
   final FocusNode _focusNode = FocusNode();
@@ -90,6 +92,10 @@ class _SearchBarState extends State<SearchBar> {
     if (!_isEdit) return;
     // cancel action...
     print('cancel action...');
+
+    // 清除掉搜索内容
+    _textController.text = '';
+
     setState(() {
       _duration = 300;
       _isEdit = false;
@@ -106,13 +112,15 @@ class _SearchBarState extends State<SearchBar> {
   @override
   Widget build(BuildContext context) {
     print('searchbar build');
+    // 方案一： 先算出 SearchCube 的宽度，再去计算其位置 left ，虽然能实现，但是初次显示时会跳动
     widgetUtil.asyncPrepare(context, true, (Rect rect) {
       final RenderBox box = _textKey.currentContext.findRenderObject();
       final Size size = box.size;
       setState(() {
+        _isPrepared = true;
         _searchIconLeft = (rect.width - 16.0 - size.width) * .5;
       });
-      print('渲染完成  ${rect.size}  ${size.width} ');
+      print('渲染完成  ${rect.size} $size  ${size.width} $_searchIconLeft');
     });
 
     return Container(
@@ -148,7 +156,7 @@ class _SearchBarState extends State<SearchBar> {
           // 输入框
           Positioned(
             left: 0,
-            top: -4,
+            top: 0,
             bottom: 0,
             right: FlutterScreenUtil.ScreenUtil().setWidth(162.0),
             child: Offstage(
@@ -163,8 +171,15 @@ class _SearchBarState extends State<SearchBar> {
                   ),
                   Expanded(
                     child: MHTextField(
+                      controller: _textController,
+                      // Fixed Bug：由于textField 默认有个高度 会导致内容偏下
+                      contentPadding: EdgeInsets.only(bottom: 10.0),
                       hintText: "搜索",
                       focusNode: _focusNode,
+                      textInputAction: TextInputAction.search,
+                      onSubmitted: (valueText) {
+                        print('Search text is 👉 $valueText');
+                      },
                     ),
                   )
                 ],
@@ -174,19 +189,25 @@ class _SearchBarState extends State<SearchBar> {
           // 搜索按钮
           AnimatedPositioned(
             top: 0,
-            // Fixed Bug: left 必须有值，否则没的动画
+            // Fixed Bug: left 必须有值，否则没的动画；其次，由于我们要在`asyncPrepare`里面计算 _searchIconLeft 的值，会导致初次渲染时有个跳动（0 --> _searchIconLeft），
+            // 所以我们要在渲染完成后去设置值，从而解决跳动
+            // 但是：很遗憾的是 这个方法还是会导致跳动，欲哭无泪....
+            // 最后，用Offstage 来处理了 起码不会左右抖动了...
             left: _isEdit
                 ? FlutterScreenUtil.ScreenUtil().setWidth(33.0)
-                : _searchIconLeft,
+                : (_isPrepared ? _searchIconLeft : null),
             bottom: 0,
             child: InkWell(
               onTap: _onEditTap,
               highlightColor: Colors.transparent,
               splashColor: Colors.transparent,
-              child: _SearchCube(
-                key: _textKey,
-                isEdit: _isEdit,
-                isAnimating: _isAnimating,
+              child: Offstage(
+                offstage: !_isPrepared,
+                child: _SearchCube(
+                  key: _textKey,
+                  isEdit: _isEdit,
+                  isAnimating: _isAnimating,
+                ),
               ),
             ),
             curve: Curves.easeInOut,
@@ -194,7 +215,6 @@ class _SearchBarState extends State<SearchBar> {
             onEnd: () {
               if (_duration > 0) {
                 _isAnimating = false;
-
                 setState(() {});
               }
             },
@@ -249,28 +269,30 @@ class _SearchCube extends StatelessWidget {
     } else {
       offstage = false;
     }
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Image.asset(
-          Constant.assetsImagesSearch + 'SearchContactsBarIcon_20x20.png',
-          width: 20.0,
-          height: 20.0,
-        ),
-        SizedBox(
-          width: 6.0,
-        ),
-        Offstage(
-          offstage: offstage,
-          child: Text(
-            '搜索',
-            style: TextStyle(
-              color: Color(0xFFb3b3b3),
-              fontSize: 17.0,
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Image.asset(
+            Constant.assetsImagesSearch + 'SearchContactsBarIcon_20x20.png',
+            width: 20.0,
+            height: 20.0,
+          ),
+          SizedBox(
+            width: 6.0,
+          ),
+          Offstage(
+            offstage: offstage,
+            child: Text(
+              '搜索',
+              style: TextStyle(
+                color: Color(0xFFb3b3b3),
+                fontSize: 17.0,
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

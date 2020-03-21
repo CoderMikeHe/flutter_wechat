@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:flutter_wechat/constant/style.dart';
 import 'package:flutter_wechat/constant/constant.dart';
+import 'package:flutter_wechat/widgets/text_field/mh_text_field.dart';
 
 /// 闪屏跳转模式
 enum MHSearchType {
@@ -33,27 +34,15 @@ class SearchContent extends StatefulWidget {
   _SearchContentState createState() => _SearchContentState();
 }
 
-class _SearchContentState extends State<SearchContent>
-    with WidgetsBindingObserver {
+class _SearchContentState extends State<SearchContent> {
   @override
   void initState() {
-    WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-    print('GameOver');
-  }
-
-  @override
-  void didChangeMetrics() {
-    super.didChangeMetrics();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      print('键盘高度 👉 ${MediaQuery.of(context).viewInsets.bottom}');
-    });
   }
 
   @override
@@ -64,7 +53,7 @@ class _SearchContentState extends State<SearchContent>
         FocusScope.of(context).requestFocus(new FocusNode());
       },
       child: Container(
-        // constraints: BoxConstraints.expand(),
+        constraints: BoxConstraints.expand(),
         color: Style.pBackgroundColor,
         child: Stack(
           alignment: Alignment.center,

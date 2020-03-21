@@ -354,7 +354,7 @@ class _ContactsPageState extends State<ContactsPage>
       dividerColor: Color(0xFFE6E6E6),
       onTapValue: onTap,
       allowTap: !_slideIsOpen || !needSlidable,
-      // leading: leading,
+      leading: leading,
       middle: middle,
       height: _itemHeight.toDouble(),
       dividerIndent: ScreenUtil.getInstance().setWidth(208.0),
