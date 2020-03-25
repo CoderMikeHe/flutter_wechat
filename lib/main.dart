@@ -10,6 +10,7 @@ import 'package:flutter_wechat/routers/application.dart';
 import 'package:flutter_wechat/routers/routers.dart';
 
 import 'package:flutter_wechat/providers/tab_bar_provider.dart';
+import 'package:flutter_wechat/providers/keyboard_provider.dart';
 
 void main() => runApp(MyApp());
 
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => TabBarProvider()),
+        ChangeNotifierProvider(create: (_) => KeyboardProvider()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

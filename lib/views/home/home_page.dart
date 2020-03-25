@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 import 'package:flutter_wechat/constant/constant.dart';
 import 'package:flutter_wechat/constant/style.dart';
-import 'package:flutter_wechat/providers/tab_bar_provider.dart';
 
 import 'package:flutter_wechat/views/mainframe/mainframe_page.dart';
 import 'package:flutter_wechat/views/contacts/contacts_page.dart';
 import 'package:flutter_wechat/views/discover/discover_page.dart';
 import 'package:flutter_wechat/views/profile/profile_page.dart';
-import 'package:provider/provider.dart';
+
+import 'package:flutter_wechat/providers/tab_bar_provider.dart';
+import 'package:flutter_wechat/providers/keyboard_provider.dart';
 
 class _TabBarItem {
   String title, image, selectedImage;
@@ -126,8 +129,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void didChangeMetrics() {
     super.didChangeMetrics();
+    // Fixed Bug : bottomNavigationBar 的子页面无法监听到键盘高度变化, so 没办法只能再此监听了
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      print('🔥🔥 👉 ${MediaQuery.of(context).viewInsets.bottom}');
+      final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+      Provider.of<KeyboardProvider>(context, listen: false)
+          .setKeyboardHeight(keyboardHeight);
     });
   }
 

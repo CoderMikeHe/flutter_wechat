@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 import 'package:flutter_wechat/constant/style.dart';
 import 'package:flutter_wechat/constant/constant.dart';
-import 'package:flutter_wechat/widgets/text_field/mh_text_field.dart';
+
+import 'package:flutter_wechat/providers/keyboard_provider.dart';
 
 /// 闪屏跳转模式
 enum MHSearchType {
@@ -47,9 +49,12 @@ class _SearchContentState extends State<SearchContent> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<KeyboardProvider>(context);
+    double bottom = provider.keyboardHeight <= 0
+        ? ScreenUtil().setHeight(-240)
+        : (provider.keyboardHeight + ScreenUtil().setHeight(72));
     return InkWell(
       onTap: () {
-        print('on tap is ');
         FocusScope.of(context).requestFocus(new FocusNode());
       },
       child: Container(
@@ -84,8 +89,10 @@ class _SearchContentState extends State<SearchContent> {
                 ],
               ),
             ),
-            Positioned(
-              bottom: ScreenUtil().setHeight(0.0),
+            AnimatedPositioned(
+              curve: Curves.easeInOut,
+              duration: Duration(milliseconds: 200),
+              bottom: bottom,
               width: ScreenUtil().setWidth(171.0),
               height: ScreenUtil().setHeight(240.0),
               // Fixed Bug: SVG 不能放在有固定大小的 Container 中，否则设置 SVG 大小无效
