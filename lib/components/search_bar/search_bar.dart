@@ -74,7 +74,6 @@ class _SearchBarState extends State<SearchBar> {
   void _onEditTap() {
     // widget.onTap
     if (_isEdit) return;
-    print('object..... onTap....');
 
     _duration = 300;
     _isEdit = true;
@@ -90,9 +89,6 @@ class _SearchBarState extends State<SearchBar> {
   // 取消编辑事件
   void _onCancelTap() {
     if (!_isEdit) return;
-    // cancel action...
-    print('cancel action...');
-
     // 清除掉搜索内容
     _textController.text = '';
 
@@ -111,7 +107,6 @@ class _SearchBarState extends State<SearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    print('searchbar build');
     // 方案一： 先算出 SearchCube 的宽度，再去计算其位置 left ，虽然能实现，但是初次显示时会跳动
     widgetUtil.asyncPrepare(context, true, (Rect rect) {
       final RenderBox box = _textKey.currentContext.findRenderObject();

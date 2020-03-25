@@ -37,8 +37,7 @@ class MainframePage extends StatefulWidget {
   _MainframePageState createState() => _MainframePageState();
 }
 
-class _MainframePageState extends State<MainframePage>
-    with WidgetsBindingObserver {
+class _MainframePageState extends State<MainframePage> {
   /// 数据源
   List<Message> _dataSource = [];
 
@@ -89,8 +88,6 @@ class _MainframePageState extends State<MainframePage>
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addObserver(this);
-
     // 获取数据
     _fetchRemoteData();
 
@@ -122,16 +119,8 @@ class _MainframePageState extends State<MainframePage>
   void dispose() {
     // 为了避免内存泄露，需要调用_controller.dispose
     _controller.dispose();
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
 
-  @override
-  void didChangeMetrics() {
-    super.didChangeMetrics();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      print('键盘高度abcd 👉 ${MediaQuery.of(context).viewInsets.bottom}');
-    });
+    super.dispose();
   }
 
   /// ✨✨✨✨✨✨✨ Network ✨✨✨✨✨✨✨

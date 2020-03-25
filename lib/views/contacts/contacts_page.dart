@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 import 'package:flutter_wechat/constant/constant.dart';
 import 'package:flutter_wechat/constant/style.dart';
@@ -17,6 +18,14 @@ import 'package:flutter_wechat/views/contacts/contacts_router.dart';
 import 'package:flutter_wechat/components/list_tile/mh_list_tile.dart';
 import 'package:flutter_wechat/components/search_bar/search_bar.dart';
 import 'package:flutter_wechat/components/index_bar/mh_index_bar.dart';
+import 'package:flutter_wechat/widgets/mainframe/search_content.dart';
+
+import 'package:flutter_wechat/components/app_bar/mh_app_bar.dart';
+
+import 'package:flutter_wechat/providers/tab_bar_provider.dart';
+
+// Standard iOS 10 tab bar height.
+const double _kTabBarHeight = 50.0;
 
 /// 用作测试用
 const List<String> INDEX_DATA_0 = ['★', '♀', '↑', '@', 'A', 'B', 'C', 'D'];
@@ -37,8 +46,7 @@ class ContactsPage extends StatefulWidget {
   _ContactsPageState createState() => _ContactsPageState();
 }
 
-class _ContactsPageState extends State<ContactsPage>
-    with WidgetsBindingObserver {
+class _ContactsPageState extends State<ContactsPage> {
   /// 联系人列表
   List<User> _contactsList = [];
 
@@ -70,10 +78,15 @@ class _ContactsPageState extends State<ContactsPage>
   // 滚动
   ScrollController _scrollController;
 
+  /// 是否展示搜索页
+  bool _showSearch = false;
+
+  /// 动画时间 0 无动画
+  int _duration = 0;
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     // 请求联系人
     _fetchContacts();
     // 配制数字居
@@ -88,16 +101,7 @@ class _ContactsPageState extends State<ContactsPage>
   @override
   void dispose() {
     _scrollController?.dispose();
-    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-  }
-
-  @override
-  void didChangeMetrics() {
-    super.didChangeMetrics();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      print('🔥🔥 👉MLGB---> ${MediaQuery.of(context).viewInsets.bottom}');
-    });
   }
 
   // 监听事件
@@ -157,7 +161,28 @@ class _ContactsPageState extends State<ContactsPage>
   Widget _buildHeader() {
     return Column(
       children: <Widget>[
-        SearchBar(),
+        SearchBar(
+          onEdit: () {
+            //
+            print('edit action ....');
+            // 隐藏底部的TabBar
+            Provider.of<TabBarProvider>(context, listen: false).setHidden(true);
+            setState(() {
+              _showSearch = true;
+              _duration = 300;
+            });
+          },
+          onCancel: () {
+            print('cancel action ....');
+            // 显示底部的TabBar
+            Provider.of<TabBarProvider>(context, listen: false)
+                .setHidden(false);
+            setState(() {
+              _showSearch = false;
+              _duration = 300;
+            });
+          },
+        ),
         _buildItem(
           Constant.assetsImagesContacts + 'plugins_FriendNotify_36x36.png',
           '新的朋友',
@@ -241,7 +266,7 @@ class _ContactsPageState extends State<ContactsPage>
               Expanded(
                 child: _buildItem(user.profileImageUrl, user.screenName, true,
                     needSlidable: true, onTap: (cxt) {
-                  // 没有侧滑展开项 就直接下钻
+                  // 没有侧滑���开项 就直接下钻
                   if (!_slideIsOpen) {
                     NavigatorUtils.push(cxt,
                         '${ContactsRouter.contactInfoPage}?idstr=${user.idstr}');
@@ -258,7 +283,7 @@ class _ContactsPageState extends State<ContactsPage>
                     // 手动设置为false
                     // _slideIsOpen = false;
 
-                    // 方案二： 每次生���一个 cell ,就用 Map[key] = cxt 记录起来，特别注意，这里用Map 而不是 List or Set
+                    // 方案二： 每次生�����一个 cell ,就用 Map[key] = cxt 记录起来，特别注意，这里用Map 而不是 List or Set
                     // 关闭上一个侧滑
                     _closeSlidable();
 
@@ -415,22 +440,23 @@ class _ContactsPageState extends State<ContactsPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('通讯录'),
-        actions: <Widget>[
-          IconButton(
-            icon: new SvgPicture.asset(
-              Constant.assetsImagesContacts + 'icons_outlined_add-friends.svg',
-              color: Color(0xFF181818),
-            ),
-            onPressed: () {
-              // 关掉侧滑
-              _closeSlidable();
-              NavigatorUtils.push(context, ContactsRouter.addFriendPage);
-            },
-          )
-        ],
-      ),
+      // 这个是固定住的AppBar
+      // appBar: AppBar(
+      //   title: Text('通讯录'),
+      //   actions: <Widget>[
+      //     IconButton(
+      //       icon: new SvgPicture.asset(
+      //         Constant.assetsImagesContacts + 'icons_outlined_add-friends.svg',
+      //         color: Color(0xFF181818),
+      //       ),
+      //       onPressed: () {
+      //         // 关掉侧滑
+      //         _closeSlidable();
+      //         NavigatorUtils.push(context, ContactsRouter.addFriendPage);
+      //       },
+      //     )
+      //   ],
+      // ),
       // body: Column(
       //   children: <Widget>[
       //     Expanded(
@@ -439,7 +465,84 @@ class _ContactsPageState extends State<ContactsPage>
       //     ),
       //   ],
       // ),
-      body: _buildContactsList(defaultMode: !USE_CUSTOM_BAR),
+      // body: _buildContactsList(defaultMode: !USE_CUSTOM_BAR),
+
+      // 下面是非固定住的bar
+      body: _buildChildWidget(),
+    );
+  }
+
+  /// ✨✨✨✨✨✨✨ UI ✨✨✨✨✨✨✨
+  /// 构建子部件
+  Widget _buildChildWidget() {
+    return Container(
+      constraints: BoxConstraints.expand(),
+      color: Style.pBackgroundColor,
+      child: Stack(
+        overflow: Overflow.visible,
+        children: <Widget>[
+          // 导航栏
+          AnimatedPositioned(
+            key: Key('bar'),
+            top: _showSearch
+                ? (-kToolbarHeight - ScreenUtil.statusBarHeight)
+                : 0,
+            left: 0,
+            right: 0,
+            child: MHAppBar(
+              title: Text('通讯录'),
+              actions: <Widget>[
+                IconButton(
+                  icon: new SvgPicture.asset(
+                    Constant.assetsImagesContacts +
+                        'icons_outlined_add-friends.svg',
+                    color: Color(0xFF181818),
+                  ),
+                  onPressed: () {
+                    // 关闭上一个侧滑
+                    _closeSlidable();
+                    NavigatorUtils.push(context, ContactsRouter.addFriendPage);
+                  },
+                )
+              ],
+            ),
+            curve: Curves.easeInOut,
+            duration: Duration(milliseconds: _duration),
+          ),
+          // 内容页
+          AnimatedPositioned(
+            key: Key('list'),
+            top: _showSearch ? -kToolbarHeight : 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              padding: EdgeInsets.only(
+                  top: kToolbarHeight + ScreenUtil.statusBarHeight),
+              child: _buildContactsList(defaultMode: !USE_CUSTOM_BAR),
+              height: ScreenUtil.screenHeightDp - _kTabBarHeight,
+            ),
+            curve: Curves.easeInOut,
+            duration: Duration(milliseconds: _duration),
+            onEnd: () {},
+          ),
+          // 搜索内容页
+          Positioned(
+            top: ScreenUtil.statusBarHeight + 56,
+            left: 0,
+            right: 0,
+            height: ScreenUtil.screenHeightDp - ScreenUtil.statusBarHeight - 56,
+            child: Offstage(
+              offstage: !_showSearch,
+              child: AnimatedOpacity(
+                duration: Duration(milliseconds: _duration),
+                child: SearchContent(),
+                curve: Curves.easeInOut,
+                opacity: _showSearch ? 1.0 : .0,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -660,7 +763,7 @@ class _ContactsPageState extends State<ContactsPage>
           );
         }
       } else {
-        // 不忽略，则显示高亮组件
+        // 不忽略，则显示高��组件
         if (tag == '♀') {
           // 返回映射高亮的部件
           return new SvgPicture.asset(

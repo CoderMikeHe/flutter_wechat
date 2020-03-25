@@ -432,7 +432,6 @@ class _CommonItemWidgetState extends State<CommonItemWidget> {
         width: width,
         height: height,
         fit: BoxFit.cover,
-        // CMH TODO 搞个占位图
         placeholder: (context, url) {
           return Image.asset(
             Constant.assetsImagesDefault + 'DefaultHead_48x48.png',
