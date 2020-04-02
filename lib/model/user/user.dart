@@ -1,4 +1,5 @@
 import 'package:azlistview/azlistview.dart';
+import 'package:flutter_wechat/model/picture/picture.dart';
 
 ///
 class User extends ISuspensionBean {
@@ -22,7 +23,7 @@ class User extends ISuspensionBean {
   /// 地区
   String region;
   List phones;
-  List pictures;
+  List<Picture> pictures;
   String remarks;
 
   /// 用于通讯录排序
@@ -72,7 +73,12 @@ class User extends ISuspensionBean {
     zoneCode = json['zoneCode'];
     region = json['region'];
     phones = json['phones'];
-    pictures = json['pictures'];
+    if (json['pictures'] != null) {
+      pictures = new List<Picture>();
+      json['pictures'].forEach((v) {
+        pictures.add(new Picture.fromJson(v));
+      });
+    }
     remarks = json['remarks'];
     screenNamePinyin = json['screenNamePinyin'];
     tagIndex = json['tagIndex'];
@@ -96,7 +102,9 @@ class User extends ISuspensionBean {
     data['zoneCode'] = this.zoneCode;
     data['region'] = this.region;
     data['phones'] = this.phones;
-    data['pictures'] = this.pictures;
+    if (this.pictures != null) {
+      data['pictures'] = this.pictures.map((v) => v.toJson()).toList();
+    }
     data['remarks'] = this.remarks;
     data['screenNamePinyin'] = this.screenNamePinyin;
     data['tagIndex'] = this.tagIndex;
