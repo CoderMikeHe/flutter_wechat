@@ -32,10 +32,24 @@ class ContactInfoMoments extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: _buildChildWidget(context),
+      child: Column(
+        children: <Widget>[
+          // 头部信息
+          _buildheaderWidget(context),
+          // 构建内容
+          _buildContentWidget(context),
+          // 分割线
+          Divider(
+            color: const Color(0xFFD8D8D8),
+            indent: Constant.pEdgeInset,
+            height: 0.5,
+          ),
+        ],
+      ),
     );
   }
 
+  // 打开图片浏览器
   void _openPhotoBrowser(BuildContext context, final int index) {
     // 先将photos 装成字符串
     final String jsonStr = jsonEncode(_photos);
@@ -46,80 +60,14 @@ class ContactInfoMoments extends StatelessWidget {
   }
 
   /// 构建子部件
-  Widget _buildChildWidget(BuildContext context) {
-    Widget leading = ConstrainedBox(
+  Widget _buildheaderWidget(BuildContext context) {
+    Widget middle = ConstrainedBox(
       constraints: BoxConstraints(
         minWidth: 50.0,
       ),
       child: Text(
         '朋友圈',
         style: TextStyle(fontSize: 16.0, color: Style.pTextColor),
-      ),
-    );
-
-    // 计算朋友圈图片的大小
-    // 获取屏幕的物理尺寸宽度
-    final double screenW = ScreenUtil.screenWidthDp;
-    // 计算父部件的宽度
-    final double momentsW = screenW -
-        2 * Constant.pEdgeInset -
-        8.0 -
-        50.0 -
-        2 * Constant.pEdgeInset;
-    // 就算图片的大小
-    final double imageWH = momentsW / 5.0;
-    final double leftPadding = 5.0;
-    final List<Widget> children = [];
-    if (user.pictures != null && user.pictures.length != 0) {
-      final count = user.pictures.length;
-      for (var i = 0; i < count; i++) {
-        final Picture picture = user.pictures[i];
-
-        final Photo photo = Photo(url: picture.big.url, tag: i.toString());
-        _photos.add(photo);
-
-        Widget w = Container(
-          padding: EdgeInsets.only(left: leftPadding),
-          child: InkWell(
-              onTap: () {
-                _openPhotoBrowser(context, i);
-              },
-              child: Hero(
-                tag: i.toString(),
-                child: CachedNetworkImage(
-                  imageUrl: picture.small.url,
-                  width: imageWH - leftPadding,
-                  height: imageWH - leftPadding,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) {
-                    return Image.asset(
-                      Constant.assetsImagesDefault +
-                          'ChatBackgroundThumb_00_100x100.png',
-                      width: imageWH - leftPadding,
-                      height: imageWH - leftPadding,
-                    );
-                  },
-                  errorWidget: (context, url, error) {
-                    return Image.asset(
-                      Constant.assetsImagesDefault +
-                          'ChatBackgroundThumb_00_100x100.png',
-                      width: imageWH - leftPadding,
-                      height: imageWH - leftPadding,
-                    );
-                  },
-                ),
-              )),
-        );
-        children.add(w);
-      }
-    }
-    Widget middle = Padding(
-      padding: EdgeInsets.symmetric(horizontal: Constant.pEdgeInset),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: children,
-        ),
       ),
     );
 
@@ -132,10 +80,79 @@ class ContactInfoMoments extends StatelessWidget {
     return MHListTile(
       contentPadding: EdgeInsets.all(Constant.pEdgeInset),
       allowTap: false,
-      leading: leading,
       middle: middle,
       trailing: trailing,
       dividerIndent: Constant.pEdgeInset,
+      dividerHeight: 0,
+    );
+  }
+
+  Widget _buildContentWidget(BuildContext context) {
+    // 计算朋友圈图片的大小
+    // 获取屏幕的物理尺寸宽度
+    final double screenW = ScreenUtil.screenWidthDp;
+    // 5个数据
+    final int count = 5;
+    // 计算父部件的宽度
+    final double momentsW =
+        screenW - 2 * Constant.pEdgeInset - 8.0 * (count - 1);
+
+    // 就算图片的大小
+    final double imageWH = momentsW / count;
+
+    final List<Widget> children = [];
+    if (user.pictures != null && user.pictures.length != 0) {
+      final count = user.pictures.length;
+      for (var i = 0; i < count; i++) {
+        final Picture picture = user.pictures[i];
+
+        final Photo photo = Photo(url: picture.big.url, tag: i.toString());
+        _photos.add(photo);
+        Widget w = InkWell(
+          onTap: () {
+            _openPhotoBrowser(context, i);
+          },
+          child: Hero(
+            tag: i.toString(),
+            child: CachedNetworkImage(
+              imageUrl: picture.small.url,
+              width: imageWH,
+              height: imageWH,
+              fit: BoxFit.cover,
+              placeholder: (context, url) {
+                return Image.asset(
+                  Constant.assetsImagesDefault +
+                      'ChatBackgroundThumb_00_100x100.png',
+                  width: imageWH,
+                  height: imageWH,
+                );
+              },
+              errorWidget: (context, url, error) {
+                return Image.asset(
+                  Constant.assetsImagesDefault +
+                      'ChatBackgroundThumb_00_100x100.png',
+                  width: imageWH,
+                  height: imageWH,
+                );
+              },
+            ),
+          ),
+        );
+        children.add(w);
+      }
+    }
+    return Container(
+      color: Colors.white,
+      padding: EdgeInsets.only(
+        left: Constant.pEdgeInset,
+        right: Constant.pEdgeInset,
+        bottom: Constant.pEdgeInset,
+      ),
+      child: Wrap(
+        spacing: 8.0,
+        runSpacing: 8.0,
+        children: children,
+      ),
     );
   }
 }
