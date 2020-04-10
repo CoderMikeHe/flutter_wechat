@@ -953,7 +953,26 @@
     "featureSign": "生死看淡，不服就干",
     "gender": 1,
     "phones": [],
-    "pictures": [],
+    "pictures": [
+      {
+        "name": "森",
+        "small": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/505/505-smallskin-2.jpg"
+        },
+        "big": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/skin/hero-info/505/505-bigskin-2.jpg"
+        }
+      },
+      {
+        "name": "鹿灵守心",
+        "small": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/505/505-smallskin-1.jpg"
+        },
+        "big": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/skin/hero-info/505/505-bigskin-1.jpg"
+        }
+      }
+    ],
     "remarks": "鹿灵守心"
   },
   {
@@ -964,7 +983,35 @@
     "featureSign": "生死看淡，不服就干",
     "gender": 0,
     "phones": [],
-    "pictures": [],
+    "pictures": [
+      {
+        "name": "御銮",
+        "small": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/509/509-smallskin-3.jpg"
+        },
+        "big": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/skin/hero-info/509/509-bigskin-3.jpg"
+        }
+      },
+      {
+        "name": "极冰防御线",
+        "small": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/509/509-smallskin-2.jpg"
+        },
+        "big": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/skin/hero-info/509/509-bigskin-2.jpg"
+        }
+      },
+      {
+        "name": "无尽之盾",
+        "small": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/509/509-smallskin-1.jpg"
+        },
+        "big": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/skin/hero-info/509/509-bigskin-1.jpg"
+        }
+      }
+    ],
     "remarks": "无尽之盾"
   },
   {
@@ -975,7 +1022,44 @@
     "featureSign": "花如盛世绽放，以人心培育",
     "gender": 0,
     "phones": [],
-    "pictures": [],
+    "pictures": [
+      {
+        "name": "疑决卦",
+        "small": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/501/501-smallskin-4.jpg"
+        },
+        "big": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/skin/hero-info/501/501-bigskin-4.jpg"
+        }
+      },
+      {
+        "name": "虹云星官",
+        "small": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/501/501-smallskin-3.jpg"
+        },
+        "big": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/skin/hero-info/501/501-bigskin-3.jpg"
+        }
+      },
+      {
+        "name": "占星师",
+        "small": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/501/501-smallskin-2.jpg"
+        },
+        "big": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/skin/hero-info/501/501-bigskin-2.jpg"
+        }
+      },
+      {
+        "name": "灵魂劫卜",
+        "small": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/501/501-smallskin-1.jpg"
+        },
+        "big": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/skin/hero-info/501/501-bigskin-1.jpg"
+        }
+      }
+    ],
     "remarks": "灵魂劫卜"
   },
   {
@@ -983,10 +1067,38 @@
     "idstr": "10000089",
     "profile_image_url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/189/189.jpg",
     "wechatId": "guiguzi",
-    "featureSign": "生死看淡，不服就干",
+    "featureSign": "挥舞太危险的武器，小心被他吞掉人生哦！",
     "gender": 0,
     "phones": [],
-    "pictures": [],
+    "pictures": [
+      {
+        "name": "幻乐之宴",
+        "small": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/189/189-smallskin-3.jpg"
+        },
+        "big": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/skin/hero-info/189/189-bigskin-3.jpg"
+        }
+      },
+      {
+        "name": "阿摩司公爵",
+        "small": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/189/189-smallskin-2.jpg"
+        },
+        "big": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/skin/hero-info/189/189-bigskin-2.jpg"
+        }
+      },
+      {
+        "name": "万物有灵",
+        "small": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/189/189-smallskin-1.jpg"
+        },
+        "big": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/skin/hero-info/189/189-bigskin-1.jpg"
+        }
+      }
+    ],
     "remarks": "万物有灵"
   },
   {
@@ -994,10 +1106,56 @@
     "idstr": "10000090",
     "profile_image_url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/191/191.jpg",
     "wechatId": "daqiao",
-    "featureSign": "生死看淡，不服就干",
+    "featureSign": "完美，是最无情的禁锢！",
     "gender": 1,
     "phones": [],
-    "pictures": [],
+    "pictures": [
+      {
+        "name": "白蛇",
+        "small": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/191/191-smallskin-5.jpg"
+        },
+        "big": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/skin/hero-info/191/191-bigskin-5.jpg"
+        }
+      },
+      {
+        "name": "猫狗日记",
+        "small": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/191/191-smallskin-4.jpg"
+        },
+        "big": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/skin/hero-info/191/191-bigskin-4.jpg"
+        }
+      },
+      {
+        "name": "守护之力",
+        "small": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/191/191-smallskin-3.jpg"
+        },
+        "big": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/skin/hero-info/191/191-bigskin-3.jpg"
+        }
+      },
+      {
+        "name": "伊势巫女",
+        "small": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/191/191-smallskin-2.jpg"
+        },
+        "big": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/skin/hero-info/191/191-bigskin-2.jpg"
+        }
+      },
+      {
+        "name": "沧海之曜",
+        "small": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/191/191-smallskin-1.jpg"
+        },
+        "big": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/skin/hero-info/191/191-bigskin-1.jpg"
+        }
+      }
+    ],
     "remarks": "沧海之曜"
   },
   {
@@ -1008,7 +1166,53 @@
     "featureSign": "左三圈~右三圈~扭一扭转一转~人家也作萝莉控~",
     "gender": 1,
     "phones": [],
-    "pictures": [],
+    "pictures": [
+      {
+        "name": "繁星吟游",
+        "small": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/184/184-smallskin-5.jpg"
+        },
+        "big": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/skin/hero-info/184/184-bigskin-5.jpg"
+        }
+      },
+      {
+        "name": "舞动绿茵",
+        "small": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/184/184-smallskin-4.jpg"
+        },
+        "big": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/skin/hero-info/184/184-bigskin-4.jpg"
+        }
+      },
+      {
+        "name": "奇迹圣诞",
+        "small": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/184/184-smallskin-3.jpg"
+        },
+        "big": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/skin/hero-info/184/184-bigskin-3.jpg"
+        }
+      },
+      {
+        "name": "蔷薇王座",
+        "small": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/184/184-smallskin-2.jpg"
+        },
+        "big": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/skin/hero-info/184/184-bigskin-2.jpg"
+        }
+      },
+      {
+        "name": "天籁弦音",
+        "small": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/184/184-smallskin-1.jpg"
+        },
+        "big": {
+          "url": "https://game.gtimg.cn/images/yxzj/img201606/skin/hero-info/184/184-bigskin-1.jpg"
+        }
+      }
+    ],
     "remarks": "天籁弦音"
   },
   {
@@ -1342,7 +1546,7 @@
         }
       },
       {
-        "name": "归虚梦演",
+        "name": "神匠",
         "small": {
           "url": "https://game.gtimg.cn/images/yxzj/img201606/heroimg/525/525-smallskin-1.jpg"
         },
