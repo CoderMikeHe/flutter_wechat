@@ -143,6 +143,7 @@ class ContactInfoMoments extends StatelessWidget {
     }
     return Container(
       color: Colors.white,
+      width: double.infinity,
       padding: EdgeInsets.only(
         left: Constant.pEdgeInset,
         right: Constant.pEdgeInset,
