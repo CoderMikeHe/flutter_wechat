@@ -141,6 +141,7 @@ class _MHListTileState extends State<MHListTile> {
       widget.callbackContext(context);
     }
     return Container(
+      color: Colors.white,
       child: _buildChildWidget(),
     );
   }
