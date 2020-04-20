@@ -407,6 +407,8 @@ class _MainframePageState extends State<MainframePage> {
       },
       child: CustomScrollView(
         controller: _controller,
+        // Fixed Bug: 让安卓和iOS 都是下拉回弹效果  否则 安卓无法 展示小程序 逻辑
+        physics: BouncingScrollPhysics(),
         slivers: <Widget>[
           SliverToBoxAdapter(
             child: SearchBar(

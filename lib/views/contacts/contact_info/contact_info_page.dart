@@ -1,6 +1,7 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:flutter_wechat/constant/constant.dart';
 import 'package:flutter_wechat/constant/style.dart';
@@ -120,6 +121,8 @@ class _ContactInfoPageState extends State<ContactInfoPage> {
       children: <Widget>[
         _buildHeaderWidget(),
         _buildSettingRemarksWidget(),
+        // 朋友权限
+        _buildFriendPermission(),
         SizedBox(height: 8.0),
         _buildMomentsWidget(),
         _buildMoreInfoWidget(),
@@ -150,13 +153,43 @@ class _ContactInfoPageState extends State<ContactInfoPage> {
     );
   }
 
+  /// 构建盆友权限 部件
+  Widget _buildFriendPermission() {
+    Widget middle = Padding(
+      padding: EdgeInsets.only(
+          right: ScreenUtil().setWidth(Constant.pEdgeInset * 3)),
+      child: Text(
+        '朋友权限',
+        style: TextStyle(
+            fontSize: ScreenUtil().setSp(48.0), color: Style.pTextColor),
+      ),
+    );
+
+    Widget trailing = Image.asset(
+      Constant.assetsImagesArrow + 'tableview_arrow_8x13.png',
+      width: ScreenUtil().setWidth(24.0),
+      height: ScreenUtil().setHeight(39.0),
+    );
+
+    return Container(
+      color: Colors.white,
+      child: MHListTile(
+        contentPadding: EdgeInsets.all(Constant.pEdgeInset),
+        middle: middle,
+        trailing: trailing,
+        dividerIndent: ScreenUtil().setWidth(Constant.pEdgeInset * 3),
+      ),
+    );
+  }
+
   /// 构建更多信息 部件
   Widget _buildMoreInfoWidget() {
     Widget middle = Padding(
       padding: EdgeInsets.only(right: Constant.pEdgeInset),
       child: Text(
         '更多信息',
-        style: TextStyle(fontSize: 16.0, color: Style.pTextColor),
+        style: TextStyle(
+            fontSize: ScreenUtil().setSp(48.0), color: Style.pTextColor),
       ),
     );
 
