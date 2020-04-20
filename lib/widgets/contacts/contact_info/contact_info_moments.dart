@@ -109,7 +109,8 @@ class ContactInfoMoments extends StatelessWidget {
       for (var i = 0; i < count; i++) {
         final Picture picture = user.pictures[i];
 
-        final Photo photo = Photo(url: picture.big.url, tag: i.toString());
+        final Photo photo =
+            Photo(url: picture.big.url, tag: i.toString(), title: picture.name);
         _photos.add(photo);
         Widget w = InkWell(
           onTap: () {
