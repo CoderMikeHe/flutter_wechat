@@ -132,4 +132,9 @@ class CacheKey {
 
   /// 加入黑名单
   static const String joinToBlacklistKey = "join_to_blacklist_key";
+
+  /// ---- 联系人-朋友权限
+  /// 聊天、朋友圈、微信运动等
+  static const String settingFriendPermissionKey =
+      "setting_friend_permission_key";
 }

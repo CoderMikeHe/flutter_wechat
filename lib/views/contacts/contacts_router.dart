@@ -6,6 +6,7 @@ import 'package:flutter_wechat/views/contacts/add_friend/add_friend_page.dart';
 import 'package:flutter_wechat/views/contacts/contact_info/contact_info_page.dart';
 import 'package:flutter_wechat/views/contacts/contact_more_info/contact_more_info_page.dart';
 import 'package:flutter_wechat/views/contacts/contact_setting_info/contact_setting_info.dart';
+import 'package:flutter_wechat/views/contacts/friend_permission/friend_permission_page.dart';
 
 class ContactsRouter implements IRouterProvider {
   /// 联系人 root页
@@ -22,6 +23,9 @@ class ContactsRouter implements IRouterProvider {
 
   /// 联系人资料设置
   static String contactSettingInfoPage = "/contacts/contact-setting-info";
+
+  /// 朋友权限
+  static String friendPermissionPage = "/contacts/friend_permission";
 
   @override
   void initRouter(Router router) {
@@ -52,6 +56,16 @@ class ContactsRouter implements IRouterProvider {
       handler: Handler(handlerFunc: (_, params) {
         final String idstr = params['idstr']?.first;
         return ContactSettingInfoPage(
+          idstr: idstr,
+        );
+      }),
+    );
+
+    router.define(
+      friendPermissionPage,
+      handler: Handler(handlerFunc: (_, params) {
+        final String idstr = params['idstr']?.first;
+        return FriendPermissionPage(
           idstr: idstr,
         );
       }),

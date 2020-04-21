@@ -45,7 +45,8 @@ class ContactInfoRemarks extends StatelessWidget {
     );
 
     return MHListTile(
-      contentPadding: EdgeInsets.all(Constant.pEdgeInset),
+      contentPadding:
+          EdgeInsets.all(ScreenUtil().setWidth(Constant.pEdgeInset * 3.0)),
       middle: middle,
       trailing: trailing,
       dividerIndent: ScreenUtil().setWidth(Constant.pEdgeInset * 3),

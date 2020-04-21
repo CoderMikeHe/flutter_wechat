@@ -6,6 +6,9 @@ import 'package:flutter_wechat/constant/cache_key.dart';
 import 'package:flutter_wechat/constant/style.dart';
 import 'package:flutter_wechat/utils/util.dart';
 
+import 'package:flutter_wechat/routers/fluro_navigator.dart';
+import 'package:flutter_wechat/views/contacts/contacts_router.dart';
+
 import 'package:flutter_wechat/model/common/common_item.dart';
 import 'package:flutter_wechat/model/common/common_group.dart';
 import 'package:flutter_wechat/model/common/common_header.dart';
@@ -53,6 +56,7 @@ class _ContactSettingInfoPageState extends State<ContactSettingInfoPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('资料设置'),
+        elevation: 0, // 隐藏AppBar底部细线阴影
       ),
       body: Container(
         child: _buildChildWidget(context),
@@ -68,9 +72,20 @@ class _ContactSettingInfoPageState extends State<ContactSettingInfoPage> {
       title: '设置备注和标签',
       subtitle: _user.screenName,
     );
+    // 朋友权限
+    final friendPermission = CommonItem(
+      title: '朋友权限',
+      onTap: (item) {
+        NavigatorUtils.push(
+          context,
+          '${ContactsRouter.friendPermissionPage}?idstr=${_user.idstr}',
+        );
+      },
+    );
     final group0 = CommonGroup(
       items: [
         settingRemarks,
+        friendPermission,
       ],
     );
 
@@ -94,30 +109,8 @@ class _ContactSettingInfoPageState extends State<ContactSettingInfoPage> {
       cacheKey: preCacheKey + CacheKey.settingToStarFriendKey,
     );
     final group2 = CommonGroup(
-      footerHeight: 0.0,
       items: [
         starFriend,
-      ],
-    );
-
-    // group3
-    // 不让他看
-    final iNotLookHe = CommonSwitchItem(
-      title: '不让' + heOrShe + '看',
-      cacheKey: preCacheKey + CacheKey.notAllowLookMyMomentsKey,
-    );
-    // 不看他
-    final heNotLookMe = CommonSwitchItem(
-      title: "不看" + heOrShe,
-      cacheKey: preCacheKey + CacheKey.notLookHisMomentsKey,
-    );
-    // 组头
-    final CommonHeader header0 = CommonHeader(header: '朋友圈和视频动态');
-    final group3 = CommonGroup(
-      header: header0,
-      items: [
-        iNotLookHe,
-        heNotLookMe,
       ],
     );
 
@@ -132,7 +125,7 @@ class _ContactSettingInfoPageState extends State<ContactSettingInfoPage> {
     final complaint = CommonItem(
       title: "投诉",
     );
-    final group4 = CommonGroup(
+    final group3 = CommonGroup(
       items: [
         joinToBlacklist,
         complaint,
@@ -147,12 +140,12 @@ class _ContactSettingInfoPageState extends State<ContactSettingInfoPage> {
           // 显示action sheet
           _showActionSheet(context);
         });
-    final group5 = CommonGroup(
+    final group4 = CommonGroup(
       items: [delete],
     );
 
     // 添加数据源
-    return [group0, group1, group2, group3, group4, group5];
+    return [group0, group1, group2, group3, group4];
   }
 
   /// 构建actionsheet

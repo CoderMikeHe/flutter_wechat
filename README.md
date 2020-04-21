@@ -38,6 +38,10 @@
 	master: 各个功能完整，且稳定，出现Bug优先处理
 	dev: 笔者的开发分支，意识流且不稳定，但知识或技术会超前 master 分支，按需加载。
 	``` 
+- 真机调试
+	+ **Android：**  `HUAWEI P30`
+	+ **iPhone：**  `iPhone 7 Plus`
+
 ---
 
 ### 期待

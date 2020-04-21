@@ -96,8 +96,8 @@ class _PhotoBrowserState extends State<PhotoBrowser> {
               itemCount: widget.photos.length,
               loadingBuilder: (context, progress) => Center(
                 child: Container(
-                  width: FlutterScreenUtil.ScreenUtil().setWidth(30.0),
-                  height: FlutterScreenUtil.ScreenUtil().setWidth(30.0),
+                  width: FlutterScreenUtil.ScreenUtil().setWidth(30.0 * 3.0),
+                  height: FlutterScreenUtil.ScreenUtil().setWidth(30.0 * 3.0),
                   child: CircularProgressIndicator(
                     backgroundColor: Colors.black45,
                     valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
