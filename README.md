@@ -13,6 +13,9 @@
 ---
 
 ### 使用
+-  项目环境
+	+ **Flutter:**  ` 1.12.13+hotfix.9 `
+	+ **Dart:**  `3.5.1`
 
 - 项目运行
 
@@ -42,7 +45,15 @@
 	+ **Android：**  `HUAWEI P30`
 	+ **iPhone：**  `iPhone 7 Plus`
 
+- **Issue提交**
+	+ 首先，请先尝试拉取`master`最新的代码，看看`Bug`是否修复，目前此项目`dev`分支代码提交比较活跃，`master`分支代码比较稳定。
+	
+	+ 其次，检查你的`Flutter`版本是否和本人项目环境一致，**Flutter:  1.12.13+hotfix.7** 以上版本，各模块没啥问题的。`Flutter SDk` 更新命令：`flutter upgrade`。
+
+	+ 最后，告诉我你是运行在哪个平台，`Android` 或者 `iOS`。若有问题，我会及时修复，谢谢。
+
 ---
+
 
 ### 期待
 

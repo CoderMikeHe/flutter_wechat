@@ -53,7 +53,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     //     Constant.assetsImagesTabbar + 'tabbar_discoverHL_23x23.png'),
     // _TabBarItem('我', Constant.assetsImagesTabbar + 'tabbar_me_23x23.png',
     //     Constant.assetsImagesTabbar + 'tabbar_meHL_23x23.png'),
-
     // 7.0.0+
     _TabBarItem('微信', Constant.assetsImagesTabbar + 'icons_outlined_chats.svg',
         Constant.assetsImagesTabbar + 'icons_filled_chats.svg'),
@@ -69,10 +68,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         Constant.assetsImagesTabbar + 'icons_filled_me.svg'),
   ];
 
-  String appBarTitle = "微信";
-  List<Widget> list = List();
+  // pages
+  List<Widget> _pageList = List();
+  // 当前索引
   int _currentIndex = 0;
-  List<BottomNavigationBarItem> myTabs = [];
+  // 底部导航items
+  List<BottomNavigationBarItem> _tabItems = [];
+
+  // page
+  final PageController _pageController = PageController();
 
   @override
   void initState() {
@@ -80,7 +84,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     for (int i = 0; i < tabData.length; i++) {
       final item = tabData[i];
-      myTabs.add(
+      _tabItems.add(
         BottomNavigationBarItem(
           // 7.0.0 之前版本
           // icon: Image.asset(
@@ -113,7 +117,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         ),
       );
     }
-    list
+    _pageList
       ..add(MainframePage())
       ..add(ContactsPage())
       ..add(DiscoverPage())
@@ -137,34 +141,38 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     });
   }
 
+  // bottom nav bar action
   void _itemTapped(int index) {
+    // 跳转指定页
+    _pageController.jumpToPage(index);
+  }
+
+  // page controller 事件
+  void _onPageChanged(int index) {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
       _currentIndex = index;
-      appBarTitle = tabData[index].title;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Consumer<TabBarProvider>(
       builder: (context, tabBarProvider, _) {
         return Scaffold(
           appBar: null,
-          body: list[_currentIndex],
+          // 这种方式无法 让四个页签保持 keepAlive
+          // body: _pageList[_currentIndex],
+
+          // 保持 keepAlive 请使用PageView的原因参看 https://zhuanlan.zhihu.com/p/58582876
+          body: PageView(
+            controller: _pageController,
+            onPageChanged: _onPageChanged,
+            children: _pageList,
+            physics: NeverScrollableScrollPhysics(), // 禁止滑动
+          ),
           // Android
           // bottomNavigationBar: BottomNavigationBar(
-          //   items: myTabs,
+          //   items: _tabItems,
           //   //高亮  被点击高亮
           //   currentIndex: _currentIndex,
           //   //修改 页面
@@ -180,7 +188,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           bottomNavigationBar: tabBarProvider.hidden
               ? null
               : CupertinoTabBar(
-                  items: myTabs,
+                  items: _tabItems,
                   onTap: _itemTapped,
                   currentIndex: _currentIndex,
                   activeColor: Style.pTintColor,
