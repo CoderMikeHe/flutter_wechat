@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_screenutil/flutter_screenutil.dart'
+    as FlutterScreenUtil;
+
 import 'package:flutter_wechat/constant/style.dart';
 
 import 'package:flutter_wechat/widgets/bar_button/bar_button.dart';
 import 'package:flutter_wechat/widgets/login/register_widget.dart';
 
+// 适配完毕
 class RegisterPage extends StatelessWidget {
   const RegisterPage({Key key}) : super(key: key);
 
@@ -41,7 +45,11 @@ class RegisterPage extends StatelessWidget {
   Widget _buildHeaderWidget(BuildContext context) {
     return Container(
       color: Colors.white38,
-      padding: EdgeInsets.fromLTRB(16.0, 0, 16.0, 12.0),
+      padding: EdgeInsets.fromLTRB(
+          FlutterScreenUtil.ScreenUtil().setWidth(16.0 * 3),
+          0,
+          FlutterScreenUtil.ScreenUtil().setWidth(16.0 * 3),
+          FlutterScreenUtil.ScreenUtil().setHeight(12.0 * 3)),
       alignment: Alignment.bottomLeft,
       height: kToolbarHeight + MediaQuery.of(context).padding.top,
       width: double.maxFinite,

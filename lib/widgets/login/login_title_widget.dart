@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_wechat/constant/style.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+// 适配完毕
 class LoginTitleWidget extends StatelessWidget {
   const LoginTitleWidget({Key key, this.title}) : super(key: key);
 
@@ -10,7 +12,8 @@ class LoginTitleWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(20.0, 0, 20.0, 42.0),
+      padding: EdgeInsets.fromLTRB(ScreenUtil().setWidth(20.0 * 3.0), 0,
+          ScreenUtil().setWidth(20.0 * 3.0), ScreenUtil().setHeight(42.0)),
       child: Row(
         children: <Widget>[
           Text(
@@ -18,7 +21,7 @@ class LoginTitleWidget extends StatelessWidget {
             textAlign: TextAlign.left,
             style: TextStyle(
               color: Style.pTextColor,
-              fontSize: 24.0,
+              fontSize: ScreenUtil().setSp(24.0 * 3),
               fontWeight: FontWeight.w500,
             ),
           ),

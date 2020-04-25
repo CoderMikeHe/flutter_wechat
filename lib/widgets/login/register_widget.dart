@@ -6,6 +6,8 @@ import 'package:flutter/services.dart' show rootBundle;
 
 import 'package:fluro/fluro.dart';
 import 'package:flustars/flustars.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'
+    as FlutterScreenUtil;
 
 import 'package:flutter_wechat/constant/style.dart';
 import 'package:flutter_wechat/constant/constant.dart';
@@ -25,6 +27,7 @@ import 'package:flutter_wechat/utils/service/account_service.dart';
 import 'package:flutter_wechat/model/zone_code/zone_code.dart';
 import 'package:flutter_wechat/utils/service/zone_code_service.dart';
 
+// 适配完毕
 class RegisterWidget extends StatefulWidget {
   RegisterWidget({Key key}) : super(key: key);
 
@@ -256,7 +259,8 @@ class _RegisterWidgetState extends State<RegisterWidget>
   /// 初始化子部件
   Widget _buildChidWidgets() {
     return Container(
-      padding: EdgeInsets.only(top: 28.0),
+      padding: EdgeInsets.only(
+          top: FlutterScreenUtil.ScreenUtil().setHeight(28 * 3.0)),
       width: double.maxFinite,
       child: Column(
         children: <Widget>[
@@ -285,7 +289,7 @@ class _RegisterWidgetState extends State<RegisterWidget>
           child: Text(
             '用手机号注册',
             style: TextStyle(
-              fontSize: 21.0,
+              fontSize: FlutterScreenUtil.ScreenUtil().setSp(21 * 3.0),
               fontWeight: FontWeight.w500,
               color: Style.pTextColor,
             ),
@@ -293,14 +297,15 @@ class _RegisterWidgetState extends State<RegisterWidget>
         ),
         InkWell(
           child: Padding(
-            padding: EdgeInsets.only(top: 46.0),
+            padding: EdgeInsets.only(
+                top: FlutterScreenUtil.ScreenUtil().setHeight(46 * 3.0)),
             child: Image.asset(
               Constant.assetsImagesLogin +
                   (_avatarBtnHighlight
                       ? 'SignUpWC_ChangeAvatar_Hl_80x80.png'
                       : 'SignUpWC_ChangeAvatar_80x80.png'),
-              width: 64.0,
-              height: 64.0,
+              width: FlutterScreenUtil.ScreenUtil().setWidth(64 * 3.0),
+              height: FlutterScreenUtil.ScreenUtil().setWidth(64 * 3.0),
             ),
           ),
           onHighlightChanged: (highlight) {
@@ -322,7 +327,9 @@ class _RegisterWidgetState extends State<RegisterWidget>
   /// ---- 构建身体部件
   Widget _buildBodyWidget() {
     return Container(
-      padding: EdgeInsets.only(top: 30.0, left: 20.0),
+      padding: EdgeInsets.only(
+          top: FlutterScreenUtil.ScreenUtil().setHeight(30 * 3.0),
+          left: FlutterScreenUtil.ScreenUtil().setWidth(20 * 3.0)),
       width: double.maxFinite,
       color: Colors.white,
       child: _buildBodyChildWidget(),
@@ -352,7 +359,12 @@ class _RegisterWidgetState extends State<RegisterWidget>
       {bool obscure = false, bool password = false}) {
     return Container(
       padding: EdgeInsets.only(
-          top: 10.0, bottom: 10.0, right: password ? 10.0 : 20.0),
+        top: 0.0,
+        bottom: 0.0,
+        right: password
+            ? FlutterScreenUtil.ScreenUtil().setWidth(10 * 3.0)
+            : FlutterScreenUtil.ScreenUtil().setWidth(20 * 3.0),
+      ),
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(color: Style.pDividerColor, width: 0.5),
@@ -363,12 +375,12 @@ class _RegisterWidgetState extends State<RegisterWidget>
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           SizedBox(
-            width: 105.0,
+            width: FlutterScreenUtil.ScreenUtil().setWidth(105 * 3.0),
             child: Text(
               title,
               style: TextStyle(
                 color: Style.pTextColor,
-                fontSize: 17.0,
+                fontSize: FlutterScreenUtil.ScreenUtil().setSp(17 * 3.0),
               ),
             ),
           ),
@@ -390,8 +402,8 @@ class _RegisterWidgetState extends State<RegisterWidget>
                     (_hidePassword
                         ? 'CellHidePassword_icon_22x14.png'
                         : 'CellHidePassword_icon_HL_22x14.png'),
-                width: 22.0,
-                height: 14.0,
+                width: FlutterScreenUtil.ScreenUtil().setWidth(22 * 3.0),
+                height: FlutterScreenUtil.ScreenUtil().setWidth(14 * 3.0),
               ),
               onTap: () {
                 setState(() {
@@ -411,7 +423,11 @@ class _RegisterWidgetState extends State<RegisterWidget>
   /// 构建选择地区的Widget
   Widget _buildSelectZoneWidget() {
     return Container(
-      padding: EdgeInsets.only(top: 10.0, bottom: 10.0, right: 20.0),
+      padding: EdgeInsets.only(
+        top: FlutterScreenUtil.ScreenUtil().setHeight(10 * 3.0),
+        bottom: FlutterScreenUtil.ScreenUtil().setHeight(10 * 3.0),
+        right: FlutterScreenUtil.ScreenUtil().setWidth(20 * 3.0),
+      ),
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(color: Style.pDividerColor, width: 0.5),
@@ -422,12 +438,12 @@ class _RegisterWidgetState extends State<RegisterWidget>
         child: Row(
           children: <Widget>[
             SizedBox(
-              width: 105.0,
+              width: FlutterScreenUtil.ScreenUtil().setWidth(105 * 3.0),
               child: Text(
                 '国家/地区',
                 style: TextStyle(
                   color: Style.pTextColor,
-                  fontSize: 17.0,
+                  fontSize: FlutterScreenUtil.ScreenUtil().setSp(17 * 3.0),
                 ),
               ),
             ),
@@ -437,7 +453,7 @@ class _RegisterWidgetState extends State<RegisterWidget>
                   _zoneCodeName,
                   style: TextStyle(
                     color: Style.pTextColor,
-                    fontSize: 17.0,
+                    fontSize: FlutterScreenUtil.ScreenUtil().setSp(17 * 3.0),
                   ),
                 ),
                 onTap: _skip2ZoneCodePicker,
@@ -445,8 +461,8 @@ class _RegisterWidgetState extends State<RegisterWidget>
             ),
             Image.asset(
               Constant.assetsImagesArrow + 'tableview_arrow_8x13.png',
-              width: 8.0,
-              height: 13.0,
+              width: FlutterScreenUtil.ScreenUtil().setWidth(8 * 3.0),
+              height: FlutterScreenUtil.ScreenUtil().setWidth(13 * 3.0),
             )
           ],
         ),
@@ -468,7 +484,7 @@ class _RegisterWidgetState extends State<RegisterWidget>
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Container(
-            width: 80.0,
+            width: FlutterScreenUtil.ScreenUtil().setWidth(80 * 3.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -483,7 +499,8 @@ class _RegisterWidgetState extends State<RegisterWidget>
                       '+',
                       style: TextStyle(
                         color: Style.pTextColor,
-                        fontSize: 17.0,
+                        fontSize:
+                            FlutterScreenUtil.ScreenUtil().setSp(17 * 3.0),
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -500,16 +517,19 @@ class _RegisterWidgetState extends State<RegisterWidget>
             ),
           ),
           Container(
-            width: 10.0,
-            padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+            width: FlutterScreenUtil.ScreenUtil().setWidth(10 * 3.0),
+            padding: EdgeInsets.only(
+              top: FlutterScreenUtil.ScreenUtil().setHeight(10 * 3.0),
+              bottom: FlutterScreenUtil.ScreenUtil().setHeight(10 * 3.0),
+            ),
             decoration: BoxDecoration(
               border: Border(
                 left: BorderSide(width: .5, color: Style.pDividerColor),
               ),
             ),
             child: SizedBox(
-              height: 24.0,
-              width: 10.0,
+              height: FlutterScreenUtil.ScreenUtil().setHeight(24 * 3.0),
+              width: FlutterScreenUtil.ScreenUtil().setWidth(10 * 3.0),
             ),
           ),
           Expanded(
@@ -521,7 +541,7 @@ class _RegisterWidgetState extends State<RegisterWidget>
               },
             ),
           ),
-          SizedBox(width: 20.0)
+          SizedBox(width: FlutterScreenUtil.ScreenUtil().setWidth(20 * 3.0))
         ],
       ),
     );
@@ -530,7 +550,8 @@ class _RegisterWidgetState extends State<RegisterWidget>
   /// ---- 构建尾部部件
   Widget _buildFooterWidget() {
     return Container(
-      padding: EdgeInsets.only(top: 40.0),
+      padding: EdgeInsets.only(
+          top: FlutterScreenUtil.ScreenUtil().setHeight(40 * 3.0)),
       width: double.maxFinite,
       color: Colors.white,
       child: _buildFooterChildWidget(),
@@ -568,8 +589,8 @@ class _RegisterWidgetState extends State<RegisterWidget>
                       (_checked
                           ? 'wcpay_lqt_protocol_selected_16x16.png'
                           : 'wcpay_lqt_protocol_not_selected_16x16.png'),
-                  width: 16.0,
-                  height: 16.0,
+                  width: FlutterScreenUtil.ScreenUtil().setWidth(16 * 3.0),
+                  height: FlutterScreenUtil.ScreenUtil().setWidth(16 * 3.0),
                 ),
                 onTap: () {
                   setState(() {
@@ -580,17 +601,19 @@ class _RegisterWidgetState extends State<RegisterWidget>
                 splashColor: Colors.transparent,
                 focusColor: Colors.transparent,
               ),
-              SizedBox(width: 3),
+              SizedBox(width: FlutterScreenUtil.ScreenUtil().setWidth(3 * 3.0)),
               Text(
                 '我已阅读并同意',
-                style: TextStyle(color: Color(0xFF525458), fontSize: 13.0),
+                style: TextStyle(
+                    color: Color(0xFF525458),
+                    fontSize: FlutterScreenUtil.ScreenUtil().setSp(13 * 3.0)),
               ),
               InkWell(
                 child: Text(
                   '《微信软件许可及服务协议》',
                   style: TextStyle(
                       color: Color(0xFF576b95),
-                      fontSize: 13.0,
+                      fontSize: FlutterScreenUtil.ScreenUtil().setSp(13 * 3.0),
                       backgroundColor: _agreementHighlight
                           ? Color(0xFFc7c7c5)
                           : Colors.transparent),
@@ -615,27 +638,37 @@ class _RegisterWidgetState extends State<RegisterWidget>
   /// 构建注册按钮部件
   Widget _buildRegisterButtonWidget() {
     return Container(
-      padding: EdgeInsets.only(left: 20.0, top: 10.0, right: 20.0, bottom: 0),
+      padding: EdgeInsets.only(
+        left: FlutterScreenUtil.ScreenUtil().setWidth(20 * 3.0),
+        top: FlutterScreenUtil.ScreenUtil().setHeight(10 * 3.0),
+        right: FlutterScreenUtil.ScreenUtil().setWidth(20 * 3.0),
+        bottom: 0,
+      ),
       child: Opacity(
         opacity: _registerBtnDisabled ? 0.5 : 1,
         child: Row(
           children: <Widget>[
             Expanded(
               child: RaisedButton(
-                padding: EdgeInsets.symmetric(vertical: 11.0, horizontal: 24.0),
+                padding: EdgeInsets.symmetric(
+                    vertical:
+                        FlutterScreenUtil.ScreenUtil().setHeight(11.0 * 3.0),
+                    horizontal:
+                        FlutterScreenUtil.ScreenUtil().setWidth(24 * 3.0)),
                 color: Style.pTintColor,
                 highlightColor: _registerBtnDisabled
                     ? Colors.transparent
                     : Style.sTintColor,
                 splashColor: _registerBtnDisabled ? Colors.transparent : null,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                  borderRadius: BorderRadius.all(Radius.circular(
+                      FlutterScreenUtil.ScreenUtil().setWidth(4 * 3.0))),
                 ),
                 onPressed: _register,
                 child: Text(
                   '注册',
                   style: TextStyle(
-                    fontSize: 17.0,
+                    fontSize: FlutterScreenUtil.ScreenUtil().setSp(17 * 3.0),
                     color: Colors.white,
                   ),
                 ),

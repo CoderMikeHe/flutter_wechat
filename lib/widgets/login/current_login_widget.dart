@@ -4,6 +4,8 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flustars/flustars.dart';
 import 'package:fluro/fluro.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'
+    as FlutterScreenUtil;
 
 import 'package:flutter_wechat/constant/style.dart';
 import 'package:flutter_wechat/constant/constant.dart';
@@ -21,6 +23,7 @@ import 'package:flutter_wechat/widgets/loading_dialog/loading_dialog.dart';
 import 'package:flutter_wechat/model/user/user.dart';
 import 'package:flutter_wechat/utils/service/account_service.dart';
 
+// 适配完毕
 class CurrentLoginWidget extends StatefulWidget {
   CurrentLoginWidget({Key key}) : super(key: key);
 
@@ -32,7 +35,7 @@ class _CurrentLoginWidgetState extends State<CurrentLoginWidget> {
   bool _showPasswordWay = true;
 
   // 切换名称
-  String get _changeLoginName => _showPasswordWay ? "用短信验证码登录" : "用密码登录";
+  String get _changeLoginName => _showPasswordWay ? "用短信验证码登录" : "用微信密码登录";
 
   /// 登录按钮是否无效
   bool get _loginBtnDisabled {
@@ -307,7 +310,8 @@ class _CurrentLoginWidgetState extends State<CurrentLoginWidget> {
   /// 初始化子部件
   Widget _buildChidWidgets() {
     return Container(
-      padding: EdgeInsets.only(top: 149.0),
+      padding: EdgeInsets.only(
+          top: FlutterScreenUtil.ScreenUtil().setHeight(149 * 3.0)),
       width: double.maxFinite,
       child: Column(
         children: <Widget>[
@@ -322,8 +326,10 @@ class _CurrentLoginWidgetState extends State<CurrentLoginWidget> {
 
   /// 构建 Avatar + 账号信息
   Widget _buildAccountInfoWidget() {
+    final double imageWH = FlutterScreenUtil.ScreenUtil().setWidth(66 * 3.0);
     return Container(
-      padding: EdgeInsets.only(bottom: 44.0),
+      padding: EdgeInsets.only(
+          bottom: FlutterScreenUtil.ScreenUtil().setHeight(44 * 3.0)),
       child: Column(
         children: <Widget>[
           CachedNetworkImage(
@@ -332,28 +338,29 @@ class _CurrentLoginWidgetState extends State<CurrentLoginWidget> {
             placeholder: (context, url) {
               return Image.asset(
                 Constant.assetsImagesDefault + 'DefaultProfileHead_66x66.png',
-                width: 66.0,
-                height: 66.0,
+                width: imageWH,
+                height: imageWH,
               );
             },
             errorWidget: (context, url, error) {
               print('头像报错 $error');
               return Image.asset(
                 Constant.assetsImagesDefault + 'DefaultProfileHead_66x66.png',
-                width: 66.0,
-                height: 66.0,
+                width: imageWH,
+                height: imageWH,
               );
             },
-            width: 66.0,
-            height: 66.0,
+            width: imageWH,
+            height: imageWH,
           ),
           Container(
-            padding: EdgeInsets.symmetric(vertical: 5.0),
+            padding: EdgeInsets.symmetric(
+                vertical: FlutterScreenUtil.ScreenUtil().setWidth(5 * 3.0)),
             child: Text(
               _account,
               style: TextStyle(
                 color: Style.pTextColor,
-                fontSize: 18.0,
+                fontSize: FlutterScreenUtil.ScreenUtil().setSp(18 * 3.0),
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -407,18 +414,19 @@ class _CurrentLoginWidgetState extends State<CurrentLoginWidget> {
   Widget _buildPasswordLoginWidget() {
     return Container(
       key: ValueKey('password'),
-      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      padding: EdgeInsets.symmetric(
+          horizontal: FlutterScreenUtil.ScreenUtil().setWidth(20 * 3.0)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           SizedBox(
-            width: 105.0,
+            width: FlutterScreenUtil.ScreenUtil().setWidth(105 * 3.0),
             child: Text(
               '密码',
               style: TextStyle(
                 color: Style.pTextColor,
-                fontSize: 17.0,
+                fontSize: FlutterScreenUtil.ScreenUtil().setSp(17.0 * 3.0),
               ),
             ),
           ),
@@ -442,18 +450,19 @@ class _CurrentLoginWidgetState extends State<CurrentLoginWidget> {
   Widget _buildCaptchaLoginWidget() {
     return Container(
       key: ValueKey('captcha'),
-      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      padding: EdgeInsets.symmetric(
+          horizontal: FlutterScreenUtil.ScreenUtil().setWidth(20 * 3.0)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           SizedBox(
-            width: 105.0,
+            width: FlutterScreenUtil.ScreenUtil().setWidth(105 * 3.0),
             child: Text(
               '验证码',
               style: TextStyle(
                 color: Style.pTextColor,
-                fontSize: 17.0,
+                fontSize: FlutterScreenUtil.ScreenUtil().setSp(17.0 * 3.0),
               ),
             ),
           ),
@@ -470,9 +479,12 @@ class _CurrentLoginWidgetState extends State<CurrentLoginWidget> {
             ),
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
+            padding: EdgeInsets.symmetric(
+                horizontal: FlutterScreenUtil.ScreenUtil().setWidth(5 * 3.0),
+                vertical: FlutterScreenUtil.ScreenUtil().setHeight(2 * 3.0)),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(3.0)),
+              borderRadius: BorderRadius.all(Radius.circular(
+                  FlutterScreenUtil.ScreenUtil().setWidth(3 * 3.0))),
               border: Border.all(
                   color: _captchaBtnDisabled
                       ? Color(0xFF999999)
@@ -486,7 +498,7 @@ class _CurrentLoginWidgetState extends State<CurrentLoginWidget> {
                   color: _captchaBtnDisabled
                       ? Color(0xFF999999)
                       : Style.pTextColor,
-                  fontSize: 13.0,
+                  fontSize: FlutterScreenUtil.ScreenUtil().setSp(13 * 3.0),
                 ),
               ),
             ),
@@ -499,7 +511,11 @@ class _CurrentLoginWidgetState extends State<CurrentLoginWidget> {
   /// 构建切换按钮部件
   Widget _buildChangeButtonWidget() {
     return Container(
-      padding: EdgeInsets.only(left: 20.0, top: 16.0, right: 20.0),
+      padding: EdgeInsets.only(
+        left: FlutterScreenUtil.ScreenUtil().setWidth(20 * 3.0),
+        top: FlutterScreenUtil.ScreenUtil().setHeight(16 * 3.0),
+        right: FlutterScreenUtil.ScreenUtil().setWidth(20 * 3.0),
+      ),
       width: double.maxFinite,
       child: InkWell(
         onTap: () {
@@ -512,7 +528,7 @@ class _CurrentLoginWidgetState extends State<CurrentLoginWidget> {
           textAlign: TextAlign.left,
           style: TextStyle(
             color: Color(0xFF5b6a91),
-            fontSize: 16.0,
+            fontSize: FlutterScreenUtil.ScreenUtil().setSp(16 * 3.0),
           ),
         ),
         highlightColor: Colors.transparent,
@@ -525,26 +541,35 @@ class _CurrentLoginWidgetState extends State<CurrentLoginWidget> {
   /// 构建登陆按钮部件
   Widget _buildLoginButtonWidget() {
     return Container(
-      padding: EdgeInsets.only(left: 20.0, top: 63.0, right: 20.0, bottom: 0),
+      padding: EdgeInsets.only(
+        left: FlutterScreenUtil.ScreenUtil().setWidth(20 * 3.0),
+        top: FlutterScreenUtil.ScreenUtil().setHeight(63 * 3.0),
+        right: FlutterScreenUtil.ScreenUtil().setWidth(20 * 3.0),
+        bottom: 0,
+      ),
       child: Opacity(
         opacity: _loginBtnDisabled ? 0.5 : 1,
         child: Row(
           children: <Widget>[
             Expanded(
               child: RaisedButton(
-                padding: EdgeInsets.symmetric(vertical: 11.0, horizontal: 24.0),
+                padding: EdgeInsets.symmetric(
+                    vertical: FlutterScreenUtil.ScreenUtil().setWidth(11 * 3.0),
+                    horizontal:
+                        FlutterScreenUtil.ScreenUtil().setHeight(24 * 3.0)),
                 color: Style.pTintColor,
                 highlightColor:
                     _loginBtnDisabled ? Colors.transparent : Style.sTintColor,
                 splashColor: _loginBtnDisabled ? Colors.transparent : null,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                  borderRadius: BorderRadius.all(Radius.circular(
+                      FlutterScreenUtil.ScreenUtil().setWidth(4 * 3.0))),
                 ),
                 onPressed: _login,
                 child: Text(
                   _loginBtnTitle,
                   style: TextStyle(
-                    fontSize: 17.0,
+                    fontSize: FlutterScreenUtil.ScreenUtil().setSp(17.0 * 3.0),
                     color: Colors.white,
                   ),
                 ),
@@ -560,8 +585,8 @@ class _CurrentLoginWidgetState extends State<CurrentLoginWidget> {
   Widget _buildDivider() {
     return Divider(
       height: 0.5,
-      indent: 20.0,
-      endIndent: 20.0,
+      indent: FlutterScreenUtil.ScreenUtil().setWidth(20 * 3.0),
+      endIndent: FlutterScreenUtil.ScreenUtil().setWidth(20 * 3.0),
       color: Style.pDividerColor,
     );
   }

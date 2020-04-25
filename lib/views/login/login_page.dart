@@ -13,6 +13,7 @@ import 'package:flutter_wechat/constant/style.dart';
 import 'package:flutter_wechat/routers/fluro_navigator.dart';
 import 'login_router.dart';
 
+// 适配完毕
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
 
@@ -144,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-          top: FlutterScreenUtil.ScreenUtil().setHeight(30.0) +
+          top: FlutterScreenUtil.ScreenUtil().setHeight(15.0) +
               FlutterScreenUtil.ScreenUtil.statusBarHeight,
           right: FlutterScreenUtil.ScreenUtil().setWidth(60.0),
         ),
