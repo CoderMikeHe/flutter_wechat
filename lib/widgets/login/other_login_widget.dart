@@ -4,6 +4,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:fluro/fluro.dart';
 import 'package:flustars/flustars.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'
+    as FlutterScreenUtil;
 
 import 'package:flutter_wechat/constant/constant.dart';
 import 'package:flutter_wechat/constant/style.dart';
@@ -31,6 +33,7 @@ class OtherLoginWidget extends StatefulWidget {
   _OtherLoginWidgetState createState() => _OtherLoginWidgetState();
 }
 
+// 适配完毕
 class _OtherLoginWidgetState extends State<OtherLoginWidget> {
   // 切换登陆方式
   bool _showPasswordWay = true;
@@ -171,7 +174,8 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
   /// 初始化子部件
   Widget _buildChidWidgets() {
     return Container(
-      padding: EdgeInsets.only(top: 90.0),
+      padding: EdgeInsets.only(
+          top: FlutterScreenUtil.ScreenUtil().setHeight(90.0 * 3.0)),
       width: double.maxFinite,
       child: Column(
         children: <Widget>[
@@ -229,18 +233,20 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
   /// 构建选择地区的Widget
   Widget _buildSelectZoneWidget() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      padding: EdgeInsets.symmetric(
+          horizontal: FlutterScreenUtil.ScreenUtil().setWidth(20 * 3.0),
+          vertical: FlutterScreenUtil.ScreenUtil().setHeight(12 * 3.0)),
       child: InkWell(
         onTap: () {},
         child: Row(
           children: <Widget>[
             SizedBox(
-              width: 105.0,
+              width: FlutterScreenUtil.ScreenUtil().setWidth(105.0 * 3),
               child: Text(
                 '国家/地区',
                 style: TextStyle(
                   color: Style.pTextColor,
-                  fontSize: 17.0,
+                  fontSize: FlutterScreenUtil.ScreenUtil().setSp(51.0),
                 ),
               ),
             ),
@@ -250,7 +256,7 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
                   _zoneCodeName,
                   style: TextStyle(
                     color: Style.pTextColor,
-                    fontSize: 17.0,
+                    fontSize: FlutterScreenUtil.ScreenUtil().setSp(51.0),
                   ),
                 ),
                 onTap: _skip2ZoneCodePicker,
@@ -258,8 +264,8 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
             ),
             Image.asset(
               Constant.assetsImagesArrow + 'tableview_arrow_8x13.png',
-              width: 8.0,
-              height: 13.0,
+              width: FlutterScreenUtil.ScreenUtil().setWidth(8.0 * 3),
+              height: FlutterScreenUtil.ScreenUtil().setHeight(13.0 * 3),
             )
           ],
         ),
@@ -270,13 +276,14 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
   /// 构建地区部和手机 输入小部件
   Widget _buildZoneAndPhoneInputWidget() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.0),
+      padding: EdgeInsets.symmetric(
+          horizontal: FlutterScreenUtil.ScreenUtil().setWidth(20.0 * 3)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Container(
-            width: 80.0,
+            width: FlutterScreenUtil.ScreenUtil().setWidth(80.0 * 3),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -291,7 +298,7 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
                       '+',
                       style: TextStyle(
                         color: Style.pTextColor,
-                        fontSize: 17.0,
+                        fontSize: FlutterScreenUtil.ScreenUtil().setSp(51.0),
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -308,16 +315,18 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
             ),
           ),
           Container(
-            width: 10.0,
-            padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+            width: FlutterScreenUtil.ScreenUtil().setWidth(10.0 * 3),
+            padding: EdgeInsets.only(
+                top: FlutterScreenUtil.ScreenUtil().setHeight(10.0 * 3),
+                bottom: FlutterScreenUtil.ScreenUtil().setHeight(10.0 * 3)),
             decoration: BoxDecoration(
               border: Border(
                 left: BorderSide(width: .5, color: Style.pDividerColor),
               ),
             ),
             child: SizedBox(
-              height: 24.0,
-              width: 10.0,
+              height: FlutterScreenUtil.ScreenUtil().setWidth(24.0 * 3),
+              width: FlutterScreenUtil.ScreenUtil().setWidth(10.0 * 3),
             ),
           ),
           Expanded(
@@ -358,18 +367,19 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
       TextEditingController controller, String title, String placeholder,
       {bool obscure = false}) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      padding: EdgeInsets.symmetric(
+          horizontal: FlutterScreenUtil.ScreenUtil().setWidth(20.0 * 3)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           SizedBox(
-            width: 105.0,
+            width: FlutterScreenUtil.ScreenUtil().setWidth(105 * 3),
             child: Text(
               title,
               style: TextStyle(
                 color: Style.pTextColor,
-                fontSize: 17.0,
+                fontSize: FlutterScreenUtil.ScreenUtil().setSp(51.0),
               ),
             ),
           ),
@@ -391,7 +401,10 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
   /// 构建切换按钮部件
   Widget _buildChangeButtonWidget() {
     return Container(
-      padding: EdgeInsets.only(left: 20.0, top: 34.0, right: 20.0),
+      padding: EdgeInsets.only(
+          left: FlutterScreenUtil.ScreenUtil().setWidth(20.0 * 3),
+          top: FlutterScreenUtil.ScreenUtil().setHeight(34.0 * 3),
+          right: FlutterScreenUtil.ScreenUtil().setWidth(20.0 * 3)),
       width: double.maxFinite,
       child: InkWell(
         onTap: () {
@@ -404,7 +417,7 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
           textAlign: TextAlign.left,
           style: TextStyle(
             color: Color(0xFF5b6a91),
-            fontSize: 16.0,
+            fontSize: FlutterScreenUtil.ScreenUtil().setSp(16.0 * 3),
           ),
         ),
         highlightColor: Colors.transparent,
@@ -417,26 +430,35 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
   /// 构建登陆按钮部件
   Widget _buildLoginButtonWidget() {
     return Container(
-      padding: EdgeInsets.only(left: 20.0, top: 63.0, right: 20.0, bottom: 0),
+      padding: EdgeInsets.only(
+          left: FlutterScreenUtil.ScreenUtil().setWidth(20.0 * 3),
+          top: FlutterScreenUtil.ScreenUtil().setHeight(63.0 * 3),
+          right: FlutterScreenUtil.ScreenUtil().setWidth(20.0 * 3),
+          bottom: 0),
       child: Opacity(
         opacity: _loginBtnDisabled ? 0.5 : 1,
         child: Row(
           children: <Widget>[
             Expanded(
               child: RaisedButton(
-                padding: EdgeInsets.symmetric(vertical: 11.0, horizontal: 24.0),
+                padding: EdgeInsets.symmetric(
+                    vertical:
+                        FlutterScreenUtil.ScreenUtil().setHeight(11.0 * 3),
+                    horizontal:
+                        FlutterScreenUtil.ScreenUtil().setWidth(24.0 * 3)),
                 color: Style.pTintColor,
                 highlightColor:
                     _loginBtnDisabled ? Colors.transparent : Style.sTintColor,
                 splashColor: _loginBtnDisabled ? Colors.transparent : null,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                  borderRadius: BorderRadius.all(Radius.circular(
+                      FlutterScreenUtil.ScreenUtil().setWidth(4.0 * 3))),
                 ),
                 onPressed: _login,
                 child: Text(
                   _loginBtnTitle,
                   style: TextStyle(
-                    fontSize: 17.0,
+                    fontSize: FlutterScreenUtil.ScreenUtil().setSp(51.0),
                     color: Colors.white,
                   ),
                 ),
@@ -452,8 +474,8 @@ class _OtherLoginWidgetState extends State<OtherLoginWidget> {
   Widget _buildDivider() {
     return Divider(
       height: 0.5,
-      indent: 20.0,
-      endIndent: 20.0,
+      indent: FlutterScreenUtil.ScreenUtil().setWidth(20.0 * 3),
+      endIndent: FlutterScreenUtil.ScreenUtil().setWidth(20.0 * 3),
       color: Style.pDividerColor,
     );
   }

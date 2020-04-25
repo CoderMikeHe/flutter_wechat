@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:azlistview/azlistview.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'
+    as FlutterScreenUtil;
 
 import 'package:flutter_wechat/constant/constant.dart';
 import 'package:flutter_wechat/constant/style.dart';
@@ -10,6 +12,7 @@ import 'package:flutter_wechat/utils/service/zone_code_service.dart';
 import 'package:flutter_wechat/components/list_tile/mh_list_tile.dart';
 import 'package:flutter_wechat/components/search_bar/search_bar.dart';
 
+// 适配完毕
 class ZoneCodePickerPage extends StatefulWidget {
   ZoneCodePickerPage({Key key, @required this.value}) : super(key: key);
 
@@ -65,14 +68,16 @@ class _ZoneCodePickerPageState extends State<ZoneCodePickerPage> {
   Widget _buildSusWidget(String susTag) {
     return Container(
       height: _suspensionHeight.toDouble(),
-      padding: const EdgeInsets.only(left: 15.0),
+      padding: EdgeInsets.only(
+        left: FlutterScreenUtil.ScreenUtil().setWidth(15.0 * 3),
+      ),
       color: Color(0xfff3f4f5),
       alignment: Alignment.centerLeft,
       child: Text(
         '$susTag',
         softWrap: false,
         style: TextStyle(
-          fontSize: 14.0,
+          fontSize: FlutterScreenUtil.ScreenUtil().setSp(14.0 * 3),
           color: Color(0xff999999),
         ),
       ),
@@ -111,17 +116,26 @@ class _ZoneCodePickerPageState extends State<ZoneCodePickerPage> {
     void Function() onTap,
   }) {
     Widget middle = Padding(
-      padding: EdgeInsets.only(right: Constant.pEdgeInset),
+      padding: EdgeInsets.only(
+          right: FlutterScreenUtil.ScreenUtil()
+              .setWidth(Constant.pEdgeInset * 3.0)),
       child: Text(
         title,
-        style: TextStyle(fontSize: 16.0, color: Style.pTextColor),
+        style: TextStyle(
+            fontSize: FlutterScreenUtil.ScreenUtil().setSp(16.0 * 3),
+            color: Style.pTextColor),
       ),
     );
     Widget trailing = Padding(
-      padding: EdgeInsets.only(right: Constant.pEdgeInset * 2),
+      padding: EdgeInsets.only(
+          right: FlutterScreenUtil.ScreenUtil()
+              .setWidth(Constant.pEdgeInset * 2 * 3)),
       child: Text(
         '+$telCode',
-        style: TextStyle(fontSize: 16.0, color: Style.sTextColor),
+        style: TextStyle(
+          fontSize: FlutterScreenUtil.ScreenUtil().setSp(16.0 * 3),
+          color: Style.sTextColor,
+        ),
       ),
     );
     return MHListTile(
@@ -129,7 +143,7 @@ class _ZoneCodePickerPageState extends State<ZoneCodePickerPage> {
       middle: middle,
       trailing: trailing,
       height: _itemHeight.toDouble(),
-      dividerIndent: 16.0,
+      dividerIndent: FlutterScreenUtil.ScreenUtil().setWidth(16.0 * 3),
     );
   }
 
@@ -162,12 +176,18 @@ class _ZoneCodePickerPageState extends State<ZoneCodePickerPage> {
                 indexHintBuilder: (context, hint) {
                   return Container(
                     alignment: Alignment.center,
-                    width: 80.0,
-                    height: 80.0,
+                    width: FlutterScreenUtil.ScreenUtil().setWidth(80.0 * 3),
+                    height: FlutterScreenUtil.ScreenUtil().setWidth(80.0 * 3),
                     decoration: BoxDecoration(
                         color: Colors.red, shape: BoxShape.circle),
-                    child: Text(hint,
-                        style: TextStyle(color: Colors.white, fontSize: 30.0)),
+                    child: Text(
+                      hint,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize:
+                            FlutterScreenUtil.ScreenUtil().setSp(30.0 * 3),
+                      ),
+                    ),
                   );
                 },
               )),

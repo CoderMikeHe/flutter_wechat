@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 
 import 'package:fluro/fluro.dart';
 import 'package:flustars/flustars.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'
+    as FlutterScreenUtil;
 
 import 'package:flutter_wechat/constant/constant.dart';
 import 'package:flutter_wechat/constant/style.dart';
@@ -23,6 +25,7 @@ import 'package:flutter_wechat/widgets/loading_dialog/loading_dialog.dart';
 import 'package:flutter_wechat/model/user/user.dart';
 import 'package:flutter_wechat/utils/service/account_service.dart';
 
+// 适配完毕
 class PhoneLoginWidget extends StatefulWidget {
   PhoneLoginWidget({Key key, this.phone, this.zoneCode}) : super(key: key);
 
@@ -249,7 +252,7 @@ class _PhoneLoginWidgetState extends State<PhoneLoginWidget> {
   }
 
   /// 定时器事件
-  _timerValueChanged(Timer timer) {
+  void _timerValueChanged(Timer timer) {
     setState(() {
       _timerMaxCount--;
       if (_timerMaxCount == 0) {
@@ -276,7 +279,8 @@ class _PhoneLoginWidgetState extends State<PhoneLoginWidget> {
   /// 初始化子部件
   Widget _buildChidWidgets() {
     return Container(
-      padding: EdgeInsets.only(top: 90.0),
+      padding: EdgeInsets.only(
+          top: FlutterScreenUtil.ScreenUtil().setHeight(90.0 * 3)),
       width: double.maxFinite,
       child: Column(
         children: <Widget>[
@@ -334,16 +338,18 @@ class _PhoneLoginWidgetState extends State<PhoneLoginWidget> {
   /// 构建选择手机号的Widget
   Widget _buildPhoneWidget() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      padding: EdgeInsets.symmetric(
+          horizontal: FlutterScreenUtil.ScreenUtil().setWidth(20 * 3.0),
+          vertical: FlutterScreenUtil.ScreenUtil().setHeight(12.0 * 3.0)),
       child: Row(
         children: <Widget>[
           SizedBox(
-            width: 105.0,
+            width: FlutterScreenUtil.ScreenUtil().setWidth(105 * 3.0),
             child: Text(
               '手机号',
               style: TextStyle(
                 color: Style.pTextColor,
-                fontSize: 17.0,
+                fontSize: FlutterScreenUtil.ScreenUtil().setSp(17 * 3.0),
               ),
             ),
           ),
@@ -352,7 +358,7 @@ class _PhoneLoginWidgetState extends State<PhoneLoginWidget> {
               _phoneFormat,
               style: TextStyle(
                 color: Style.pTextColor,
-                fontSize: 17.0,
+                fontSize: FlutterScreenUtil.ScreenUtil().setSp(17 * 3.0),
               ),
             ),
           ),
@@ -365,18 +371,19 @@ class _PhoneLoginWidgetState extends State<PhoneLoginWidget> {
   Widget _buildPasswordLoginWidget() {
     return Container(
       key: ValueKey('password'),
-      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      padding: EdgeInsets.symmetric(
+          horizontal: FlutterScreenUtil.ScreenUtil().setWidth(20 * 3.0)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           SizedBox(
-            width: 105.0,
+            width: FlutterScreenUtil.ScreenUtil().setWidth(105 * 3.0),
             child: Text(
               '密码',
               style: TextStyle(
                 color: Style.pTextColor,
-                fontSize: 17.0,
+                fontSize: FlutterScreenUtil.ScreenUtil().setSp(17 * 3.0),
               ),
             ),
           ),
@@ -400,18 +407,19 @@ class _PhoneLoginWidgetState extends State<PhoneLoginWidget> {
   Widget _buildCaptchaLoginWidget() {
     return Container(
       key: ValueKey('captcha'),
-      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      padding: EdgeInsets.symmetric(
+          horizontal: FlutterScreenUtil.ScreenUtil().setWidth(20 * 3.0)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           SizedBox(
-            width: 105.0,
+            width: FlutterScreenUtil.ScreenUtil().setWidth(105 * 3.0),
             child: Text(
               '验证码',
               style: TextStyle(
                 color: Style.pTextColor,
-                fontSize: 17.0,
+                fontSize: FlutterScreenUtil.ScreenUtil().setSp(17 * 3.0),
               ),
             ),
           ),
@@ -428,9 +436,12 @@ class _PhoneLoginWidgetState extends State<PhoneLoginWidget> {
             ),
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
+            padding: EdgeInsets.symmetric(
+                horizontal: FlutterScreenUtil.ScreenUtil().setWidth(5 * 3.0),
+                vertical: FlutterScreenUtil.ScreenUtil().setHeight(2 * 3.0)),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(3.0)),
+              borderRadius: BorderRadius.all(Radius.circular(
+                  FlutterScreenUtil.ScreenUtil().setWidth(3 * 3.0))),
               border: Border.all(
                   color: _captchaBtnDisabled
                       ? Color(0xFF999999)
@@ -444,7 +455,7 @@ class _PhoneLoginWidgetState extends State<PhoneLoginWidget> {
                   color: _captchaBtnDisabled
                       ? Color(0xFF999999)
                       : Style.pTextColor,
-                  fontSize: 13.0,
+                  fontSize: FlutterScreenUtil.ScreenUtil().setSp(13 * 3.0),
                 ),
               ),
             ),
@@ -457,7 +468,10 @@ class _PhoneLoginWidgetState extends State<PhoneLoginWidget> {
   /// 构建切换按钮部件
   Widget _buildChangeButtonWidget() {
     return Container(
-      padding: EdgeInsets.only(left: 20.0, top: 34.0, right: 20.0),
+      padding: EdgeInsets.only(
+          left: FlutterScreenUtil.ScreenUtil().setWidth(20 * 3.0),
+          top: FlutterScreenUtil.ScreenUtil().setHeight(34 * 3.0),
+          right: FlutterScreenUtil.ScreenUtil().setWidth(20 * 3.0)),
       width: double.maxFinite,
       child: InkWell(
         onTap: () {
@@ -470,7 +484,7 @@ class _PhoneLoginWidgetState extends State<PhoneLoginWidget> {
           textAlign: TextAlign.left,
           style: TextStyle(
             color: Color(0xFF5b6a91),
-            fontSize: 16.0,
+            fontSize: FlutterScreenUtil.ScreenUtil().setSp(16 * 3.0),
           ),
         ),
         highlightColor: Colors.transparent,
@@ -483,26 +497,35 @@ class _PhoneLoginWidgetState extends State<PhoneLoginWidget> {
   /// 构建登陆按钮部件
   Widget _buildLoginButtonWidget() {
     return Container(
-      padding: EdgeInsets.only(left: 20.0, top: 63.0, right: 20.0, bottom: 0),
+      padding: EdgeInsets.only(
+          left: FlutterScreenUtil.ScreenUtil().setWidth(20 * 3.0),
+          top: FlutterScreenUtil.ScreenUtil().setHeight(105 * 3.0),
+          right: FlutterScreenUtil.ScreenUtil().setWidth(20 * 3.0),
+          bottom: 0),
       child: Opacity(
         opacity: _loginBtnDisabled ? 0.5 : 1,
         child: Row(
           children: <Widget>[
             Expanded(
               child: RaisedButton(
-                padding: EdgeInsets.symmetric(vertical: 11.0, horizontal: 24.0),
+                padding: EdgeInsets.symmetric(
+                    vertical:
+                        FlutterScreenUtil.ScreenUtil().setHeight(11 * 3.0),
+                    horizontal:
+                        FlutterScreenUtil.ScreenUtil().setWidth(24 * 3.0)),
                 color: Style.pTintColor,
                 highlightColor:
                     _loginBtnDisabled ? Colors.transparent : Style.sTintColor,
                 splashColor: _loginBtnDisabled ? Colors.transparent : null,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                  borderRadius: BorderRadius.all(Radius.circular(
+                      FlutterScreenUtil.ScreenUtil().setWidth(4 * 3.0))),
                 ),
                 onPressed: _login,
                 child: Text(
                   _loginBtnTitle,
                   style: TextStyle(
-                    fontSize: 17.0,
+                    fontSize: FlutterScreenUtil.ScreenUtil().setSp(17 * 3.0),
                     color: Colors.white,
                   ),
                 ),
@@ -518,8 +541,8 @@ class _PhoneLoginWidgetState extends State<PhoneLoginWidget> {
   Widget _buildDivider() {
     return Divider(
       height: 0.5,
-      indent: 20.0,
-      endIndent: 20.0,
+      indent: FlutterScreenUtil.ScreenUtil().setWidth(20 * 3.0),
+      endIndent: FlutterScreenUtil.ScreenUtil().setWidth(20 * 3.0),
       color: Style.pDividerColor,
     );
   }

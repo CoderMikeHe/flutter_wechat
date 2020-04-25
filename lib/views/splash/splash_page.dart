@@ -220,8 +220,9 @@ class _SplashPageState extends State<SplashPage> {
                 child: InkWell(
                   child: Image.asset(
                     Constant.assetsImagesNewFeature + 'skip_btn.png',
-                    width: 175.0,
-                    height: 55.0,
+                    width: FlutterScreenUtil.ScreenUtil().setWidth(175.0 * 3.0),
+                    height:
+                        FlutterScreenUtil.ScreenUtil().setHeight(55.0 * 3.0),
                   ),
                   onTap: _switchRootView,
                   highlightColor: Colors.transparent,
@@ -229,9 +230,10 @@ class _SplashPageState extends State<SplashPage> {
                   focusColor: Colors.transparent,
                 ),
                 left: (ScreenUtil.getInstance().screenWidth - 175) * 0.5,
-                bottom: 55.0,
-                width: 175.0,
-                height: 55.0,
+                bottom: FlutterScreenUtil.ScreenUtil().setHeight(55.0 * 3.0) +
+                    FlutterScreenUtil.ScreenUtil.bottomBarHeight,
+                width: FlutterScreenUtil.ScreenUtil().setWidth(175.0 * 3.0),
+                height: FlutterScreenUtil.ScreenUtil().setHeight(55.0 * 3.0),
               ),
             ],
           );
@@ -289,7 +291,7 @@ class _SplashPageState extends State<SplashPage> {
           },
         ),
         Positioned(
-          top: FlutterScreenUtil.ScreenUtil.getInstance().setHeight(30.0) +
+          top: FlutterScreenUtil.ScreenUtil.getInstance().setHeight(15.0) +
               FlutterScreenUtil.ScreenUtil.statusBarHeight,
           right: FlutterScreenUtil.ScreenUtil.getInstance().setWidth(60.0),
           child: InkWell(
