@@ -37,7 +37,8 @@ class MainframePage extends StatefulWidget {
   _MainframePageState createState() => _MainframePageState();
 }
 
-class _MainframePageState extends State<MainframePage> {
+class _MainframePageState extends State<MainframePage>
+    with AutomaticKeepAliveClientMixin {
   /// 数据源
   List<Message> _dataSource = [];
 
@@ -84,6 +85,10 @@ class _MainframePageState extends State<MainframePage> {
   bool _showSearch = false;
 
   /// ✨✨✨✨✨✨✨ Override ✨✨✨✨✨✨✨
+  ///
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   void initState() {
     super.initState();
@@ -156,7 +161,7 @@ class _MainframePageState extends State<MainframePage> {
     _slidableController.activeState?.close();
   }
 
-// 处理偏移逻辑
+  // 处理偏移逻辑
   void _handlerOffset(double offset) {
     // 计算
     if (offset <= 0.0) {
@@ -407,6 +412,8 @@ class _MainframePageState extends State<MainframePage> {
       },
       child: CustomScrollView(
         controller: _controller,
+        // Fixed Bug: 让安卓和iOS 都是下拉回弹效果  否则 安卓无法 展示小程序 逻辑
+        physics: BouncingScrollPhysics(),
         slivers: <Widget>[
           SliverToBoxAdapter(
             child: SearchBar(
@@ -618,6 +625,7 @@ class _MainframePageState extends State<MainframePage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       // appBar: MHAppBar(
       //   title: Text('微信'),

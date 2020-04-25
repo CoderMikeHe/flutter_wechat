@@ -32,6 +32,7 @@ class ContactInfoMoments extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Colors.white,
       child: Column(
         children: <Widget>[
           // 头部信息
@@ -63,18 +64,19 @@ class ContactInfoMoments extends StatelessWidget {
   Widget _buildheaderWidget(BuildContext context) {
     Widget middle = ConstrainedBox(
       constraints: BoxConstraints(
-        minWidth: 50.0,
+        minWidth: ScreenUtil().setWidth(150.0),
       ),
       child: Text(
         '朋友圈',
-        style: TextStyle(fontSize: 16.0, color: Style.pTextColor),
+        style: TextStyle(
+            fontSize: ScreenUtil().setSp(48.0), color: Style.pTextColor),
       ),
     );
 
     Widget trailing = Image.asset(
       Constant.assetsImagesArrow + 'tableview_arrow_8x13.png',
-      width: 8.0,
-      height: 13.0,
+      width: ScreenUtil().setWidth(24.0),
+      height: ScreenUtil().setHeight(39.0),
     );
 
     return MHListTile(
@@ -82,7 +84,7 @@ class ContactInfoMoments extends StatelessWidget {
       allowTap: false,
       middle: middle,
       trailing: trailing,
-      dividerIndent: Constant.pEdgeInset,
+      dividerIndent: ScreenUtil().setWidth(Constant.pEdgeInset * 3.0),
       dividerHeight: 0,
     );
   }
@@ -94,8 +96,9 @@ class ContactInfoMoments extends StatelessWidget {
     // 5个数据
     final int count = 5;
     // 计算父部件的宽度
-    final double momentsW =
-        screenW - 2 * Constant.pEdgeInset - 8.0 * (count - 1);
+    final double momentsW = screenW -
+        2 * Constant.pEdgeInset -
+        ScreenUtil().setWidth(24.0) * (count - 1);
 
     // 就算图片的大小
     final double imageWH = momentsW / count;
@@ -106,7 +109,8 @@ class ContactInfoMoments extends StatelessWidget {
       for (var i = 0; i < count; i++) {
         final Picture picture = user.pictures[i];
 
-        final Photo photo = Photo(url: picture.big.url, tag: i.toString());
+        final Photo photo =
+            Photo(url: picture.big.url, tag: i.toString(), title: picture.name);
         _photos.add(photo);
         Widget w = InkWell(
           onTap: () {
@@ -114,27 +118,30 @@ class ContactInfoMoments extends StatelessWidget {
           },
           child: Hero(
             tag: i.toString(),
-            child: CachedNetworkImage(
-              imageUrl: picture.small.url,
-              width: imageWH,
-              height: imageWH,
-              fit: BoxFit.cover,
-              placeholder: (context, url) {
-                return Image.asset(
-                  Constant.assetsImagesDefault +
-                      'ChatBackgroundThumb_00_100x100.png',
-                  width: imageWH,
-                  height: imageWH,
-                );
-              },
-              errorWidget: (context, url, error) {
-                return Image.asset(
-                  Constant.assetsImagesDefault +
-                      'ChatBackgroundThumb_00_100x100.png',
-                  width: imageWH,
-                  height: imageWH,
-                );
-              },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(ScreenUtil().setWidth(30.0)),
+              child: CachedNetworkImage(
+                imageUrl: picture.small.url,
+                width: imageWH,
+                height: imageWH,
+                fit: BoxFit.cover,
+                placeholder: (context, url) {
+                  return Image.asset(
+                    Constant.assetsImagesDefault +
+                        'ChatBackgroundThumb_00_100x100.png',
+                    width: imageWH,
+                    height: imageWH,
+                  );
+                },
+                errorWidget: (context, url, error) {
+                  return Image.asset(
+                    Constant.assetsImagesDefault +
+                        'ChatBackgroundThumb_00_100x100.png',
+                    width: imageWH,
+                    height: imageWH,
+                  );
+                },
+              ),
             ),
           ),
         );
@@ -143,14 +150,15 @@ class ContactInfoMoments extends StatelessWidget {
     }
     return Container(
       color: Colors.white,
+      width: double.infinity,
       padding: EdgeInsets.only(
-        left: Constant.pEdgeInset,
-        right: Constant.pEdgeInset,
-        bottom: Constant.pEdgeInset,
+        left: ScreenUtil().setWidth(Constant.pEdgeInset * 3.0),
+        right: ScreenUtil().setWidth(Constant.pEdgeInset * 3.0),
+        bottom: ScreenUtil().setHeight(Constant.pEdgeInset * 3.0),
       ),
       child: Wrap(
-        spacing: 8.0,
-        runSpacing: 8.0,
+        spacing: ScreenUtil().setWidth(24.0),
+        runSpacing: ScreenUtil().setWidth(24.0),
         children: children,
       ),
     );

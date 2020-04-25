@@ -19,6 +19,7 @@ import 'package:flutter_wechat/utils/service/account_service.dart';
 import 'package:flutter_wechat/utils/service/contacts_service.dart';
 import 'package:flutter_wechat/utils/service/zone_code_service.dart';
 
+// 适配完毕
 /// 闪屏跳转模式
 enum MHSplashSkipMode {
   newFeature, // 新特性（引导页）
@@ -50,7 +51,6 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void dispose() {
     super.dispose();
-    print('🔥 Splash Page is Over 👉');
     // 记得中dispose里面把timer cancel。
     if (_timerUtil != null) _timerUtil.cancel();
   }
@@ -273,7 +273,6 @@ class _SplashPageState extends State<SplashPage> {
       children: <Widget>[
         Swiper(
           onTap: (idx) {
-            print('onTap $idx');
             // 跳转到Web
           },
           itemCount: 4,
@@ -290,7 +289,8 @@ class _SplashPageState extends State<SplashPage> {
           },
         ),
         Positioned(
-          top: FlutterScreenUtil.ScreenUtil.getInstance().setWidth(60.0),
+          top: FlutterScreenUtil.ScreenUtil.getInstance().setHeight(30.0) +
+              FlutterScreenUtil.ScreenUtil.statusBarHeight,
           right: FlutterScreenUtil.ScreenUtil.getInstance().setWidth(60.0),
           child: InkWell(
             onTap: () {

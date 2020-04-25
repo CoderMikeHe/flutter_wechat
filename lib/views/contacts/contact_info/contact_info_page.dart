@@ -1,6 +1,7 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:flutter_wechat/constant/constant.dart';
 import 'package:flutter_wechat/constant/style.dart';
@@ -77,11 +78,11 @@ class _ContactInfoPageState extends State<ContactInfoPage> {
               children: <Widget>[
                 new SvgPicture.asset(
                   Constant.assetsImagesContacts + 'icons_filled_videocall.svg',
-                  width: 16.0,
-                  height: 16.0,
+                  width: ScreenUtil().setWidth(16.0 * 3),
+                  height: ScreenUtil().setWidth(16.0 * 3),
                   color: Colors.black,
                 ),
-                SizedBox(width: 4.0),
+                SizedBox(width: ScreenUtil().setWidth(4.0 * 3)),
                 Text('视频通话'),
               ],
             )),
@@ -95,11 +96,11 @@ class _ContactInfoPageState extends State<ContactInfoPage> {
               new SvgPicture.asset(
                 Constant.assetsImagesContacts +
                     'icons_filled_contacts_phone.svg',
-                width: 16.0,
-                height: 16.0,
+                width: ScreenUtil().setWidth(16.0 * 3),
+                height: ScreenUtil().setWidth(16.0 * 3),
                 color: Colors.black,
               ),
-              SizedBox(width: 4.0),
+              SizedBox(width: ScreenUtil().setWidth(4.0 * 3)),
               Text('语音通话'),
             ],
           ),
@@ -120,10 +121,12 @@ class _ContactInfoPageState extends State<ContactInfoPage> {
       children: <Widget>[
         _buildHeaderWidget(),
         _buildSettingRemarksWidget(),
-        SizedBox(height: 8.0),
+        // 朋友权限
+        _buildFriendPermission(),
+        SizedBox(height: ScreenUtil().setHeight(8.0 * 3)),
         _buildMomentsWidget(),
         _buildMoreInfoWidget(),
-        SizedBox(height: 8.0),
+        SizedBox(height: ScreenUtil().setHeight(8.0 * 3)),
         _buildMessageAndVideoWidget(),
       ],
     );
@@ -150,24 +153,63 @@ class _ContactInfoPageState extends State<ContactInfoPage> {
     );
   }
 
-  /// 构建更多信息 部件
-  Widget _buildMoreInfoWidget() {
+  /// 构建盆友权限 部件
+  Widget _buildFriendPermission() {
     Widget middle = Padding(
-      padding: EdgeInsets.only(right: Constant.pEdgeInset),
+      padding: EdgeInsets.only(
+          right: ScreenUtil().setWidth(Constant.pEdgeInset * 3)),
       child: Text(
-        '更多信息',
-        style: TextStyle(fontSize: 16.0, color: Style.pTextColor),
+        '朋友权限',
+        style: TextStyle(
+            fontSize: ScreenUtil().setSp(48.0), color: Style.pTextColor),
       ),
     );
 
     Widget trailing = Image.asset(
       Constant.assetsImagesArrow + 'tableview_arrow_8x13.png',
-      width: 8.0,
-      height: 13.0,
+      width: ScreenUtil().setWidth(24.0),
+      height: ScreenUtil().setHeight(39.0),
+    );
+
+    return Container(
+      color: Colors.white,
+      child: MHListTile(
+        contentPadding:
+            EdgeInsets.all(ScreenUtil().setWidth(Constant.pEdgeInset * 3.0)),
+        middle: middle,
+        trailing: trailing,
+        dividerIndent: ScreenUtil().setWidth(Constant.pEdgeInset * 3),
+        onTap: () {
+          NavigatorUtils.push(
+            context,
+            '${ContactsRouter.friendPermissionPage}?idstr=${_user.idstr}',
+          );
+        },
+      ),
+    );
+  }
+
+  /// 构建更多信息 部件
+  Widget _buildMoreInfoWidget() {
+    Widget middle = Padding(
+      padding: EdgeInsets.only(
+          right: ScreenUtil().setWidth(Constant.pEdgeInset * 3)),
+      child: Text(
+        '更多信息',
+        style: TextStyle(
+            fontSize: ScreenUtil().setSp(48.0), color: Style.pTextColor),
+      ),
+    );
+
+    Widget trailing = Image.asset(
+      Constant.assetsImagesArrow + 'tableview_arrow_8x13.png',
+      width: ScreenUtil().setWidth(24.0),
+      height: ScreenUtil().setHeight(39.0),
     );
 
     return MHListTile(
-      contentPadding: EdgeInsets.all(Constant.pEdgeInset),
+      contentPadding:
+          EdgeInsets.all(ScreenUtil().setWidth(Constant.pEdgeInset * 3.0)),
       middle: middle,
       trailing: trailing,
       onTap: () {
@@ -200,21 +242,24 @@ class _ContactInfoPageState extends State<ContactInfoPage> {
       String icon, String title, void Function() onTap) {
     Color color = Color(0xFF576B95);
     Widget middle = Padding(
-      padding: EdgeInsets.only(right: Constant.pEdgeInset),
+      padding: EdgeInsets.only(
+          right: ScreenUtil().setWidth(Constant.pEdgeInset * 3)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           new SvgPicture.asset(
             Constant.assetsImagesContacts + icon,
             color: color,
-            width: 16.0,
-            height: 16.0,
+            width: ScreenUtil().setWidth(16.0 * 3),
+            height: ScreenUtil().setWidth(16.0 * 3),
           ),
-          SizedBox(width: 4.0),
+          SizedBox(width: ScreenUtil().setWidth(4.0 * 3)),
           Text(
             title,
             style: TextStyle(
-                fontSize: 16.0, color: color, fontWeight: FontWeight.w600),
+                fontSize: ScreenUtil().setSp(16.0 * 3),
+                color: color,
+                fontWeight: FontWeight.w600),
           ),
         ],
       ),

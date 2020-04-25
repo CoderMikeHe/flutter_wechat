@@ -46,7 +46,8 @@ class ContactsPage extends StatefulWidget {
   _ContactsPageState createState() => _ContactsPageState();
 }
 
-class _ContactsPageState extends State<ContactsPage> {
+class _ContactsPageState extends State<ContactsPage>
+    with AutomaticKeepAliveClientMixin {
   /// 联系人列表
   List<User> _contactsList = [];
 
@@ -83,6 +84,10 @@ class _ContactsPageState extends State<ContactsPage> {
 
   /// 动画时间 0 无动画
   int _duration = 0;
+
+  ///
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -439,6 +444,7 @@ class _ContactsPageState extends State<ContactsPage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       // 这个是固定住的AppBar
       // appBar: AppBar(

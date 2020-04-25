@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 
 import 'package:fluro/fluro.dart';
-import 'package:flutter/material.dart';
 import 'package:flustars/flustars.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'
+    as FlutterScreenUtil;
 
 import 'package:flutter_wechat/constant/cache_key.dart';
 import 'package:flutter_wechat/constant/constant.dart';
@@ -29,13 +31,13 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   // 跳转登陆
-  _login() {
+  void _login() {
     NavigatorUtils.push(context, LoginRouter.otherLoginPage,
         transition: TransitionType.inFromBottom);
   }
 
   // 跳转注册
-  _register() {
+  void _register() {
     NavigatorUtils.push(context, LoginRouter.registerPage,
         transition: TransitionType.inFromBottom);
   }
@@ -75,22 +77,27 @@ class _LoginPageState extends State<LoginPage> {
                       '登陆',
                       style: TextStyle(
                         color: Style.sTintColor,
-                        fontSize: 17.0,
+                        fontSize:
+                            FlutterScreenUtil.ScreenUtil().setSp(17.0 * 3.0),
                       ),
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(4)),
+                      borderRadius: BorderRadius.all(Radius.circular(
+                          FlutterScreenUtil.ScreenUtil().setWidth(12.0))),
                     ),
-                    padding:
-                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 24.0),
+                    padding: EdgeInsets.symmetric(
+                        vertical:
+                            FlutterScreenUtil.ScreenUtil().setHeight(30.0),
+                        horizontal:
+                            FlutterScreenUtil.ScreenUtil().setWidth(24.0 * 3)),
                     color: Colors.white,
                     highlightColor: Color(0xd9d9d9),
                     onPressed: _login,
                   ),
                 ),
                 SizedBox(
-                  width: 20.0,
-                  height: 20.0,
+                  width: FlutterScreenUtil.ScreenUtil().setWidth(60.0),
+                  height: FlutterScreenUtil.ScreenUtil().setWidth(60.0),
                 ),
                 Expanded(
                   child: RaisedButton(
@@ -98,14 +105,19 @@ class _LoginPageState extends State<LoginPage> {
                       '注册',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 17.0,
+                        fontSize:
+                            FlutterScreenUtil.ScreenUtil().setSp(17.0 * 3.0),
                       ),
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(4)),
+                      borderRadius: BorderRadius.all(Radius.circular(
+                          FlutterScreenUtil.ScreenUtil().setWidth(12.0))),
                     ),
-                    padding:
-                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 24.0),
+                    padding: EdgeInsets.symmetric(
+                        vertical:
+                            FlutterScreenUtil.ScreenUtil().setHeight(30.0),
+                        horizontal:
+                            FlutterScreenUtil.ScreenUtil().setWidth(24.0 * 3)),
                     color: Style.pTintColor,
                     highlightColor: Style.sTintColor,
                     onPressed: _register,
@@ -114,9 +126,9 @@ class _LoginPageState extends State<LoginPage> {
               ],
             ),
           ),
-          left: 20.0,
-          bottom: 20.0,
-          right: 20.0,
+          left: FlutterScreenUtil.ScreenUtil().setWidth(60.0),
+          bottom: FlutterScreenUtil.ScreenUtil().setHeight(60.0),
+          right: FlutterScreenUtil.ScreenUtil().setWidth(60.0),
         ),
         Positioned(
           child: Container(
@@ -125,15 +137,16 @@ class _LoginPageState extends State<LoginPage> {
               child: Text(
                 _language,
                 style: TextStyle(
-                  fontSize: 12.0,
+                  fontSize: FlutterScreenUtil.ScreenUtil().setSp(12.0 * 3.0),
                   color: Color.fromRGBO(255, 255, 255, 0.7),
                 ),
                 textAlign: TextAlign.right,
               ),
             ),
           ),
-          top: 20.0,
-          right: 20.0,
+          top: FlutterScreenUtil.ScreenUtil().setHeight(30.0) +
+              FlutterScreenUtil.ScreenUtil.statusBarHeight,
+          right: FlutterScreenUtil.ScreenUtil().setWidth(60.0),
         ),
       ],
     );

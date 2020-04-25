@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:flutter_wechat/constant/constant.dart';
 import 'package:flutter_wechat/constant/style.dart';
-import 'package:flutter_wechat/utils/util.dart';
 
 import 'package:flutter_wechat/components/list_tile/mh_list_tile.dart';
 import 'package:flutter_wechat/model/user/user.dart';
 
+// 适配完毕
 class ContactInfoRemarks extends StatelessWidget {
   const ContactInfoRemarks({
     Key key,
@@ -19,6 +20,7 @@ class ContactInfoRemarks extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Colors.white,
       child: _buildChildWidget(),
     );
   }
@@ -27,24 +29,27 @@ class ContactInfoRemarks extends StatelessWidget {
   Widget _buildChildWidget() {
     // CMH TODO: 增加 标签和电话的罗
     Widget middle = Padding(
-      padding: EdgeInsets.only(right: Constant.pEdgeInset),
+      padding: EdgeInsets.only(
+          right: ScreenUtil().setWidth(Constant.pEdgeInset * 3)),
       child: Text(
-        '设置备注和标签',
-        style: TextStyle(fontSize: 16.0, color: Style.pTextColor),
+        '备注和标签',
+        style: TextStyle(
+            fontSize: ScreenUtil().setSp(48.0), color: Style.pTextColor),
       ),
     );
 
     Widget trailing = Image.asset(
       Constant.assetsImagesArrow + 'tableview_arrow_8x13.png',
-      width: 8.0,
-      height: 13.0,
+      width: ScreenUtil().setWidth(24.0),
+      height: ScreenUtil().setHeight(39.0),
     );
 
     return MHListTile(
-      contentPadding: EdgeInsets.all(Constant.pEdgeInset),
+      contentPadding:
+          EdgeInsets.all(ScreenUtil().setWidth(Constant.pEdgeInset * 3.0)),
       middle: middle,
       trailing: trailing,
-      dividerIndent: Constant.pEdgeInset,
+      dividerIndent: ScreenUtil().setWidth(Constant.pEdgeInset * 3),
     );
   }
 }
