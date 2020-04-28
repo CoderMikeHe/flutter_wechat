@@ -52,6 +52,9 @@ class Constant {
   /// loading 模块资源
   static const String assetsImagesLoading = 'assets/images/loading/';
 
+  /// 朋友圈 模块资源
+  static const String assetsImagesMoments = 'assets/images/moments/';
+
   /// 本地mock数据json
   static const String mockData = 'mock/';
 
