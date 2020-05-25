@@ -192,6 +192,10 @@ class _MainframePageState extends State<MainframePage>
 
   /// 处理小程序滚动事件
   void _handleAppletOnScroll(double offset, bool dragging) {
+    // Fixed Bug：首页快速拖动 会导致小程序页 加载不出来
+    if (_isAnimating) {
+      return;
+    }
     if (dragging) {
       _isAnimating = false;
       // 去掉动画
