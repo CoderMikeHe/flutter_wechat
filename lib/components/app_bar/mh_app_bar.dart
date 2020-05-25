@@ -4,6 +4,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
+import 'dart:math' as math;
+
 const double _kLeadingWidth =
     kToolbarHeight; // So the leading button is square.
 
@@ -30,6 +32,121 @@ class _ToolbarContainerLayout extends SingleChildLayoutDelegate {
   bool shouldRelayout(_ToolbarContainerLayout oldDelegate) => false;
 }
 
+// TODO(eseidel): Toolbar needs to change size based on orientation:
+// https://material.io/design/components/app-bars-top.html#specs
+// Mobile Landscape: 48dp
+// Mobile Portrait: 56dp
+// Tablet/Desktop: 64dp
+
+/// A material design app bar.
+///
+/// An app bar consists of a toolbar and potentially other widgets, such as a
+/// [TabBar] and a [FlexibleSpaceBar]. App bars typically expose one or more
+/// common [actions] with [IconButton]s which are optionally followed by a
+/// [PopupMenuButton] for less common operations (sometimes called the "overflow
+/// menu").
+///
+/// App bars are typically used in the [Scaffold.appBar] property, which places
+/// the app bar as a fixed-height widget at the top of the screen. For a scrollable
+/// app bar, see [SliverAppBar], which embeds an [AppBar] in a sliver for use in
+/// a [CustomScrollView].
+///
+/// When not used as [Scaffold.appBar], or when wrapped in a [Hero], place the app
+/// bar in a [MediaQuery] to take care of the padding around the content of the
+/// app bar if needed, as the padding will not be handled by [Scaffold].
+///
+/// The AppBar displays the toolbar widgets, [leading], [title], and [actions],
+/// above the [bottom] (if any). The [bottom] is usually used for a [TabBar]. If
+/// a [flexibleSpace] widget is specified then it is stacked behind the toolbar
+/// and the bottom widget. The following diagram shows where each of these slots
+/// appears in the toolbar when the writing language is left-to-right (e.g.
+/// English):
+///
+/// ![The leading widget is in the top left, the actions are in the top right,
+/// the title is between them. The bottom is, naturally, at the bottom, and the
+/// flexibleSpace is behind all of them.](https://flutter.github.io/assets-for-api-docs/assets/material/app_bar.png)
+///
+/// If the [leading] widget is omitted, but the [AppBar] is in a [Scaffold] with
+/// a [Drawer], then a button will be inserted to open the drawer. Otherwise, if
+/// the nearest [Navigator] has any previous routes, a [BackButton] is inserted
+/// instead. This behavior can be turned off by setting the [automaticallyImplyLeading]
+/// to false. In that case a null leading widget will result in the middle/title widget
+/// stretching to start.
+///
+/// {@tool dartpad --template=stateless_widget_material}
+///
+/// This sample shows an [AppBar] with two simple actions. The first action
+/// opens a [SnackBar], while the second action navigates to a new page.
+///
+/// ```dart preamble
+/// final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+/// final SnackBar snackBar = const SnackBar(content: Text('Showing Snackbar'));
+///
+/// void openPage(BuildContext context) {
+///   Navigator.push(context, MaterialPageRoute(
+///     builder: (BuildContext context) {
+///       return Scaffold(
+///         appBar: AppBar(
+///           title: const Text('Next page'),
+///         ),
+///         body: const Center(
+///           child: Text(
+///             'This is the next page',
+///             style: TextStyle(fontSize: 24),
+///           ),
+///         ),
+///       );
+///     },
+///   ));
+/// }
+/// ```
+///
+/// ```dart
+/// Widget build(BuildContext context) {
+///   return Scaffold(
+///     key: scaffoldKey,
+///     appBar: AppBar(
+///       title: const Text('AppBar Demo'),
+///       actions: <Widget>[
+///         IconButton(
+///           icon: const Icon(Icons.add_alert),
+///           tooltip: 'Show Snackbar',
+///           onPressed: () {
+///             scaffoldKey.currentState.showSnackBar(snackBar);
+///           },
+///         ),
+///         IconButton(
+///           icon: const Icon(Icons.navigate_next),
+///           tooltip: 'Next page',
+///           onPressed: () {
+///             openPage(context);
+///           },
+///         ),
+///       ],
+///     ),
+///     body: const Center(
+///       child: Text(
+///         'This is the home page',
+///         style: TextStyle(fontSize: 24),
+///       ),
+///     ),
+///   );
+/// }
+/// ```
+/// {@end-tool}
+///
+/// See also:
+///
+///  * [Scaffold], which displays the [AppBar] in its [Scaffold.appBar] slot.
+///  * [SliverAppBar], which uses [AppBar] to provide a flexible app bar that
+///    can be used in a [CustomScrollView].
+///  * [TabBar], which is typically placed in the [bottom] slot of the [AppBar]
+///    if the screen has multiple pages arranged in tabs.
+///  * [IconButton], which is used with [actions] to show buttons on the app bar.
+///  * [PopupMenuButton], to show a popup menu on the app bar, via [actions].
+///  * [FlexibleSpaceBar], which is used with [flexibleSpace] when the app bar
+///    can expand and collapse.
+///  * <https://material.io/design/components/app-bars-top.html>
 class MHAppBar extends StatefulWidget implements PreferredSizeWidget {
   /// Creates a material design app bar.
   ///
@@ -51,7 +168,7 @@ class MHAppBar extends StatefulWidget implements PreferredSizeWidget {
     this.actions,
     this.flexibleSpace,
     this.bottom,
-    this.elevation = 0.5,
+    this.elevation,
     this.shape,
     this.backgroundColor,
     this.brightness,
@@ -60,6 +177,7 @@ class MHAppBar extends StatefulWidget implements PreferredSizeWidget {
     this.textTheme,
     this.primary = true,
     this.centerTitle,
+    this.excludeHeaderSemantics = false,
     this.titleSpacing = NavigationToolbar.kMiddleSpacing,
     this.toolbarOpacity = 1.0,
     this.bottomOpacity = 1.0,
@@ -75,6 +193,12 @@ class MHAppBar extends StatefulWidget implements PreferredSizeWidget {
 
   /// A widget to display before the [title].
   ///
+  /// Typically the [leading] widget is an [Icon] or an [IconButton].
+  ///
+  /// Becomes the leading component of the [NavigationToolBar] built
+  /// by this widget. The [leading] widget's width and height are constrained to
+  /// be no bigger than toolbar's height, which is [kToolbarHeight].
+  ///
   /// If this is null and [automaticallyImplyLeading] is set to true, the
   /// [AppBar] will imply an appropriate widget. For example, if the [AppBar] is
   /// in a [Scaffold] that also has a [Drawer], the [Scaffold] will fill this
@@ -82,7 +206,7 @@ class MHAppBar extends StatefulWidget implements PreferredSizeWidget {
   /// there's no [Drawer] and the parent [Navigator] can go back, the [AppBar]
   /// will use a [BackButton] that calls [Navigator.maybePop].
   ///
-  /// {@tool sample}
+  /// {@tool snippet}
   ///
   /// The following code shows how the drawer button could be manually specified
   /// instead of relying on [automaticallyImplyLeading]:
@@ -123,15 +247,44 @@ class MHAppBar extends StatefulWidget implements PreferredSizeWidget {
 
   /// The primary widget displayed in the app bar.
   ///
-  /// Typically a [Text] widget containing a description of the current contents
-  /// of the app.
+  /// Typically a [Text] widget that contains a description of the current
+  /// contents of the app.
+  ///
+  /// Becomes the middle component of the [NavigationToolBar] built by this widget.
+  /// The [title]'s width is constrained to fit within the remaining space
+  /// between the toolbar's [leading] and [actions] widgets. Its height is
+  /// _not_ constrained. The [title] is vertically centered and clipped to fit
+  /// within the toolbar, whose height is [kToolbarHeight]. Typically this
+  /// isn't noticeable because a simple [Text] [title] will fit within the
+  /// toolbar by default. On the other hand, it is noticeable when a
+  /// widget with an intrinsic height that is greater than [kToolbarHeight]
+  /// is used as the [title]. For example, when the height of an Image used
+  /// as the [title] exceeds [kToolbarHeight], it will be centered and
+  /// clipped (top and bottom), which may be undesirable. In cases like this
+  /// the height of the [title] widget can be constrained. For example:
+  ///
+  /// ```dart
+  /// MaterialApp(
+  ///   home: Scaffold(
+  ///     appBar: AppBar(
+  ///        title: SizedBox(
+  ///        height: kToolbarHeight,
+  ///          child: child: Image.asset(logoAsset),
+  ///      ),
+  ///   ),
+  /// )
+  /// ```
   final Widget title;
 
-  /// Widgets to display after the [title] widget.
+  /// Widgets to display in a row after the [title] widget.
   ///
   /// Typically these widgets are [IconButton]s representing common operations.
   /// For less common operations, consider using a [PopupMenuButton] as the
   /// last action.
+  ///
+  /// The [actions] become the trailing component of the [NavigationToolBar] built
+  /// by this widget. The height of each action is constrained to be no bigger
+  /// than the toolbar's height, which is [kToolbarHeight].
   final List<Widget> actions;
 
   /// This widget is stacked behind the toolbar and the tab bar. It's height will
@@ -220,6 +373,11 @@ class MHAppBar extends StatefulWidget implements PreferredSizeWidget {
   /// Defaults to being adapted to the current [TargetPlatform].
   final bool centerTitle;
 
+  /// Whether the title should be wrapped with header [Semantics].
+  ///
+  /// Defaults to false.
+  final bool excludeHeaderSemantics;
+
   /// The spacing around [title] content on the horizontal axis. This spacing is
   /// applied even if there is no [leading] content or [actions]. If you want
   /// [title] to take all the space available, set this value to 0.0.
@@ -258,8 +416,11 @@ class MHAppBar extends StatefulWidget implements PreferredSizeWidget {
     switch (theme.platform) {
       case TargetPlatform.android:
       case TargetPlatform.fuchsia:
+      case TargetPlatform.linux:
+      case TargetPlatform.windows:
         return false;
       case TargetPlatform.iOS:
+      case TargetPlatform.macOS:
         return actions == null || actions.length < 2;
     }
     return null;
@@ -300,12 +461,12 @@ class _MHAppBarState extends State<MHAppBar> {
     IconThemeData actionsIconTheme = widget.actionsIconTheme ??
         appBarTheme.actionsIconTheme ??
         overallIconTheme;
-    TextStyle centerStyle = widget.textTheme?.title ??
-        appBarTheme.textTheme?.title ??
-        theme.primaryTextTheme.title;
-    TextStyle sideStyle = widget.textTheme?.body1 ??
-        appBarTheme.textTheme?.body1 ??
-        theme.primaryTextTheme.body1;
+    TextStyle centerStyle = widget.textTheme?.headline6 ??
+        appBarTheme.textTheme?.headline6 ??
+        theme.primaryTextTheme.headline6;
+    TextStyle sideStyle = widget.textTheme?.bodyText2 ??
+        appBarTheme.textTheme?.bodyText2 ??
+        theme.primaryTextTheme.bodyText2;
 
     if (widget.toolbarOpacity != 1.0) {
       final double opacity =
@@ -349,20 +510,29 @@ class _MHAppBarState extends State<MHAppBar> {
       switch (theme.platform) {
         case TargetPlatform.android:
         case TargetPlatform.fuchsia:
+        case TargetPlatform.linux:
+        case TargetPlatform.windows:
           namesRoute = true;
           break;
         case TargetPlatform.iOS:
+        case TargetPlatform.macOS:
           break;
       }
+
+      title = _AppBarTitleBox(child: title);
+      if (!widget.excludeHeaderSemantics) {
+        title = Semantics(
+          namesRoute: namesRoute,
+          child: title,
+          header: true,
+        );
+      }
+
       title = DefaultTextStyle(
         style: centerStyle,
         softWrap: false,
         overflow: TextOverflow.ellipsis,
-        child: Semantics(
-          namesRoute: namesRoute,
-          child: _AppBarTitleBox(child: title),
-          header: true,
-        ),
+        child: title,
       );
     }
 
@@ -436,6 +606,7 @@ class _MHAppBarState extends State<MHAppBar> {
     // The padding applies to the toolbar and tabbar, not the flexible space.
     if (widget.primary) {
       appBar = SafeArea(
+        bottom: false,
         top: true,
         child: appBar,
       );
@@ -515,6 +686,7 @@ class _RenderAppBarTitleBox extends RenderAligningShiftedBox {
 
   @override
   void performLayout() {
+    final BoxConstraints constraints = this.constraints;
     final BoxConstraints innerConstraints =
         constraints.copyWith(maxHeight: double.infinity);
     child.layout(innerConstraints, parentUsesSize: true);

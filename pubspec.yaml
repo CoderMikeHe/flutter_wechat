@@ -14,7 +14,7 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.1.0 <3.0.0'
+  sdk: '>=2.5.0 <3.0.0'
 
 dependencies:
   flutter:
@@ -32,7 +32,7 @@ dependencies:
   # 事件总线 https://github.com/marcojakob/dart-event-bus
   event_bus: 1.0.1
   # 路由管理 https://github.com/theyakka/fluro
-  fluro: 1.5.1
+  fluro: 1.6.3
   # Flutter 轮播图 https://github.com/best-flutter/flutter_swiper
   flutter_swiper: 1.1.6
   # Flutter 屏幕适配 https://github.com/OpenFlutter/flutter_screenutil
