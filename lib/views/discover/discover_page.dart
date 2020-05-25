@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_wechat/routers/fluro_navigator.dart';
+import 'package:flutter_wechat/views/discover/discover_router.dart';
+
 import 'package:flutter_wechat/constant/constant.dart';
+
 import 'package:flutter_wechat/model/common/common_item.dart';
 import 'package:flutter_wechat/model/common/common_group.dart';
 
@@ -38,6 +42,9 @@ class _DiscoverPageState extends State<DiscoverPage>
       title: '朋友圈',
       icon:
           Constant.assetsImagesDiscover + "icons_outlined_colorful_moment.svg",
+      onTap: (_) {
+        NavigatorUtils.push(context, DiscoverRouter.momentsPage);
+      },
     );
     final group0 = CommonGroup(
       items: [moments],

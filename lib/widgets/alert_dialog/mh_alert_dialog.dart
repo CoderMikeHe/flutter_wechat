@@ -996,7 +996,7 @@ class _PressableActionButtonState extends State<_PressableActionButton> {
 // updating the pressed state of an _ActionButtonParentData based on the
 // incoming [isPressed] property.
 class _ActionButtonParentDataWidget
-    extends ParentDataWidget<_CupertinoDialogActionsRenderWidget> {
+    extends ParentDataWidget<_ActionButtonParentData> {
   const _ActionButtonParentDataWidget({
     Key key,
     this.isPressed,
@@ -1008,7 +1008,8 @@ class _ActionButtonParentDataWidget
   @override
   void applyParentData(RenderObject renderObject) {
     assert(renderObject.parentData is _ActionButtonParentData);
-    final _ActionButtonParentData parentData = renderObject.parentData;
+    final _ActionButtonParentData parentData =
+        renderObject.parentData as _ActionButtonParentData;
     if (parentData.isPressed != isPressed) {
       parentData.isPressed = isPressed;
 
@@ -1017,6 +1018,10 @@ class _ActionButtonParentDataWidget
       if (targetParent is RenderObject) targetParent.markNeedsPaint();
     }
   }
+
+  @override
+  Type get debugTypicalAncestorWidgetClass =>
+      _CupertinoDialogActionsRenderWidget;
 }
 
 // ParentData applied to individual action buttons that report whether or not

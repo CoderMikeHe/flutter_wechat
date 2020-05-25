@@ -9,6 +9,7 @@ import 'package:flutter_wechat/views/login/login_router.dart';
 import 'package:flutter_wechat/views/profile/profile_rourer.dart';
 import 'package:flutter_wechat/views/contacts/contacts_router.dart';
 import 'package:flutter_wechat/components/photo_browser/photo_browser_router.dart';
+import 'package:flutter_wechat/views/discover/discover_router.dart';
 
 import 'package:flutter_wechat/views/login/current_login/current_login_page.dart';
 import 'package:flutter_wechat/routers/router_init.dart';
@@ -65,7 +66,7 @@ class Routers {
     _listRouter.add(ProfileRouter());
     _listRouter.add(ContactsRouter());
     _listRouter.add(PhotoBrowserRouter());
-    // _listRouter.add(StoreRouter());
+    _listRouter.add(DiscoverRouter());
     // _listRouter.add(AccountRouter());
     // _listRouter.add(SettingRouter());
     // _listRouter.add(StatisticsRouter());

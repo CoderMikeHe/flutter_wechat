@@ -1,0 +1,6 @@
+include: package:pedantic/analysis_options.1.8.0.yaml
+# https://stackoverflow.com/questions/55477046/how-can-i-enable-flutter-dart-language-experiments
+# https://blog.csdn.net/peng2hui1314/article/details/104787223
+linter:
+  rules:
+    - prefer_spread_collections
